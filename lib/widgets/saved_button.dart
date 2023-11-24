@@ -6,7 +6,7 @@ import 'package:makaiapp/services/vessel_service.dart';
 import 'package:makaiapp/utils/constants.dart';
 
 class SavedButton extends StatelessWidget {
-  final String vesselID;
+  final String? vesselID;
 
   SavedButton({this.vesselID});
 
@@ -14,16 +14,16 @@ class SavedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: vesselService.getVesselSavedStatus(vesselID),
+      stream: vesselService.getVesselSavedStatus(vesselID!),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasData)
           return IconButton(
             onPressed: () async {
-              snapshot.data.exists ? await vesselService.unSaveVessel(vesselID) : await vesselService.saveVessel(vesselID);
+              snapshot.data!.exists ? await vesselService.unSaveVessel(vesselID!) : await vesselService.saveVessel(vesselID!);
             },
             icon: Icon(
-              snapshot.data.exists ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
-              color: !snapshot.data.exists ? Colors.white54 : redColor,
+              snapshot.data!.exists ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+              color: !snapshot.data!.exists ? Colors.white54 : redColor,
               size: 20,
             ),
           );

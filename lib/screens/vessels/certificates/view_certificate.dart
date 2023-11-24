@@ -13,7 +13,7 @@ import 'package:makaiapp/widgets/custom_text_field.dart';
 class ViewCertificate extends StatefulWidget {
   final Certificate certificate;
 
-  ViewCertificate({this.certificate});
+  ViewCertificate({required this.certificate});
 
   @override
   State<ViewCertificate> createState() => _ViewCertificateState();
@@ -35,17 +35,17 @@ class _ViewCertificateState extends State<ViewCertificate> {
 
   @override
   void initState() {
-    certificateAuthTEC.text = widget.certificate.certificateAuthority;
-    certificateTypeTEC.text = widget.certificate.certificateType;
-    cNumberTEC.text = widget.certificate.cNumber;
-    vdNumberTEC.text = widget.certificate.vDNumber;
-    moNumberTEC.text = widget.certificate.mONumber;
-    portTEC.text = widget.certificate.port;
-    tonnageTEC.text = widget.certificate.tonnage;
-    issueDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.issueDate.toDate());
-    buildDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.buildDate.toDate());
-    expiryDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.expiryDate.toDate());
-    issuePlaceTEC.text = widget.certificate.issuePlace;
+    certificateAuthTEC.text = widget.certificate.certificateAuthority!;
+    certificateTypeTEC.text = widget.certificate.certificateType!;
+    cNumberTEC.text = widget.certificate.cNumber!;
+    vdNumberTEC.text = widget.certificate.vDNumber!;
+    moNumberTEC.text = widget.certificate.mONumber!;
+    portTEC.text = widget.certificate.port!;
+    tonnageTEC.text = widget.certificate.tonnage!;
+    issueDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.issueDate!.toDate());
+    buildDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.buildDate!.toDate());
+    expiryDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.expiryDate!.toDate());
+    issuePlaceTEC.text = widget.certificate.issuePlace!;
     super.initState();
   }
 
@@ -63,13 +63,13 @@ class _ViewCertificateState extends State<ViewCertificate> {
               height: 80,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: widget.certificate.certificates.length,
+                itemCount: widget.certificate.certificates!.length,
                 itemBuilder: (context, i) {
                   return InkWell(
-                    onTap: () => Get.to(() => ViewImages(index: i, images: widget.certificate.certificates)),
+                    onTap: () => Get.to(() => ViewImages(index: i, images: widget.certificate.certificates!)),
                     child: Padding(
                       padding: const EdgeInsets.only(right: 10),
-                      child: CachedImage(height: 80, roundedCorners: true, url: widget.certificate.certificates[i]),
+                      child: CachedImage(height: 80, roundedCorners: true, url: widget.certificate.certificates![i]),
                     ),
                   );
                 },

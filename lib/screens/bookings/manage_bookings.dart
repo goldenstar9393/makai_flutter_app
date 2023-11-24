@@ -16,7 +16,7 @@ import 'package:paginate_firestore/paginate_firestore.dart';
 class ManageBookings extends StatelessWidget {
   final Vessel vessel;
 
-  ManageBookings({this.vessel});
+  ManageBookings({required this.vessel});
 
   final buyService = Get.find<BookingService>();
 
@@ -94,7 +94,7 @@ class ManageBookings extends StatelessWidget {
             return BookingItem(booking: booking);
         }
       },
-      query: buyService.getVesselBookings(vessel.vesselID, 10, isPast),
+      query: buyService.getVesselBookings(vessel.vesselID!, 10, isPast),
       onEmpty: EmptyBox(text: 'No booking to show'),
       itemsPerPage: 10,
       bottomLoader: LoadingData(),

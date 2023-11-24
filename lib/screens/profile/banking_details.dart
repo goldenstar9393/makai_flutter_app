@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:makaiapp/controllers/user_controller.dart';
@@ -14,7 +13,7 @@ import 'package:makaiapp/widgets/loading.dart';
 class BankingDetails extends StatefulWidget {
   final User user;
 
-  BankingDetails({this.user});
+  BankingDetails({required this.user});
 
   @override
   _BankingDetailsState createState() => _BankingDetailsState();
@@ -29,7 +28,7 @@ class _BankingDetailsState extends State<BankingDetails> {
   final userService = Get.find<UserService>();
   final userController = Get.find<UserController>();
   final dialogService = Get.find<DialogService>();
-  Banking banking;
+  late Banking banking;
 
   @override
   Widget build(BuildContext context) {
@@ -38,17 +37,15 @@ class _BankingDetailsState extends State<BankingDetails> {
       body: FutureBuilder(
         future: userService.getBankingDetails(),
         builder: (context, snapshot) {
-          print('USER ID:' + userController.currentUser.value.userID);
+          print('USER ID:' + userController.currentUser.value.userID!);
           if (snapshot.hasData) {
-            banking = Banking.fromDocument(snapshot.data);
-            if (banking != null) {
-              accountNameTEC.text = banking.accountName;
-              bankNameTEC.text = banking.bankName;
-              accountNoTEC.text = banking.accountNo;
-              routingTEC.text = banking.routingNo;
-              selectedCountry.value = banking.country;
-            }
-            return bankForm();
+            banking = Banking.fromDocument(snapshot.data as DocumentSnapshot<Object?>);
+            accountNameTEC.text = banking.accountName ?? "";
+            bankNameTEC.text = banking.bankName ?? "";
+            accountNoTEC.text = banking.accountNo ?? "";
+            routingTEC.text = banking.routingNo ?? "";
+            selectedCountry.value = banking.country ?? "";
+                      return bankForm();
           } else
             return LoadingData();
         },
@@ -101,12 +98,12 @@ class _BankingDetailsState extends State<BankingDetails> {
       items: items.map((value) {
         return DropdownMenuItem<String>(value: value, child: Text(value, textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
-      onChanged: (value) => selectedCountry.value = value,
+      onChanged: (value) => selectedCountry.value = value!,
     );
   }
 
   update() async {
-    if (!formKey.currentState.validate()) {
+    if (!formKey.currentState!.validate()) {
       showRedAlert('Please fill the necessary details');
       return;
     }

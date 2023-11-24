@@ -26,12 +26,12 @@ class _CustomerSupportState extends State<CustomerSupport> {
   final userService = Get.find<UserService>();
   final userController = Get.find<UserController>();
   final dialogService = Get.find<DialogService>();
-  DateTime tripDate;
+  late DateTime tripDate;
 
   @override
   void initState() {
-    nameTEC.text = userController.currentUser.value.fullName;
-    emailTEC.text = userController.currentUser.value.email;
+    nameTEC.text = userController.currentUser.value.fullName!;
+    emailTEC.text = userController.currentUser.value.email!;
     super.initState();
   }
 
@@ -75,7 +75,7 @@ class _CustomerSupportState extends State<CustomerSupport> {
   }
 
   sendMail() async {
-    if (!formKey.currentState.validate()) {
+    if (!formKey.currentState!.validate()) {
       showRedAlert('Please fill the necessary details');
       return;
     } else {

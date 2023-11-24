@@ -13,7 +13,7 @@ import 'package:makaiapp/widgets/cached_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ConversationItem extends StatelessWidget {
-  final Conversation conversation;
+  final Conversation? conversation;
 
   ConversationItem({this.conversation});
 
@@ -23,27 +23,27 @@ class ConversationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List users = conversation.users;
+    List users = conversation!.users!;
     users.remove(userController.currentUser.value.userID);
     String userID = users[0];
     print(userID);
-    return conversation.lastMessage != ''
+    return conversation!.lastMessage != ''
         ? StreamBuilder(
             stream: messageService.getUserStream(userID),
             builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasData) {
-                User user = User.fromDocument(snapshot.data);
+                User user = User.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>);
                 return FutureBuilder(
-                  future: vesselService.getVesselForVesselID(conversation.vesselID),
+                  future: vesselService.getVesselForVesselID(conversation!.vesselID!),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      Vessel vessel = Vessel.fromDocument(snapshot.data);
+                      Vessel vessel = Vessel.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>);
                       if (MY_ROLE == VESSEL_USER)
-                        return item(vessel.vesselName + ' (' + user.fullName + ')', vessel.images[0], user, vessel);
+                        return item(vessel.vesselName! + ' (' + user.fullName! + ')', vessel.images![0], user, vessel);
                       else
-                        return item(user.fullName, user.photoURL, user, vessel);
+                        return item(user.fullName!, user.photoURL!, user, vessel);
                     } else
-                      return item(user.fullName, user.photoURL, user, null);
+                      return item(user.fullName!, user.photoURL!, user, true as Vessel);
                   },
                 );
               } else
@@ -56,14 +56,14 @@ class ConversationItem extends StatelessWidget {
   item(String name, String image, User user, Vessel vessel) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      onTap: () => Get.to(() => Chats(user: user, vessel: vessel, chatRoomID: conversation.chatRoomID)),
-      leading: CachedImage(url: image, height: 60, roundedCorners: true),
+      onTap: () => Get.to(() => Chats(user: user, vessel: vessel, chatRoomID: conversation!.chatRoomID)),
+      leading: CachedImage(url: image, height: 60, roundedCorners: true, circular: null,),
       title: Text(name, textScaleFactor: 1.15, maxLines: 1, overflow: TextOverflow.ellipsis),
       subtitle: Row(
         children: [
-          Expanded(child: Text(conversation.lastMessage, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.grey), textScaleFactor: 0.95)),
+          Expanded(child: Text(conversation!.lastMessage!, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.grey), textScaleFactor: 0.95)),
           SizedBox(width: 5),
-          Text(timeago.format(DateTime.fromMillisecondsSinceEpoch(conversation.lastMessageTime)), style: TextStyle(color: Colors.grey), textScaleFactor: 0.8),
+          Text(timeago.format(DateTime.fromMillisecondsSinceEpoch(conversation!.lastMessageTime!)), style: TextStyle(color: Colors.grey), textScaleFactor: 0.8),
         ],
       ),
     );

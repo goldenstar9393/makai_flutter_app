@@ -60,12 +60,12 @@ class _ConversationsState extends State<Conversations> {
       itemBuilder: (context, documentSnapshot, i) {
         Conversation conversation = Conversation.fromDocument(documentSnapshot[i]);
         if (MY_ROLE != VESSEL_USER) {
-          if (conversation.users[0] != userController.currentUser.value.userID)
+          if (conversation.users![0] != userController.currentUser.value.userID)
             return ConversationItem(conversation: conversation);
           else
             return Container();
         } else {
-          if (conversation.users[0] == userController.currentUser.value.userID)
+          if (conversation.users![0] == userController.currentUser.value.userID)
             return ConversationItem(conversation: conversation);
           else
             return Container();

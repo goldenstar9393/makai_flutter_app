@@ -4,20 +4,20 @@ import 'package:makaiapp/services/validator_service.dart';
 import 'package:makaiapp/utils/constants.dart';
 
 class CustomTextField extends StatelessWidget {
-  final String hint;
-  final String label;
-  final TextEditingController controller;
-  final TextInputType textInputType;
-  final Color labelColor;
-  final int maxLines;
-  final bool validate;
-  final bool isPassword;
-  final bool isEmail;
-  final bool enabled;
-  final Widget dropdown;
-  final int maxLength;
-  final Widget prefix;
-  final String autofillHints;
+  final String? hint;
+  final String? label;
+  final TextEditingController? controller;
+  final TextInputType? textInputType;
+  final Color? labelColor;
+  final int? maxLines;
+  final bool? validate;
+  final bool? isPassword;
+  final bool? isEmail;
+  final bool? enabled;
+  final Widget? dropdown;
+  final int? maxLength;
+  final Widget? prefix;
+  final String? autofillHints;
 
   CustomTextField({this.hint, this.isEmail, this.label, this.controller, this.textInputType, this.labelColor, this.maxLines, this.validate, this.isPassword, this.enabled, this.dropdown, this.maxLength, this.prefix, this.autofillHints});
 
@@ -34,11 +34,11 @@ class CustomTextField extends StatelessWidget {
         if (label != '')
           Padding(
             padding: const EdgeInsets.only(top: 30, bottom: 15),
-            child: Text(label, style: TextStyle(color: labelColor ?? primaryColor)),
+            child: Text(label!, style: TextStyle(color: labelColor ?? primaryColor)),
           ),
-        dropdown == null
+        dropdown == null 
             ? TextFormField(
-                autofillHints: autofillHints != null ? [autofillHints] : null,
+                autofillHints: autofillHints != null ? [autofillHints!] : null,
                 maxLength: maxLength ?? 250,
                 enabled: enabled ?? true,
                 obscureText: isPassword ?? false,
@@ -49,8 +49,8 @@ class CustomTextField extends StatelessWidget {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => validate ?? false
                     ? isEmail ?? false
-                        ? validatorService.validateEmail(value)
-                        : validatorService.validateText(value)
+                        ? validatorService.validateEmail(value!)
+                        : validatorService.validateText(value!)
                     : null,
                 controller: controller,
                 textAlignVertical: TextAlignVertical.center,
@@ -67,7 +67,7 @@ class CustomTextField extends StatelessWidget {
                         contentPadding: (maxLines ?? 1) == 1 ? EdgeInsets.symmetric(horizontal: 15) : EdgeInsets.all(15),
                       ),
               )
-            : dropdown,
+            : dropdown ?? Container(),
       ],
     );
   }

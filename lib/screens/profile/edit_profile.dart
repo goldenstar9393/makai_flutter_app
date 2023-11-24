@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:makaiapp/controllers/user_controller.dart';
@@ -13,7 +12,7 @@ import 'package:makaiapp/widgets/custom_text_field.dart';
 class EditProfile extends StatefulWidget {
   final User user;
 
-  EditProfile({this.user});
+  EditProfile({required this.user});
 
   @override
   _EditProfileState createState() => _EditProfileState();
@@ -34,8 +33,8 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   void initState() {
-    nameTEC.text = userController.currentUser.value.fullName;
-    emailTEC.text = userController.currentUser.value.email;
+    nameTEC.text = userController.currentUser.value.fullName!;
+    emailTEC.text = userController.currentUser.value.email!;
 
     super.initState();
   }
@@ -80,16 +79,16 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   update() async {
-    if (!formKey.currentState.validate()) {
+    if (!formKey.currentState!.validate()) {
       showRedAlert('Please fill the necessary details');
       return;
     }
     dialogService.showLoading();
-    await userService.editUser(User(email: emailTEC.text, fullName: nameTEC.text));
+    await userService.editUser(User(email: emailTEC.text, fullName: nameTEC.text, unreadNotifications: true, unreadMessages: true, bookingNotifications: true, messageNotifications: true, generalNotifications: true, transactionNotifications: true));
   }
 
   changePassword() async {
-    if (!passwordKey.currentState.validate()) {
+    if (!passwordKey.currentState!.validate()) {
       showRedAlert('Please fill the necessary details');
       return;
     }

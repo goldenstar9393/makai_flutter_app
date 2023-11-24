@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:makaiapp/controllers/user_controller.dart';
+import 'package:makaiapp/models/seat_model.dart';
 import 'package:makaiapp/screens/auth/login.dart';
 import 'package:makaiapp/screens/bookings/my_bookings.dart';
 import 'package:makaiapp/screens/home/home_page.dart';
@@ -26,7 +27,7 @@ import 'package:makaiapp/widgets/cached_image.dart';
 import 'package:makaiapp/widgets/custom_list_tile.dart';
 import 'package:passbase_flutter/passbase_flutter.dart';
 import 'package:share/share.dart';
-import 'package:store_launcher/store_launcher.dart';
+import 'package:store_launcher_nullsafe/store_launcher_nullsafe.dart';
 
 class Profile extends StatelessWidget {
   final userController = Get.find<UserController>();
@@ -93,15 +94,13 @@ class Profile extends StatelessWidget {
                             InkWell(
                               onTap: () async {
                                 File image = await storageService.pickImage();
-                                if (image != null) {
-                                  showYellowAlert('Uploading image');
-                                  String url = await storageService.uploadPhoto(image, 'profile');
-                                  await userService.updateUser({
-                                    'photoURL': url,
-                                    'updatedDate': Timestamp.now(),
-                                  });
-                                }
-                              },
+                                showYellowAlert('Uploading image');
+                                String url = await storageService.uploadPhoto(image, 'profile');
+                                await userService.updateUser({
+                                  'photoURL': url,
+                                  'updatedDate': Timestamp.now(),
+                                });
+                                                            },
                               child: Container(
                                 width: MediaQuery.of(context).size.height * 0.15,
                                 height: MediaQuery.of(context).size.height * 0.15,
@@ -188,7 +187,7 @@ class Profile extends StatelessWidget {
                           return DropdownMenuItem<String>(value: value, child: Text(value, textScaleFactor: 1, style: TextStyle(color: Colors.black)));
                         }).toList(),
                         onChanged: (value) async {
-                          MY_ROLE = value;
+                          MY_ROLE = value!;
                           await Preferences.setUserRole(MY_ROLE);
                           Get.offAll(() => HomePage());
                         },
@@ -197,7 +196,7 @@ class Profile extends StatelessWidget {
                       FutureBuilder(
                           future: Preferences.getBiometricStatus(),
                           builder: (context, snapshot) {
-                            bool biometric = snapshot.data ?? false;
+                            bool biometric = snapshot.data as bool;
                             RxBool value = biometric.obs;
                             return Obx(() {
                               return CustomListTile(
@@ -215,11 +214,11 @@ class Profile extends StatelessWidget {
                               );
                             });
                           }),
-                      CustomListTile(
-                        leading: Icon(Icons.person_outline, color: primaryColor),
-                        title: Text('Edit Profile'),
-                        onTap: () => Get.to(() => EditProfile()),
-                      ),
+                      // CustomListTile(
+                      //   leading: Icon(Icons.person_outline, color: primaryColor),
+                      //   title: Text('Edit Profile'),
+                      //   onTap: () => Get.to(() => EditProfile(user: null,)),
+                      // ),
                       if (MY_ROLE == VESSEL_USER)
                         CustomListTile(
                           leading: Icon(Icons.sticky_note_2_outlined, color: primaryColor),
@@ -253,7 +252,7 @@ class Profile extends StatelessWidget {
                           leading: Icon(Icons.add, color: primaryColor),
                           title: Text('Add your vessel'),
                           onTap: () {
-                            PassbaseSDK.initialize(publishableApiKey: "cmKroKAccXWHuGIe4SlJ7OHz66TdIk5WBt0b309I8y98uNg5Sgi7ZoW9Qg6stCgK");
+                            PassbaseSDK.initialize(publishableApiKey: "cmKroKAccXWHuGIe4SlJ7OHz66TdIk5WBt0b309I8y98uNg5Sgi7ZoW9Qg6stCgK", customerPayload: '');
                             PassbaseSDK.prefillUserEmail = userController.currentUser.value.email;
                             if (userController.currentUser.value.verification == 'declined') return showRedAlert('Your verification has been declined. Please contact customer support');
                             if (userController.currentUser.value.verification == 'pending') return showYellowAlert('Your profile has been submitted for verification. You will be notified when you are approved.');
@@ -322,12 +321,12 @@ class Profile extends StatelessWidget {
                         title: Text('Customer Support'),
                         onTap: () => Get.to(() => CustomerSupport()),
                       ),
-                      CustomListTile(
-                        leading: Icon(Icons.list, color: primaryColor),
-                        title: Text('More'),
-                        onTap: () => Get.to(() => More()),
-                        marginBottom: 0,
-                      ),
+                      // CustomListTile(
+                      //   leading: Icon(Icons.list, color: primaryColor),
+                      //   title: Text('More'),
+                      //   onTap: () => Get.to(() => More(vessel: null,)),
+                      //   marginBottom: 0,
+                      // ),
                       Divider(height: 50),
 
                       if (userController.currentUser.value.verification != 'approved' && userController.currentUser.value.verification != 'pending')

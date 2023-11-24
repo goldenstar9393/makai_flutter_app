@@ -12,13 +12,12 @@ import 'package:makaiapp/widgets/loading.dart';
 import 'package:makaiapp/widgets/review_item.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:rating_dialog/rating_dialog.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:uuid/uuid.dart';
 
 class VesselReviews extends StatefulWidget {
   final Vessel vessel;
 
-  VesselReviews({this.vessel});
+  VesselReviews({required this.vessel});
 
   @override
   _VesselReviewsState createState() => _VesselReviewsState();
@@ -43,29 +42,29 @@ class _VesselReviewsState extends State<VesselReviews> {
               children: [
                 CachedImage(
                   height: 120,
-                  url: widget.vessel.images[0],
+                  url: widget.vessel.images![0],
                 ),
                 Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: Text(widget.vessel.vesselName, textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(widget.vessel.vesselName!, textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SmoothStarRating(
-                      onRated: (v) {},
-                      starCount: 5,
-                      rating: widget.vessel.rating.toDouble(),
-                      size: 15.0,
-                      isReadOnly: true,
-                      color: Colors.deepOrangeAccent,
-                      borderColor: Colors.deepOrangeAccent,
-                      spacing: 7.0,
-                    ),
-                    SizedBox(width: 15),
-                    Text('(${widget.vessel.ratingCount.toString()})', textScaleFactor: 0.9),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     SmoothStarRating(
+                //       onRated: (v) {},
+                //       starCount: 5,
+                //       rating: widget.vessel.rating.toDouble(),
+                //       size: 15.0,
+                //       isReadOnly: true,
+                //       color: Colors.deepOrangeAccent,
+                //       borderColor: Colors.deepOrangeAccent,
+                //       spacing: 7.0,
+                //     ),
+                //     SizedBox(width: 15),
+                //     Text('(${widget.vessel.ratingCount.toString()})', textScaleFactor: 0.9),
+                //   ],
+                // ),
               ],
             ),
           ),
@@ -90,7 +89,7 @@ class _VesselReviewsState extends State<VesselReviews> {
                         image: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CachedImage(roundedCorners: true, circular: false, height: 75, url: widget.vessel.images[0]),
+                            CachedImage(roundedCorners: true, circular: false, height: 75, url: widget.vessel.images![0]),
                           ],
                         ),
                         title: Text("Rate ${widget.vessel.vesselName}"),
@@ -142,7 +141,7 @@ class _VesselReviewsState extends State<VesselReviews> {
         Review review = Review.fromDocument(documentSnapshot[i]);
         return ReviewItem(review: review);
       },
-      query: vesselService.getVesselReviews(widget.vessel.vesselID, 5000),
+      query: vesselService.getVesselReviews(widget.vessel.vesselID!, 5000),
       onEmpty: EmptyBox(text: 'Be the first one to review'),
       itemsPerPage: 10,
       bottomLoader: LoadingData(),

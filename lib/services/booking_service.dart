@@ -27,7 +27,7 @@ class BookingService {
   final dialogService = Get.find<DialogService>();
   final userService = Get.find<UserService>();
   final userController = Get.find<UserController>();
-  Map<String, dynamic> paymentIntentData;
+  late Map<String, dynamic> paymentIntentData;
   String stripeCustomerID = '';
   String stripeCustomerEphemeralKey = '';
 
@@ -78,7 +78,7 @@ class BookingService {
   }
 
   sendBookingRequest(Booking booking) async {
-    String bookingID = booking.bookingID;
+    String? bookingID = booking.bookingID;
     ref.collection('bookings').doc(bookingID).set({
       'bookingID': bookingID,
       'bookingRef': booking.bookingRef,
@@ -88,28 +88,28 @@ class BookingService {
       'seatCost': booking.seatCost,
       'totalCost': booking.totalCost,
       'tipAmount': booking.tipAmount,
-      'travelDate': booking.travelDate.toDate().toUtc(),
+      'travelDate': booking.travelDate!.toDate().toUtc(),
       'duration': booking.duration,
       'creationDate': Timestamp.now().toDate().toUtc(),
-      'status': booking.isPreMadeTrip ? 'accepted' : null,
+      'status': booking.isPreMadeTrip! ? 'accepted' : null,
       'bookingAgreement': booking.bookingAgreement,
       'paymentMethodID': userController.currentUser.value.paymentID,
       'paymentIntentID': booking.paymentIntentID,
       'isPreMadeTrip': booking.isPreMadeTrip,
     });
-    if (!booking.isPreMadeTrip) {
+    if (!booking.isPreMadeTrip!) {
       final vesselService = Get.find<VesselService>();
-      QuerySnapshot querySnapshot = await vesselService.getVesselReceptionistForChat(booking.vesselID);
-      User receiver = querySnapshot.docs.isEmpty ? null : User.fromDocument(querySnapshot.docs[0]);
+      QuerySnapshot querySnapshot = await vesselService.getVesselReceptionistForChat(booking.vesselID!);
+      User? receiver = querySnapshot.docs.isEmpty ? null : User.fromDocument(querySnapshot.docs[0]);
       final notificationService = Get.find<NotificationService>();
       await notificationService.sendNotification(
         parameters: {'vesselID': booking.vesselID, 'bookingID': bookingID},
-        receiverUserID: receiver.userID,
+        receiverUserID: receiver!.userID!,
         type: 'vesselBookingRequest',
         body: 'You have a new vessel booking request',
       );
     } else {
-      ConfirmPaymentModel confirmPaymentModel = await confirmPayment(booking.paymentIntentID);
+      ConfirmPaymentModel confirmPaymentModel = await confirmPayment(booking.paymentIntentID!);
       TransactionModel transaction = TransactionModel(
         userID: userController.currentUser.value.userID,
         transactionID: Uuid().v1(),
@@ -166,7 +166,7 @@ class BookingService {
   }
 
   getCards() async {
-    stripeCustomerID = userController.currentUser.value.stripeCustomerID;
+    stripeCustomerID = userController.currentUser.value.stripeCustomerID!;
     var response = await getMethod('makai/list-cards?customer_id=$stripeCustomerID', {});
     final data = json.decode(response.body);
     print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
@@ -180,8 +180,8 @@ class BookingService {
     print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
     print(response.body.toString());
     SeatAvailabilityModel seatAvailabilityModel = SeatAvailabilityModel.fromJson(data);
-    print(seatAvailabilityModel.vessel.availableSeats);
-    return seatAvailabilityModel.vessel.availableSeats;
+    print(seatAvailabilityModel.vessel!.availableSeats!);
+    return seatAvailabilityModel.vessel!.availableSeats;
   }
 
   Future<FeesModel> getFees(num amount) async {
@@ -258,7 +258,7 @@ class BookingService {
     return data['amount'];
   }
 
-  Future<Discount> calculateCouponDiscount(num amount, String couponCode) async {
+  Future<Discount?> calculateCouponDiscount(num amount, String couponCode) async {
     try {
       var response = await getMethod('makai/coupon-discount?amount=$amount&couponCode=$couponCode', {});
       final data = json.decode(response.body);
@@ -271,9 +271,9 @@ class BookingService {
     }
   }
 
-  TransactionModel transaction;
+  late TransactionModel transaction;
 
-  processPayment({BuildContext context, String vesselID, String bookingID, num total, num tipAmount, num guestCount, DateTime date, Function setState}) async {
+  processPayment({required BuildContext context, required String vesselID, required String bookingID, required num total, required num tipAmount, required num guestCount, required DateTime date, required Function setState}) async {
     try {
       Map data;
       var response;
@@ -291,10 +291,10 @@ class BookingService {
         stripeCustomerID = data['stripe_customer_id'];
         await userService.updateUser({'stripeCustomerID': stripeCustomerID});
       } else
-        stripeCustomerID = userController.currentUser.value.stripeCustomerID;
+        stripeCustomerID = userController.currentUser.value.stripeCustomerID!;
 
       //Step 3 : Get Payment Intent
-      stripeCustomerEphemeralKey = userController.currentUser.value.stripeCustomerEphemeralKey;
+      stripeCustomerEphemeralKey = userController.currentUser.value.stripeCustomerEphemeralKey!;
       response = await postMethod('makai/stripePI', {'amount': (total * 100).toInt(), 'customer_id': stripeCustomerID, 'email': userController.currentUser.value.email});
       data = json.decode(response.body);
       paymentIntentData = data['paymentIntent'];
@@ -326,7 +326,7 @@ class BookingService {
         final formatCurrency = new NumberFormat.simpleCurrency();
         final vesselService = Get.find<VesselService>();
         QuerySnapshot querySnapshot = await vesselService.getVesselReceptionistForChat(vesselID);
-        User receiver = querySnapshot.docs.isEmpty ? null : User.fromDocument(querySnapshot.docs[0]);
+        User? receiver = querySnapshot.docs.isEmpty ? null : User.fromDocument(querySnapshot.docs[0]);
         final notificationService = Get.find<NotificationService>();
         await notificationService.sendNotification(
           parameters: {
@@ -334,7 +334,7 @@ class BookingService {
             'bookingID': bookingID,
             'messageText': '${userController.currentUser.value.fullName} made a payment of ${formatCurrency.format(total)} for a booking.',
           },
-          receiverUserID: receiver.userID,
+          receiverUserID: receiver!.userID!,
           type: 'transaction',
           body: '${userController.currentUser.value.fullName} made a payment of ${formatCurrency.format(total)} for a booking.',
         );
@@ -353,7 +353,7 @@ class BookingService {
     try {
       await Stripe.instance.presentPaymentSheet();
       final postPaymentIntent = await Stripe.instance.retrievePaymentIntent(paymentIntentData['client_secret']);
-      paymentIntentData = null;
+      paymentIntentData = null as Map<String, dynamic>;
       setState();
       if (postPaymentIntent.status == PaymentIntentsStatus.Succeeded) {
         transaction = TransactionModel(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EmptyBox extends StatelessWidget {
-  final String text;
+  final String? text;
 
   EmptyBox({this.text});
 
@@ -14,7 +14,7 @@ class EmptyBox extends StatelessWidget {
           Image.asset('assets/images/logo.png', height: 80),
           Padding(
             padding: const EdgeInsets.all(15),
-            child: Text(text, textAlign: TextAlign.center, textScaleFactor: 1.25),
+            child: Text(text!, textAlign: TextAlign.center, textScaleFactor: 1.25),
           ),
         ],
       ),

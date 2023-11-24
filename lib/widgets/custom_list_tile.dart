@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class CustomListTile extends StatelessWidget {
-  final Widget leading;
-  final Widget title;
-  final Widget trailing;
-  final Function onTap;
-  final Color backgroundColor;
-  final double marginBottom;
+  final Widget? leading;
+  final Widget? title;
+  final Widget? trailing;
+  final Function? onTap;
+  final Color? backgroundColor;
+  final double? marginBottom;
 
   const CustomListTile({this.leading, this.title, this.trailing, this.onTap, this.backgroundColor, this.marginBottom});
 
@@ -20,7 +20,7 @@ class CustomListTile extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       child: InkWell(
-        onTap: onTap ?? null,
+        // onTap: onTap ?? null,
         child: Row(
           children: [
             Expanded(flex: 10, child: leading ?? Container()),

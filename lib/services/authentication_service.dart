@@ -66,16 +66,16 @@ class AuthService {
 
   signUp(u.User user, String password) async {
     try {
-      if (await checkIfEmailExists(user.email)) {
+      if (await checkIfEmailExists(user.email!)) {
         showRedAlert('User exists with this email. Please login.');
         await signOut();
       } else {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(email: user.email, password: password);
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(email: user.email!, password: password);
         await userService.addUser(user);
       }
     } on FirebaseAuthException catch (e) {
       Get.back();
-      showRedAlert(e.message);
+      showRedAlert(e.message!);
     } catch (e) {
       print(e);
       Get.back();
@@ -85,7 +85,7 @@ class AuthService {
 
   void changePassword(String password) async {
     //Create an instance of the current user.
-    User user = FirebaseAuth.instance.currentUser;
+    User user = FirebaseAuth.instance.currentUser!;
 
     //Pass in the password to updatePassword.
     user.updatePassword(password).then((_) {
@@ -110,10 +110,10 @@ class AuthService {
   signInWithGoogle(bool isLoggingIn) async {
     dialogService.showLoading();
     // Trigger the authentication flow
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth = await googleUser?.authentication;
+    final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
 
     if (googleAuth == null) {
       print(e);
@@ -124,13 +124,13 @@ class AuthService {
     }
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
     );
 
     // Once signed in, return the UserCredential
     await FirebaseAuth.instance.signInWithCredential(credential).then((value) async {
-      await check(isLoggingIn, value.user.email, u.User(fullName: value.user.displayName, email: value.user.email, photoURL: value.user.photoURL));
+      await check(isLoggingIn, value.user!.email!, u.User(fullName: value.user!.displayName, email: value.user!.email, photoURL: value.user!.photoURL));
     }).catchError((e) async {
       print(e);
       await signOut();
@@ -217,7 +217,7 @@ class AuthService {
     // Sign in the user with Firebase. If the nonce we generated earlier does
     // not match the nonce in `appleCredential.identityToken`, sign in will fail.
     await FirebaseAuth.instance.signInWithCredential(oauthCredential).then((value) async {
-      await check(isLoggingIn, value.user.email, u.User(fullName: value.user.displayName, email: value.user.email, photoURL: value.user.photoURL));
+      await check(isLoggingIn, value.user!.email!, u.User(fullName: value.user!.displayName, email: value.user!.email, photoURL: value.user!.photoURL!));
     }).catchError((e) async {
       await signOut();
       print(e);
@@ -239,7 +239,7 @@ class AuthService {
     Get.back();
     if (isLoggingIn) {
       if (emailExists) {
-        await userService.setCurrentUser(user.email);
+        await userService.setCurrentUser(user.email!);
         Get.off(() => SplashScreen());
       } else {
         await signOut();
@@ -251,7 +251,7 @@ class AuthService {
         showRedAlert('User exists with this email. Please login.');
       } else {
         await userService.addUser(user);
-        await userService.setCurrentUser(user.email);
+        await userService.setCurrentUser(user.email!);
         Get.off(() => SplashScreen());
       }
     }
@@ -271,7 +271,7 @@ class AuthService {
   Future<bool> hasBiometrics() async {
     try {
       return await _auth.canCheckBiometrics;
-    } on PlatformException catch (e) {
+    } on PlatformException {
       return false;
     }
   }
@@ -291,7 +291,7 @@ class AuthService {
         // ),
         localizedReason: 'Authenticate to proceed',
       );
-    } on PlatformException catch (e) {
+    } on PlatformException {
       return false;
     }
   }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:makaiapp/models/review_model.dart';
 import 'package:makaiapp/widgets/user_tile.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ReviewItem extends StatelessWidget {
-  final Review review;
+  final Review? review;
 
   ReviewItem({this.review});
 
@@ -23,22 +23,20 @@ class ReviewItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          UserTile(userID: review.userID, showMessage: false),
+          UserTile(userID: review!.userID, showMessage: false),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SmoothStarRating(
-                onRated: (v) {},
                 starCount: 5,
-                rating: review.rating.toDouble(),
+                rating: review!.rating!.toDouble(),
                 size: 20.0,
-                isReadOnly: true,
                 color: Colors.amber,
                 borderColor: Colors.amber,
                 spacing: 0.0,
               ),
               Text(
-                timeago.format(review.creationDate.toDate()),
+                timeago.format(review!.creationDate!.toDate()),
                 style: TextStyle(color: Colors.grey),
                 textScaleFactor: 0.9,
               ),
@@ -46,7 +44,7 @@ class ReviewItem extends StatelessWidget {
           ),
           SizedBox(height: 5),
           Text(
-            review.comment,
+            review!.comment!,
             textAlign: TextAlign.justify,
           ),
         ],

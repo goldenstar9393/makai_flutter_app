@@ -34,23 +34,23 @@ class _AllBookingsState extends State<AllBookings> {
   }
 
   getData() async {
-    List vessels;
+    List<dynamic> vessels = [];
     switch (MY_ROLE) {
       case VESSEL_OWNER:
-        vessels = userController.currentUser.value.owners;
+        vessels = userController.currentUser.value.owners!;
         break;
       case VESSEL_CAPTAIN:
-        vessels = userController.currentUser.value.captains;
+        vessels = userController.currentUser.value.captains!;
         break;
       case VESSEL_CREW:
-        vessels = userController.currentUser.value.crew;
+        vessels = userController.currentUser.value.crew!;
         break;
     }
-    for (int i = 0; i < vessels.length; i++) {
+    for (int i = 0; i < vessels.length ; i++) {
       myVessels.add(Vessel.fromDocument(await vesselService.getVesselForVesselID(vessels[i])));
     }
     selectedVesselID.value = vessels.isNotEmpty ? vessels[0] : '';
-    vessel.value = myVessels.isNotEmpty ? myVessels[0] : null;
+    vessel.value = (myVessels.isNotEmpty ? myVessels[0] : null)!;
     showLoading.value = false;
   }
 
@@ -74,10 +74,10 @@ class _AllBookingsState extends State<AllBookings> {
                             leading: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(width: 45, child: CachedImage(url: vessel.value.images[0], height: 45, circular: true)),
+                                Container(width: 45, child: CachedImage(url: vessel.value.images![0], height: 45, circular: true)),
                               ],
                             ),
-                            title: Text(vessel.value.vesselName),
+                            title: Text(vessel.value.vesselName!),
                             trailing: Icon(Icons.keyboard_arrow_down),
                             onTap: () => Get.defaultDialog(
                               title: 'Select a Vessel',
@@ -89,8 +89,8 @@ class _AllBookingsState extends State<AllBookings> {
                                   itemCount: myVessels.length,
                                   itemBuilder: (context, i) {
                                     return ListTile(
-                                      leading: Container(width: 45, child: CachedImage(url: myVessels[i]?.images[0], height: 45, circular: true)),
-                                      title: Text(myVessels[i]?.vesselName),
+                                      leading: Container(width: 45, child: CachedImage(url: myVessels[i].images![0], height: 45, circular: true)),
+                                      title: Text(myVessels[i].vesselName!),
                                       trailing: Text('SELECT', textScaleFactor: 0.9, style: TextStyle(color: Colors.blue)),
                                       onTap: () {
                                         Get.back();
@@ -156,7 +156,7 @@ class _AllBookingsState extends State<AllBookings> {
         Booking booking = Booking.fromDocument(documentSnapshot[i]);
         return BookingItem(booking: booking);
       },
-      query: bookingService.getVesselBookings(vessel.value.vesselID, 10, isPast),
+      query: bookingService.getVesselBookings(vessel.value.vesselID!, 10, isPast),
       onEmpty: EmptyBox(text: 'No bookings to show'),
       itemsPerPage: 10,
       bottomLoader: LoadingData(),

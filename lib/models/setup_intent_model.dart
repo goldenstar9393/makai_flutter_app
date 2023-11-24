@@ -1,63 +1,79 @@
 class SetupIntentModel {
-  SetupIntent setupIntent;
+  SetupIntent? setupIntent;
 
   SetupIntentModel({this.setupIntent});
 
-  SetupIntentModel.fromJson(Map<String, dynamic> json) {
-    setupIntent = json['setupIntent'] != null ? new SetupIntent.fromJson(json['setupIntent']) : null;
+  factory SetupIntentModel.fromJson(Map<String, dynamic> json) {
+    return SetupIntentModel(
+      setupIntent: json['setupIntent'] != null ? SetupIntent.fromJson(json['setupIntent']) : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.setupIntent != null) {
-      data['setupIntent'] = this.setupIntent.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (setupIntent != null) {
+      data['setupIntent'] = setupIntent!.toJson();
     }
     return data;
   }
 }
 
 class SetupIntent {
-  String id;
-  String object;
-  String clientSecret;
-  int created;
-  String customer;
-  String latestAttempt;
-  bool livemode;
-  String paymentMethod;
-  List<String> paymentMethodTypes;
-  String status;
-  String usage;
+  String? id;
+  String? object;
+  String? clientSecret;
+  int? created;
+  String? customer;
+  String? latestAttempt;
+  bool? livemode;
+  String? paymentMethod;
+  List<String>? paymentMethodTypes;
+  String? status;
+  String? usage;
 
-  SetupIntent({this.id, this.object, this.clientSecret, this.created, this.customer, this.latestAttempt, this.livemode, this.paymentMethod, this.paymentMethodTypes, this.status, this.usage});
+  SetupIntent({
+    this.id,
+    this.object,
+    this.clientSecret,
+    this.created,
+    this.customer,
+    this.latestAttempt,
+    this.livemode,
+    this.paymentMethod,
+    this.paymentMethodTypes,
+    this.status,
+    this.usage,
+  });
 
-  SetupIntent.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    object = json['object'];
-    clientSecret = json['client_secret'];
-    created = json['created'];
-    customer = json['customer'];
-    latestAttempt = json['latest_attempt'];
-    livemode = json['livemode'];
-    paymentMethod = json['payment_method'];
-    paymentMethodTypes = json['payment_method_types'].cast<String>();
-    status = json['status'];
-    usage = json['usage'];
+  factory SetupIntent.fromJson(Map<String, dynamic> json) {
+    return SetupIntent(
+      id: json['id'] as String?,
+      object: json['object'] as String?,
+      clientSecret: json['client_secret'] as String?,
+      created: json['created'] as int?,
+      customer: json['customer'] as String?,
+      latestAttempt: json['latest_attempt'] as String?,
+      livemode: json['livemode'] as bool?,
+      paymentMethod: json['payment_method'] as String?,
+      paymentMethodTypes: (json['payment_method_types'] as List<dynamic>?)?.cast<String>(),
+      status: json['status'] as String?,
+      usage: json['usage'] as String?,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['object'] = this.object;
-    data['client_secret'] = this.clientSecret;
-    data['created'] = this.created;
-    data['customer'] = this.customer;
-    data['latest_attempt'] = this.latestAttempt;
-    data['livemode'] = this.livemode;
-    data['payment_method'] = this.paymentMethod;
-    data['payment_method_types'] = this.paymentMethodTypes;
-    data['status'] = this.status;
-    data['usage'] = this.usage;
-    return data;
+    return {
+      'id': id,
+      'object': object,
+      'client_secret': clientSecret,
+      'created': created,
+      'customer': customer,
+      'latest_attempt': latestAttempt,
+      'livemode': livemode,
+      'payment_method': paymentMethod,
+      'payment_method_types': paymentMethodTypes,
+      'status': status,
+      'usage': usage,
+    };
   }
 }

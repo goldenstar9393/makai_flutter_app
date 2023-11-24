@@ -9,7 +9,7 @@ import 'package:makaiapp/utils/constants.dart';
 
 final dialogService = Get.find<DialogService>();
 
-cloudFunction({@required String functionName, @required Map parameters, @required Function action}) async {
+cloudFunction({required String functionName, required Map parameters, required Function action}) async {
   dialogService.showLoading();
   try {
     HttpsCallable addVoucherCall = FirebaseFunctions.instance.httpsCallable(functionName);
@@ -30,7 +30,7 @@ cloudFunction({@required String functionName, @required Map parameters, @require
   }
 }
 
-Future<HttpsCallableResult> cloudFunctionValueReturn({@required String functionName, @required Map parameters}) async {
+Future<HttpsCallableResult?> cloudFunctionValueReturn({required String functionName, required Map parameters}) async {
   dialogService.showLoading();
   try {
     HttpsCallable addVoucherCall = FirebaseFunctions.instance.httpsCallable(functionName);
@@ -69,7 +69,7 @@ getMethod(String url, Map params) async {
     print(response.body);
     return response;
   } catch (e) {
-    printWrapped(e);
+    printWrapped(e as String);
   }
 }
 
@@ -81,6 +81,6 @@ postMethod(String url, Map params) async {
     print(response.body);
     return response;
   } catch (e) {
-    printWrapped(e);
+    printWrapped(e as String);
   }
 }

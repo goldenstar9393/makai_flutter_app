@@ -25,11 +25,12 @@ class AdminHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
         appBar: AppBar(
           title: InkWell(
             onLongPress: () {
-              if (FirebaseAuth.instance.currentUser.email == 'ujwalchordiya@gmail.com') adminControls(context);
+              if (FirebaseAuth.instance.currentUser!.email == 'ujwalchordiya@gmail.com') adminControls(context);
             },
             child: Text('MY VESSELS'),
           ),
@@ -108,7 +109,7 @@ class AdminHomePage extends StatelessWidget {
             Expanded(
               child: FutureBuilder(
                 builder: (context, snapshot) {
-                  return buildList(snapshot.data);
+                  return buildList(snapshot.data as String);
                 },
                 future: Preferences.getUserRole(),
               ),
@@ -118,18 +119,19 @@ class AdminHomePage extends StatelessWidget {
   }
 
   buildList(String userType) {
-    List vessels;
+    List<dynamic> vessels = [];
     switch (MY_ROLE) {
       case VESSEL_OWNER:
-        vessels = userController.currentUser.value.owners;
+        vessels = userController.currentUser.value.owners!;
         break;
       case VESSEL_CAPTAIN:
-        vessels = userController.currentUser.value.captains;
+        vessels = userController.currentUser.value.captains!;
         break;
       case VESSEL_CREW:
-        vessels = userController.currentUser.value.crew;
+        vessels = userController.currentUser.value.crew!;
         break;
     }
+    
     return vessels.isEmpty
         ? EmptyBox(text: 'No vessels to show')
         : SingleChildScrollView(
@@ -153,7 +155,7 @@ class AdminHomePage extends StatelessWidget {
                     return StreamBuilder(
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          Vessel vessel = Vessel.fromDocument(snapshot.data);
+                          Vessel vessel = Vessel.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>);
                           return VesselItem(vessel: vessel);
                         } else
                           return Container();
@@ -183,10 +185,10 @@ class AdminHomePage extends StatelessWidget {
               QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: mobile).get();
               if (querySnapshot.docs.isNotEmpty) {
                 userController.currentUser.value = u.User.fromDocument(querySnapshot.docs[0]);
-                await Preferences.setUser(userController.currentUser.value.userID);
+                await Preferences.setUser(userController.currentUser.value.userID ?? "");
                 await userService.getCurrentUser();
                 Get.back();
-                showGreenAlert('You are now logged in as ' + userController.currentUser.value.fullName);
+                showGreenAlert('You are now logged in as ' + userController.currentUser.value.fullName!);
               } else {
                 Get.back();
                 showRedAlert('User does not exist. Please check the mobile number');

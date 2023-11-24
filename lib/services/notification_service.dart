@@ -19,17 +19,17 @@ class NotificationService {
   }
 
   archiveNotification(String notificationID) async {
-    if (notificationID != null) await ref.collection('notifications').doc(notificationID).update({'archived': true});
+    await ref.collection('notifications').doc(notificationID).update({'archived': true});
     return;
   }
 
-  sendNotification({Map<String, dynamic> parameters, String receiverUserID, String body, String type}) async {
+  sendNotification({Map<String, dynamic>? parameters, String? receiverUserID, String? body, String ? type}) async {
     //GET RECEIVER USER FOR TOKEN
     DocumentSnapshot doc = await userService.getUser(receiverUserID);
     User receiverUser = User.fromDocument(doc);
 
     //ADD MANDATORY PARAMETERS FOR NOTIFICATION
-    parameters['creationDate'] = Timestamp.now();
+    parameters!['creationDate'] = Timestamp.now();
     parameters['receiverUserID'] = receiverUserID;
     parameters['notificationID'] = Uuid().v1();
     parameters['senderUserID'] = userController.currentUser.value.userID;
@@ -38,10 +38,10 @@ class NotificationService {
 
     //DEPENDING ON THE TYPE STORE NOTIFICATION DETAILS AND FLAGS
     if (type != 'message') {
-      await ref.collection('notifications').doc(parameters['notificationID']).set(parameters);
-      await userService.updateOtherUser(receiverUserID, {'unreadNotifications': true});
+      await ref.collection('notifications').doc(parameters['notificationID']).set(parameters!);
+      await userService.updateOtherUser(receiverUserID!, {'unreadNotifications': true});
     } else
-      await userService.updateOtherUser(receiverUserID, {'unreadMessages': true});
+      await userService.updateOtherUser(receiverUserID!, {'unreadMessages': true});
 
     print(receiverUser.token);
 
@@ -51,7 +51,7 @@ class NotificationService {
       headers: <String, String>{'Content-Type': 'application/json', 'Authorization': 'key=$serverToken'},
       body: jsonEncode(
         <String, dynamic>{
-          'notification': <String, dynamic>{'title': body, 'body': 'From: ' + userController.currentUser.value.fullName},
+          'notification': <String, dynamic>{'title': body, 'body': 'From: ' + userController.currentUser.value.fullName!},
           'priority': 'high',
           'data': <String, dynamic>{
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',

@@ -1,4 +1,3 @@
-// @dart=2.7
 
 import 'dart:io';
 
@@ -47,18 +46,20 @@ Future<void> backgroundHandler(RemoteMessage message) async {
   final userController = Get.find<UserController>();
   final userService = Get.find<UserService>();
   bool showNotifications = false;
-  if (message.data['type'] == 'transactions' && userController.currentUser.value.transactionNotifications) showNotifications = true;
-  if (message.data['type'] == 'message' && userController.currentUser.value.messageNotifications) showNotifications = true;
-  if (message.data['type'] == 'vesselBookingRequest' && userController.currentUser.value.bookingNotifications) showNotifications = true;
-  if (message.data['type'] == 'vesselBookingResponse' && userController.currentUser.value.bookingNotifications) showNotifications = true;
-  if (message.data['type'] == 'general' && userController.currentUser.value.generalNotifications) showNotifications = true;
-  if (message.data['type'] == 'addCrew' && userController.currentUser.value.generalNotifications) showNotifications = true;
-  if (message.data['type'] == 'addCaptain' && userController.currentUser.value.generalNotifications) showNotifications = true;
+  if (message.data['type'] == 'transactions' && userController.currentUser.value.transactionNotifications!) showNotifications = true;
+  if (message.data['type'] == 'message' && userController.currentUser.value.messageNotifications!) showNotifications = true;
+  if (message.data['type'] == 'vesselBookingRequest' && userController.currentUser.value.bookingNotifications!) showNotifications = true;
+  if (message.data['type'] == 'vesselBookingResponse' && userController.currentUser.value.bookingNotifications!) showNotifications = true;
+  if (message.data['type'] == 'general' && userController.currentUser.value.generalNotifications!) showNotifications = true;
+  if (message.data['type'] == 'addCrew' && userController.currentUser.value.generalNotifications!) showNotifications = true;
+  if (message.data['type'] == 'addCaptain' && userController.currentUser.value.generalNotifications!) showNotifications = true;
   if (message.data['type'] == 'verification') {
     showNotifications = true;
     await userService.getCurrentUser();
   }
-  if (showNotifications) showNotification(message.notification);
+  if (message.notification != null) {
+  showNotification(message.notification as RemoteNotification); // Passing non-nullable notification
+}
 }
 
 showNotification(RemoteNotification notification) async {
@@ -137,26 +138,26 @@ class _MyAppState extends State<MyApp> {
 
     //foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      RemoteNotification notification = message.notification;
+      RemoteNotification? notification = message.notification;
       //AndroidNotification android = message.notification?.android;
       //   AppleNotification apple = message.notification?.apple;
       if (notification != null) {
         final userController = Get.find<UserController>();
 
         bool showNotifications = false;
-        if (message.data['type'] == 'transactions' && userController.currentUser.value.transactionNotifications) showNotifications = true;
-        if (message.data['type'] == 'message' && userController.currentUser.value.messageNotifications) showNotifications = true;
-        if (message.data['type'] == 'vesselBookingRequest' && userController.currentUser.value.bookingNotifications) showNotifications = true;
-        if (message.data['type'] == 'vesselBookingResponse' && userController.currentUser.value.bookingNotifications) showNotifications = true;
-        if (message.data['type'] == 'general' && userController.currentUser.value.generalNotifications) showNotifications = true;
-        if (message.data['type'] == 'addCrew' && userController.currentUser.value.generalNotifications) showNotifications = true;
-        if (message.data['type'] == 'addCaptain' && userController.currentUser.value.generalNotifications) showNotifications = true;
+        if (message.data['type'] == 'transactions' && userController.currentUser.value.transactionNotifications!) showNotifications = true;
+        if (message.data['type'] == 'message' && userController.currentUser.value.messageNotifications!) showNotifications = true;
+        if (message.data['type'] == 'vesselBookingRequest' && userController.currentUser.value.bookingNotifications!) showNotifications = true;
+        if (message.data['type'] == 'vesselBookingResponse' && userController.currentUser.value.bookingNotifications!) showNotifications = true;
+        if (message.data['type'] == 'general' && userController.currentUser.value.generalNotifications!) showNotifications = true;
+        if (message.data['type'] == 'addCrew' && userController.currentUser.value.generalNotifications!) showNotifications = true;
+        if (message.data['type'] == 'addCaptain' && userController.currentUser.value.generalNotifications!) showNotifications = true;
         if (message.data['type'] == 'verification') {
           showNotifications = true;
           final userService = Get.find<UserService>();
           await userService.getCurrentUser();
         }
-        if (showNotifications) showNotification(message.notification);
+        if (showNotifications) showNotification(message.notification as RemoteNotification);
       }
     });
 
@@ -191,33 +192,31 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    PassbaseSDK.initialize(publishableApiKey: "cmKroKAccXWHuGIe4SlJ7OHz66TdIk5WBt0b309I8y98uNg5Sgi7ZoW9Qg6stCgK");
+    PassbaseSDK.initialize(publishableApiKey: "cmKroKAccXWHuGIe4SlJ7OHz66TdIk5WBt0b309I8y98uNg5Sgi7ZoW9Qg6stCgK", customerPayload: '');
     return GetMaterialApp(
-      builder: (BuildContext context, Widget child) {
-        final MediaQueryData data = MediaQuery.of(context);
-        return MediaQuery(
-          data: data.copyWith(textScaleFactor: 1),
-          child: child,
-        );
-      },
+    builder: (BuildContext context, Widget? child) { // Fixed: accept Widget?
+      final MediaQueryData data = MediaQuery.of(context);
+      return MediaQuery(
+        data: data.copyWith(textScaleFactor: 1),
+        child: child ?? SizedBox.shrink(), // child can be null, so we accept Widget?
+      );
+    },
       title: 'Makai App',
       themeMode: ThemeMode.light,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.grey.shade200,
-        backgroundColor: Colors.grey.shade200,
         fontFamily: 'Font2',
         primaryColor: primaryColor,
         brightness: Brightness.light,
-        primarySwatch: Colors.blue,
         cardTheme: CardTheme(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
         dialogTheme: DialogTheme(titleTextStyle: darkTextStyle(buttonTextSize * 1.25), contentTextStyle: darkTextStyle(textSize)),
-        textTheme: TextTheme(headline6: darkTextStyle(textSize), bodyText2: darkTextStyle(textSize)),
+        textTheme: TextTheme(titleLarge: darkTextStyle(textSize), bodyMedium: darkTextStyle(textSize)),
         appBarTheme: AppBarTheme(centerTitle: true, color: primaryColor, elevation: 0, iconTheme: IconThemeData(color: Colors.white), titleTextStyle: lightTextStyle(textSize * 1.25)),
         tabBarTheme: TabBarTheme(labelColor: primaryColor, indicatorSize: TabBarIndicatorSize.label, unselectedLabelColor: Colors.grey, labelStyle: darkTextStyle(textSize)),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(backgroundColor: primaryColor, type: BottomNavigationBarType.fixed, selectedItemColor: Colors.white, unselectedItemColor: Colors.white38),
         textButtonTheme: TextButtonThemeData(style: ButtonStyle(textStyle: MaterialStateProperty.all(TextStyle(fontSize: buttonTextSize)), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))), foregroundColor: MaterialStateProperty.all(primaryColor), minimumSize: MaterialStateProperty.all(Size(45, 45)))),
         elevatedButtonTheme: ElevatedButtonThemeData(style: ButtonStyle(backgroundColor: MaterialStateProperty.all(primaryColor), textStyle: MaterialStateProperty.all(TextStyle(color: Colors.white, fontSize: buttonTextSize, fontWeight: FontWeight.bold, letterSpacing: 1.25)), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))), minimumSize: MaterialStateProperty.all(Size(double.infinity, 45)))),
-        inputDecorationTheme: InputDecorationTheme(border: inputBorder(Colors.grey.shade300), focusedBorder: inputBorder(Colors.grey.shade300), enabledBorder: inputBorder(Colors.grey.shade300), errorBorder: inputBorder(Colors.grey.shade300), disabledBorder: inputBorder(Colors.grey.shade300), hintStyle: TextStyle(color: Colors.grey), filled: true, fillColor: Colors.white, contentPadding: EdgeInsets.only(left: 20)),
+        inputDecorationTheme: InputDecorationTheme(border: inputBorder(Colors.grey.shade300), focusedBorder: inputBorder(Colors.grey.shade300), enabledBorder: inputBorder(Colors.grey.shade300), errorBorder: inputBorder(Colors.grey.shade300), disabledBorder: inputBorder(Colors.grey.shade300), hintStyle: TextStyle(color: Colors.grey), filled: true, fillColor: Colors.white, contentPadding: EdgeInsets.only(left: 20)), colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(background: Colors.grey.shade200),
       ),
       debugShowCheckedModeBanner: false,
       home: Obx(() {

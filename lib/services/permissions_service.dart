@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart' as loc;
@@ -22,8 +21,8 @@ class PermissionsService {
     if (enabled) {
       try {
         loc.LocationData locationData = await location.getLocation();
-        lat = locationData.latitude;
-        long = locationData.longitude;
+        lat = locationData.latitude!;
+        long = locationData.longitude!;
       } catch (e) {
         print(e);
       }

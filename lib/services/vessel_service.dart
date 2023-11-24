@@ -72,7 +72,7 @@ class VesselService {
       'vesselName': vessel.vesselName,
       'description': vessel.description,
       'prices': vessel.prices,
-      'costPerHour': vessel.prices.reduce((curr, next) => curr < next ? curr : next),
+      'costPerHour': vessel.prices!.reduce((curr, next) => curr < next ? curr : next),
       'rating': vessel.rating,
       'ratingCount': vessel.ratingCount,
       'geoPoint': vessel.geoPoint,
@@ -135,7 +135,7 @@ class VesselService {
       'vesselName': vessel.vesselName,
       'description': vessel.description,
       'prices': vessel.prices,
-      'costPerHour': vessel.prices.reduce((curr, next) => curr < next ? curr : next),
+      'costPerHour': vessel.prices!.reduce((curr, next) => curr < next ? curr : next),
       'geoPoint': vessel.geoPoint,
       'address': vessel.address,
       'shortAddress': vessel.shortAddress,
@@ -189,8 +189,8 @@ class VesselService {
       'expiryDate': certificate.expiryDate,
       'issuePlace': certificate.issuePlace,
     }).then((value) async {
-      DocumentSnapshot doc = await getVesselForVesselID(certificate.vesselID);
-      Vessel vessel = Vessel.fromDocument(doc);
+      DocumentSnapshot doc = await getVesselForVesselID(certificate.vesselID!);
+      Vessel vessel = Vessel.fromDocument(doc as DocumentSnapshot<Map<String, dynamic>>);
       vessel.licensed = true;
       await editVessel(vessel);
       Get.back();
@@ -244,8 +244,8 @@ class VesselService {
       'issueDate': license.issueDate,
       'expiryDate': license.expiryDate,
     }).then((value) async {
-      DocumentSnapshot doc = await getVesselForVesselID(license.vesselID);
-      Vessel vessel = Vessel.fromDocument(doc);
+      DocumentSnapshot doc = await getVesselForVesselID(license.vesselID!);
+      Vessel vessel = Vessel.fromDocument(doc as DocumentSnapshot<Map<String, dynamic>>);
       vessel.captainLicensed = true;
       await editVessel(vessel);
       Get.back();
@@ -308,18 +308,18 @@ class VesselService {
   }
 
   getVesselSavedStatus(String vesselID) {
-    return ref.collection('saved').doc(userController.currentUser.value.userID + '|' + vesselID).snapshots();
+    return ref.collection('saved').doc(userController.currentUser.value.userID! + '|' + vesselID).snapshots();
   }
 
   saveVessel(String vesselID) async {
-    return await ref.collection('saved').doc(userController.currentUser.value.userID + '|' + vesselID).set({
+    return await ref.collection('saved').doc(userController.currentUser.value.userID! + '|' + vesselID).set({
       'userID': userController.currentUser.value.userID,
       'vesselID': vesselID,
     });
   }
 
   unSaveVessel(String vesselID) async {
-    return await ref.collection('saved').doc(userController.currentUser.value.userID + '|' + vesselID).delete();
+    return await ref.collection('saved').doc(userController.currentUser.value.userID! + '|' + vesselID).delete();
   }
 
   Future<QuerySnapshot> searchVessel(String searchQuery) async {
@@ -331,7 +331,7 @@ class VesselService {
   }
 
   addReview(Review review, Vessel vessel) async {
-    num averageRating = ((vessel.rating * vessel.ratingCount) + review.rating) / (vessel.ratingCount + 1);
+    num averageRating = ((vessel.rating! * vessel.ratingCount!) + review.rating!) / (vessel.ratingCount! + 1);
     return await ref.collection('reviews').doc(review.reviewID).set({
       'userID': review.userID,
       'reviewID': review.reviewID,
@@ -356,7 +356,7 @@ class VesselService {
   }
 
   addCaptains(String email, String vesselID) async {
-    User user = await userService.getUserFromEmail(email);
+    User? user = await userService.getUserFromEmail(email);
     if (user == null) {
       Get.back();
       showRedAlert('User with this email does not exist');
@@ -392,7 +392,7 @@ class VesselService {
   }
 
   addReceptionist(String email, String vesselID) async {
-    User user = await userService.getUserFromEmail(email);
+    User? user = await userService.getUserFromEmail(email);
     if (user == null) {
       Get.back();
       showRedAlert('User with this email does not exist');
@@ -418,7 +418,7 @@ class VesselService {
   }
 
   addCrew(String email, String vesselID) async {
-    User user = await userService.getUserFromEmail(email);
+    User? user = await userService.getUserFromEmail(email);
     if (user == null) {
       Get.back();
       showRedAlert('User with this email does not exist');
@@ -460,13 +460,13 @@ class VesselService {
     //   showRedAlert('${user.fullName} is already an owner of this vessel');
     //   return true;
     // }
-    if (user.captains.contains(vesselID)) {
+    if (user.captains!.contains(vesselID)) {
       Get.back();
       Get.back();
       showRedAlert('${user.fullName} is already a captain of this vessel');
       return true;
     }
-    if (user.crew.contains(vesselID)) {
+    if (user.crew!.contains(vesselID)) {
       Get.back();
       Get.back();
       showRedAlert('${user.fullName} is already a crew member of this vessel');

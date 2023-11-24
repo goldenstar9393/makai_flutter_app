@@ -20,7 +20,7 @@ import 'package:makaiapp/widgets/custom_text_field.dart';
 class ViewLicense extends StatefulWidget {
   final License license;
 
-  ViewLicense({this.license});
+  ViewLicense({required this.license});
 
   @override
   State<ViewLicense> createState() => _ViewLicenseState();
@@ -40,7 +40,7 @@ class _ViewLicenseState extends State<ViewLicense> {
   final TextEditingController buildDateTEC = TextEditingController();
   final TextEditingController expiryDateTEC = TextEditingController();
   Rx<String> certificateType = 'Six-pack or Charter Boat License'.obs;
-  Timestamp issueDate, buildDate, expiryDate;
+  late Timestamp issueDate, buildDate, expiryDate;
   final vesselService = Get.find<VesselService>();
   final userController = Get.find<UserController>();
   final dialogService = Get.find<DialogService>();
@@ -49,20 +49,20 @@ class _ViewLicenseState extends State<ViewLicense> {
 
   @override
   void initState() {
-    imageURLs.value = widget.license.licenses;
-    documentNumberTEC.text = widget.license.documentNumber;
-    certificateType.value = widget.license.licenseType;
-    countryCodeTEC.text = widget.license.countryCode;
-    referenceNumberTEC.text = widget.license.referenceNumber;
-    fullNameTEC.text = widget.license.fullName;
-    addressTEC.text = widget.license.address;
-    citizenshipTEC.text = widget.license.citizenship;
-    dobTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.issueDate.toDate());
-    buildDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.dob.toDate());
-    expiryDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.expiryDate.toDate());
-    issueDate = widget.license.issueDate;
-    buildDate = widget.license.dob;
-    expiryDate = widget.license.expiryDate;
+    imageURLs.value = widget.license.licenses!;
+    documentNumberTEC.text = widget.license.documentNumber!;
+    certificateType.value = widget.license.licenseType!;
+    countryCodeTEC.text = widget.license.countryCode!;
+    referenceNumberTEC.text = widget.license.referenceNumber!;
+    fullNameTEC.text = widget.license.fullName!;
+    addressTEC.text = widget.license.address!;
+    citizenshipTEC.text = widget.license.citizenship!;
+    dobTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.issueDate!.toDate());
+    buildDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.dob!.toDate());
+    expiryDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.expiryDate!.toDate());
+    issueDate = widget.license.issueDate!;
+    buildDate = widget.license.dob!;
+    expiryDate = widget.license.expiryDate!;
     super.initState();
   }
 
@@ -82,13 +82,13 @@ class _ViewLicenseState extends State<ViewLicense> {
                 height: 80,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: widget.license.licenses.length,
+                  itemCount: widget.license.licenses!.length,
                   itemBuilder: (context, i) {
                     return InkWell(
-                      onTap: () => Get.to(() => ViewImages(index: i, images: widget.license.licenses)),
+                      onTap: () => Get.to(() => ViewImages(index: i, images: widget.license.licenses!)),
                       child: Padding(
                         padding: const EdgeInsets.only(right: 10),
-                        child: CachedImage(height: 80, roundedCorners: true, url: widget.license.licenses[i]),
+                        child: CachedImage(height: 80, roundedCorners: true, url: widget.license.licenses![i]),
                       ),
                     );
                   },
@@ -146,7 +146,7 @@ class _ViewLicenseState extends State<ViewLicense> {
     return InkWell(
       onTap: () async {
         File file = await storageService.pickImage();
-        if (file != null) licenses.add(file);
+        licenses.add(file);
       },
       child: Container(
         height: 80,
@@ -174,7 +174,7 @@ class _ViewLicenseState extends State<ViewLicense> {
       items: items.map((value) {
         return DropdownMenuItem<String>(value: value, child: Text(value, textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
-      onChanged: (value) => certificateType.value = value,
+      onChanged: (value) => certificateType.value = value!,
     );
   }
 

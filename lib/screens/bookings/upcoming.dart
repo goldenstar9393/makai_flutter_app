@@ -35,9 +35,9 @@ class _UpcomingState extends State<Upcoming> {
           if (snapshot.hasData) {
             allBookings.clear();
             bookingDates.clear();
-            for (int i = 0; i < snapshot.data.docs.length; i++) {
-              allBookings.add(Booking.fromDocument(snapshot.data.docs[i]));
-              String travelDate = DateFormat('dd MMM yyyy').format(Booking.fromDocument(snapshot.data.docs[i]).travelDate.toDate());
+            for (int i = 0; i < snapshot.data!.docs.length; i++) {
+              allBookings.add(Booking.fromDocument(snapshot.data!.docs[i]));
+              String travelDate = DateFormat('dd MMM yyyy').format(Booking.fromDocument(snapshot.data!.docs[i]).travelDate!.toDate());
               bookingDates.add(travelDate);
             }
             print(allBookings.length.toString());
@@ -69,9 +69,9 @@ class _UpcomingState extends State<Upcoming> {
                     selectedDateBookings.clear();
                     for (int i = 0; i < allBookings.length; i++) {
                       print('&&&&&&&&&&&&&&&&');
-                      print(DateFormat().format(allBookings[i].travelDate.toDate()));
+                      print(DateFormat().format(allBookings[i].travelDate!.toDate()));
                       print(DateFormat().format(selectedDay));
-                      if (DateFormat('dd MMM yyyy').format(allBookings[i].travelDate.toDate()) == DateFormat('dd MMM yyyy').format(selectedDay)) selectedDateBookings.add(allBookings[i]);
+                      if (DateFormat('dd MMM yyyy').format(allBookings[i].travelDate!.toDate()) == DateFormat('dd MMM yyyy').format(selectedDay)) selectedDateBookings.add(allBookings[i]);
                     }
                     setState(() {
                       selectedDate = Timestamp.fromDate(selectedDay.toUtc());
@@ -105,7 +105,7 @@ class _UpcomingState extends State<Upcoming> {
                   shrinkWrap: true,
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   itemBuilder: (context, i) {
-                    return VesselBookingItem(bookingID: selectedDateBookings[i].bookingID);
+                    return VesselBookingItem();
                   },
                   itemCount: selectedDateBookings.length,
                 ),

@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Banking {
-  final String userID;
-  final String bankName;
-  final String accountName;
-  final String accountNo;
-  final String routingNo;
-  final String country;
+  final String? userID;
+  final String? bankName;
+  final String? accountName;
+  final String? accountNo;
+  final String? routingNo;
+  final String? country;
 
   Banking({
     this.userID,
@@ -18,21 +18,17 @@ class Banking {
   });
 
   factory Banking.fromDocument(DocumentSnapshot doc) {
-    try {
-      Map<String, dynamic> snapshot = doc.data();
+    // Assuming that 'data()' returns a non-null map.
+    // If it can return null, you should handle that case as well.
+    Map<String, dynamic> snapshot = doc.data() as Map<String, dynamic>;
 
-      return Banking(
-        userID: snapshot.containsKey('userID') ? doc.get('userID') : '',
-        bankName: snapshot.containsKey('bankName') ? doc.get('bankName') : '',
-        accountName: snapshot.containsKey('accountName') ? doc.get('accountName') : '',
-        accountNo: snapshot.containsKey('accountNo') ? doc.get('accountNo') : '',
-        routingNo: snapshot.containsKey('routingNo') ? doc.get('routingNo') : '',
-        country: snapshot.containsKey('country') ? doc.get('country') : 'United States',
-      );
-    } catch (e) {
-      print('****** BANKING MODEL ******');
-      print(e);
-      return null;
-    }
+    return Banking(
+      userID: snapshot['userID'] ?? '', // The '??' operator gives a default value if 'null'
+      bankName: snapshot['bankName'] ?? '',
+      accountName: snapshot['accountName'] ?? '',
+      accountNo: snapshot['accountNo'] ?? '',
+      routingNo: snapshot['routingNo'] ?? '',
+      country: snapshot['country'] ?? 'United States', // Providing a default value
+    );
   }
 }

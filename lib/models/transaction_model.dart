@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TransactionModel {
-  final String userID;
-  final String transactionID;
-  final String vesselID;
-  final String stripeCustomerID;
-  final String stripeChargeID;
-  final String stripePaymentID;
-  final String stripeRefundID;
-  final String notes;
-  final String paymentMethod;
-  final String receiptID;
-  final String type;
-  final num tipAmount;
-  final num amount;
-  final Timestamp creationDate;
+  final String? userID;
+  final String? transactionID;
+  final String? vesselID;
+  final String? stripeCustomerID;
+  final String? stripeChargeID;
+  final String? stripePaymentID;
+  final String? stripeRefundID;
+  final String? notes;
+  final String? paymentMethod;
+  final String? receiptID;
+  final String? type;
+  final num? tipAmount;
+  final num? amount;
+  final Timestamp? creationDate;
 
   TransactionModel({
     this.userID,
@@ -34,30 +34,23 @@ class TransactionModel {
   });
 
   factory TransactionModel.fromDocument(DocumentSnapshot doc) {
-    try {
-      Map<String, dynamic> snapshot = doc.data();
+    Map<String, dynamic> snapshot = doc.data() as Map<String, dynamic>;
 
-      DateTime date = DateTime(2021);
-      return TransactionModel(
-        userID: snapshot.containsKey('userID') ? doc.get('userID') : '',
-        transactionID: snapshot.containsKey('transactionID') ? doc.get('transactionID') : '',
-        vesselID: snapshot.containsKey('vesselID') ? doc.get('vesselID') : '',
-        stripeCustomerID: snapshot.containsKey('stripeCustomerID') ? doc.get('stripeCustomerID') : '',
-        stripeChargeID: snapshot.containsKey('stripeChargeID') ? doc.get('stripeChargeID') : '',
-        stripePaymentID: snapshot.containsKey('stripePaymentID') ? doc.get('stripePaymentID') : '',
-        stripeRefundID: snapshot.containsKey('stripeRefundID') ? doc.get('stripeRefundID') : '',
-        notes: snapshot.containsKey('notes') ? doc.get('notes') : '',
-        paymentMethod: snapshot.containsKey('paymentMethod') ? doc.get('paymentMethod') : 'card',
-        receiptID: snapshot.containsKey('receiptID') ? doc.get('receiptID') : '',
-        type: snapshot.containsKey('type') ? doc.get('type') : 'payment',
-        tipAmount: snapshot.containsKey('tipAmount') ? doc.get('tipAmount') : 0,
-        amount: snapshot.containsKey('amount') ? doc.get('amount') : 0,
-        creationDate: snapshot.containsKey('creationDate') ? doc.get('creationDate') : Timestamp.fromDate(date),
-      );
-    } catch (e) {
-      print('****** BOOKING MODEL ******');
-      print(e);
-      return null;
-    }
+    return TransactionModel(
+      userID: snapshot['userID'] as String?,
+      transactionID: snapshot['transactionID'] as String?,
+      vesselID: snapshot['vesselID'] as String?,
+      stripeCustomerID: snapshot['stripeCustomerID'] as String?,
+      stripeChargeID: snapshot['stripeChargeID'] as String?,
+      stripePaymentID: snapshot['stripePaymentID'] as String?,
+      stripeRefundID: snapshot['stripeRefundID'] as String?,
+      notes: snapshot['notes'] as String?,
+      paymentMethod: snapshot['paymentMethod'] as String? ?? 'card',
+      receiptID: snapshot['receiptID'] as String?,
+      type: snapshot['type'] as String? ?? 'payment',
+      tipAmount: snapshot['tipAmount'] as num? ?? 0,
+      amount: snapshot['amount'] as num? ?? 0,
+      creationDate: snapshot['creationDate'] as Timestamp?,
+    );
   }
 }

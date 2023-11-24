@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PreMadeTrip {
-  final String userID;
-  final String tripID;
-  final String vesselID;
-  final String type;
-  final num price;
-  final num duration;
-  final Timestamp tripDate;
+  final String? userID;
+  final String? tripID;
+  final String? vesselID;
+  final String? type;
+  final num? price;
+  final num? duration;
+  final Timestamp? tripDate;
 
   PreMadeTrip({
     this.userID,
@@ -21,22 +21,22 @@ class PreMadeTrip {
 
   factory PreMadeTrip.fromDocument(DocumentSnapshot doc) {
     try {
-      Map<String, dynamic> snapshot = doc.data();
+      Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
 
-      DateTime date = DateTime(2021);
+      // Provide defaults for each field or handle potential null cases.
       return PreMadeTrip(
-        userID: snapshot.containsKey('userID') ? doc.get('userID') : '',
-        tripID: snapshot.containsKey('tripID') ? doc.get('tripID') : '',
-        vesselID: snapshot.containsKey('vesselID') ? doc.get('vesselID') : '',
-        type: snapshot.containsKey('type') ? doc.get('type') : '',
-        price: snapshot.containsKey('price') ? doc.get('price') : 0,
-        duration: snapshot.containsKey('duration') ? doc.get('duration') : 0,
-        tripDate: snapshot.containsKey('tripDate') ? doc.get('tripDate') : Timestamp.fromDate(date),
+        userID: data?['userID'] as String?,
+        tripID: data?['tripID'] as String?,
+        vesselID: data?['vesselID'] as String?,
+        type: data?['type'] as String?,
+        price: data?['price'] as num?,
+        duration: data?['duration'] as num?,
+        tripDate: data?['tripDate'] as Timestamp?,
       );
     } catch (e) {
       print('****** PRE MADE TRIP MODEL ******');
       print(e);
-      return null;
+      rethrow; // Rather than returning null, it is better to rethrow the exception.
     }
   }
 }

@@ -1,17 +1,17 @@
 class MakaiFee {
   Fee fee;
 
-  MakaiFee({this.fee});
+  MakaiFee({required this.fee});
 
-  MakaiFee.fromJson(Map<String, dynamic> json) {
-    fee = json['fee'] != null ? new Fee.fromJson(json['fee']) : null;
+  factory MakaiFee.fromJson(Map<String, dynamic> json) {
+    return MakaiFee(
+      fee: Fee.fromJson(json['fee'] as Map<String, dynamic>? ?? {}),
+    );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.fee != null) {
-      data['fee'] = this.fee.toJson();
-    }
+    data['fee'] = this.fee.toJson();
     return data;
   }
 }
@@ -19,10 +19,15 @@ class MakaiFee {
 class Fee {
   String total;
 
-  Fee({this.total});
+  Fee({this.total = '0'}); // Provide a default value for total
 
-  Fee.fromJson(Map<String, dynamic> json) {
-    total = json['total'];
+  factory Fee.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return Fee(); // Returns a Fee object with the default total value
+    }
+    return Fee(
+      total: json['total'] as String? ?? '0',
+    );
   }
 
   Map<String, dynamic> toJson() {

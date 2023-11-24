@@ -19,7 +19,7 @@ import 'package:makaiapp/widgets/custom_text_field.dart';
 class EditCertificate extends StatefulWidget {
   final Certificate certificate;
 
-  EditCertificate({this.certificate});
+  EditCertificate({required this.certificate});
 
   @override
   State<EditCertificate> createState() => _EditCertificateState();
@@ -42,7 +42,7 @@ class _EditCertificateState extends State<EditCertificate> {
 
   Rx<String> certificateType = 'Certificate of Registry'.obs;
 
-  Timestamp issueDate, buildDate, expiryDate;
+  late Timestamp issueDate, buildDate, expiryDate;
   final vesselService = Get.find<VesselService>();
   final userController = Get.find<UserController>();
   final dialogService = Get.find<DialogService>();
@@ -51,22 +51,22 @@ class _EditCertificateState extends State<EditCertificate> {
 
   @override
   void initState() {
-    imageURLs.value = widget.certificate.certificates;
+    imageURLs.value = widget.certificate.certificates!;
 
-    certificateAuthTEC.text = widget.certificate.certificateAuthority;
-    certificateType.value = widget.certificate.certificateType;
-    cNumberTEC.text = widget.certificate.cNumber;
-    vdNumberTEC.text = widget.certificate.vDNumber;
-    moNumberTEC.text = widget.certificate.mONumber;
-    portTEC.text = widget.certificate.port;
-    tonnageTEC.text = widget.certificate.tonnage;
-    issueDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.issueDate.toDate());
-    buildDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.buildDate.toDate());
-    expiryDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.expiryDate.toDate());
-    issueDate = widget.certificate.issueDate;
-    buildDate = widget.certificate.buildDate;
-    expiryDate = widget.certificate.expiryDate;
-    issuePlaceTEC.text = widget.certificate.issuePlace;
+    certificateAuthTEC.text = widget.certificate.certificateAuthority!;
+    certificateType.value = widget.certificate.certificateType!;
+    cNumberTEC.text = widget.certificate.cNumber!;
+    vdNumberTEC.text = widget.certificate.vDNumber!;
+    moNumberTEC.text = widget.certificate.mONumber!;
+    portTEC.text = widget.certificate.port!;
+    tonnageTEC.text = widget.certificate.tonnage!;
+    issueDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.issueDate!.toDate());
+    buildDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.buildDate!.toDate());
+    expiryDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.certificate.expiryDate!.toDate());
+    issueDate = widget.certificate.issueDate!;
+    buildDate = widget.certificate.buildDate!;
+    expiryDate = widget.certificate.expiryDate!;
+    issuePlaceTEC.text = widget.certificate.issuePlace!;
     super.initState();
   }
 
@@ -157,7 +157,7 @@ class _EditCertificateState extends State<EditCertificate> {
               CustomButton(
                 text: 'Edit Certificate',
                 function: () async {
-                  if (!step4Key.currentState.validate()) {
+                  if (!step4Key.currentState!.validate()) {
                     showRedAlert('Please fill the necessary details');
                   } else if (imageURLs.isEmpty && certificates.isEmpty) {
                     showRedAlert('Please add at least one certificate image');
@@ -176,7 +176,7 @@ class _EditCertificateState extends State<EditCertificate> {
 
   update() async {
     dialogService.showLoading();
-    List finalCertificates = widget.certificate.certificates;
+    List finalCertificates = widget.certificate.certificates!;
     for (int i = 0; i < certificates.length; i++) {
       finalCertificates.add(await storageService.uploadPhoto(certificates[i], 'certificates'));
     }
@@ -203,7 +203,7 @@ class _EditCertificateState extends State<EditCertificate> {
     return InkWell(
       onTap: () async {
         File file = await storageService.pickImage();
-        if (file != null) certificates.add(file);
+        certificates.add(file);
       },
       child: Container(
         height: 80,
@@ -231,7 +231,7 @@ class _EditCertificateState extends State<EditCertificate> {
       items: items.map((value) {
         return DropdownMenuItem<String>(value: value, child: Text(value, textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
-      onChanged: (value) => certificateType.value = value,
+      onChanged: (value) => certificateType.value = value!,
     );
   }
 

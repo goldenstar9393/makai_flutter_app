@@ -6,7 +6,7 @@ class SelectFeatures extends StatefulWidget {
   final List features;
   final String vesselType;
 
-  SelectFeatures({this.features, this.vesselType});
+  SelectFeatures({required this.features, required this.vesselType});
 
   @override
   SelectFeaturesState createState() => new SelectFeaturesState();
@@ -145,43 +145,47 @@ class SelectFeaturesState extends State<SelectFeatures> {
           children: [
             widget.vesselType == 'Yacht'
                 ? Expanded(
-                    child: new ListView(
-                      children: yachtAmenities.keys.map((String key) {
-                        return new CheckboxListTile(
-                          title: new Text(key),
-                          value: yachtAmenities[key],
-                          onChanged: (bool value) {
-                            setState(() {
-                              yachtAmenities[key] = value;
-                              if (value)
-                                selectedFeatures.add(key);
-                              else
-                                selectedFeatures.remove(key);
-                            });
-                          },
-                        );
-                      }).toList(),
-                    ),
-                  )
-                : Expanded(
-                    child: new ListView(
-                      children: fishingAmenities.keys.map((String key) {
-                        return new CheckboxListTile(
-                          title: new Text(key),
-                          value: fishingAmenities[key],
-                          onChanged: (bool value) {
-                            setState(() {
-                              fishingAmenities[key] = value;
-                              if (value)
-                                selectedFeatures.add(key);
-                              else
-                                selectedFeatures.remove(key);
-                            });
-                          },
-                        );
-                      }).toList(),
-                    ),
-                  ),
+  child: new ListView(
+    children: yachtAmenities.keys.map((String key) {
+      return new CheckboxListTile(
+        title: new Text(key),
+        value: yachtAmenities[key],
+        onChanged: (bool? value) { // Change here
+          if (value != null) { // Check for null
+            setState(() {
+              yachtAmenities[key] = value;
+              if (value)
+                selectedFeatures.add(key);
+              else
+                selectedFeatures.remove(key);
+            });
+          }
+        },
+      );
+    }).toList(),
+  ),
+)
+: Expanded(
+  child: new ListView(
+    children: fishingAmenities.keys.map((String key) {
+      return new CheckboxListTile(
+        title: new Text(key),
+        value: fishingAmenities[key],
+        onChanged: (bool? value) { // Change here
+          if (value != null) { // Check for null
+            setState(() {
+              fishingAmenities[key] = value;
+              if (value)
+                selectedFeatures.add(key);
+              else
+                selectedFeatures.remove(key);
+            });
+          }
+        },
+      );
+    }).toList(),
+  ),
+),
             CustomButton(text: 'Save', function: () => Get.back(result: selectedFeatures)),
           ],
         ),

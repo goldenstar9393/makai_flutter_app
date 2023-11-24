@@ -7,11 +7,11 @@ import 'package:makaiapp/widgets/cached_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class MessageBox extends StatelessWidget {
-  final String imageURL;
-  final String message;
-  final bool isSent;
-  final int time;
-  final String docID;
+  final String? imageURL;
+  final String? message;
+  final bool? isSent;
+  final int? time;
+  final String? docID;
 
   const MessageBox({
     this.imageURL,
@@ -25,28 +25,28 @@ class MessageBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: isSent! ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: <Widget>[
         Row(
-          mainAxisAlignment: isSent ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: isSent! ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             Flexible(
               child: Container(
                 decoration: BoxDecoration(
-                  color: isAllEmoji(message)
+                  color: isAllEmoji(message!)
                       ? null
-                      : isSent
+                      : isSent!
                           ? primaryColor
                           : Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                margin: EdgeInsets.fromLTRB(isSent ? MediaQuery.of(context).size.width * 0.2 : 15, 15, isSent ? 15 : MediaQuery.of(context).size.width * 0.2, 0),
+                margin: EdgeInsets.fromLTRB(isSent! ? MediaQuery.of(context).size.width * 0.2 : 15, 15, isSent! ? 15 : MediaQuery.of(context).size.width * 0.2, 0),
                 padding: EdgeInsets.symmetric(horizontal: imageURL == null ? 20 : 0, vertical: imageURL == null ? 10 : 0),
                 child: imageURL == null
                     ? Text(
-                        message,
-                        textScaleFactor: isAllEmoji(message) ? 2 : 1,
-                        style: TextStyle(color: isSent ? Colors.white : primaryColor, fontStyle: message == 'This message was deleted' ? FontStyle.italic : FontStyle.normal),
+                        message!,
+                        textScaleFactor: isAllEmoji(message!) ? 2 : 1,
+                        style: TextStyle(color: isSent! ? Colors.white : primaryColor, fontStyle: message == 'This message was deleted' ? FontStyle.italic : FontStyle.normal),
                         maxLines: 100,
                       )
                     : InkWell(
@@ -59,7 +59,7 @@ class MessageBox extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
-          child: Text(timeago.format(DateTime.fromMillisecondsSinceEpoch(time)), textScaleFactor: 0.8, style: TextStyle(color: primaryColor)),
+          child: Text(timeago.format(DateTime.fromMillisecondsSinceEpoch(time!)), textScaleFactor: 0.8, style: TextStyle(color: primaryColor)),
         ),
       ],
     );

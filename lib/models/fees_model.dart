@@ -1,66 +1,60 @@
 class FeesModel {
-  Fees fees;
+  Fees? fees;
 
   FeesModel({this.fees});
 
   FeesModel.fromJson(Map<String, dynamic> json) {
-    fees = json['fees'] != null ? new Fees.fromJson(json['fees']) : null;
+    fees = json['fees'] != null ? Fees.fromJson(json['fees']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.fees != null) {
-      data['fees'] = this.fees.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (fees != null) {
+      data['fees'] = fees!.toJson();
     }
     return data;
   }
 }
 
 class Fees {
-  List<Types> types;
-  List<Summary> summary;
-  Total total;
+  List<Types>? types;
+  List<Summary>? summary;
+  Total? total;
 
   Fees({this.types, this.summary, this.total});
 
   Fees.fromJson(Map<String, dynamic> json) {
     if (json['types'] != null) {
-      types = new List<Types>();
-      json['types'].forEach((v) {
-        types.add(new Types.fromJson(v));
-      });
+      types = (json['types'] as List).map((v) => Types.fromJson(v)).toList();
     }
     if (json['summary'] != null) {
-      summary = new List<Summary>();
-      json['summary'].forEach((v) {
-        summary.add(new Summary.fromJson(v));
-      });
+      summary = (json['summary'] as List).map((v) => Summary.fromJson(v)).toList();
     }
-    total = json['total'] != null ? new Total.fromJson(json['total']) : null;
+    total = json['total'] != null ? Total.fromJson(json['total']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.types != null) {
-      data['types'] = this.types.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (types != null) {
+      data['types'] = types!.map((v) => v.toJson()).toList();
     }
-    if (this.summary != null) {
-      data['summary'] = this.summary.map((v) => v.toJson()).toList();
+    if (summary != null) {
+      data['summary'] = summary!.map((v) => v.toJson()).toList();
     }
-    if (this.total != null) {
-      data['total'] = this.total.toJson();
+    if (total != null) {
+      data['total'] = total!.toJson();
     }
     return data;
   }
 }
 
 class Types {
-  String feeID;
-  int amount;
-  String type;
-  bool status;
-  String name;
-  String category;
+  String? feeID;
+  int? amount;
+  String? type;
+  bool? status;
+  String? name;
+  String? category;
 
   Types({this.feeID, this.amount, this.type, this.status, this.name, this.category});
 
@@ -74,20 +68,20 @@ class Types {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['feeID'] = this.feeID;
-    data['amount'] = this.amount;
-    data['type'] = this.type;
-    data['status'] = this.status;
-    data['name'] = this.name;
-    data['category'] = this.category;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['feeID'] = feeID;
+    data['amount'] = amount;
+    data['type'] = type;
+    data['status'] = status;
+    data['name'] = name;
+    data['category'] = category;
     return data;
   }
 }
 
 class Summary {
-  String name;
-  String total;
+  String? name;
+  String? total;
 
   Summary({this.name, this.total});
 
@@ -97,16 +91,16 @@ class Summary {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['total'] = this.total;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['total'] = total;
     return data;
   }
 }
 
 class Total {
-  String feesTotal;
-  String finalTotal;
+  String? feesTotal;
+  String? finalTotal;
 
   Total({this.feesTotal, this.finalTotal});
 
@@ -116,9 +110,9 @@ class Total {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['feesTotal'] = this.feesTotal;
-    data['finalTotal'] = this.finalTotal;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['feesTotal'] = feesTotal;
+    data['finalTotal'] = finalTotal;
     return data;
   }
 }

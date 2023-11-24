@@ -1,17 +1,16 @@
 class PaymentMethodsList {
-  PaymentMethods paymentMethods;
+  PaymentMethods? paymentMethods;
 
   PaymentMethodsList({this.paymentMethods});
 
-  PaymentMethodsList.fromJson(Map<String, dynamic> json) {
-    paymentMethods = json['paymentMethods'] != null ? new PaymentMethods.fromJson(json['paymentMethods']) : null;
-  }
+  PaymentMethodsList.fromJson(Map<String, dynamic> json)
+      : paymentMethods = json['paymentMethods'] != null
+            ? PaymentMethods.fromJson(json['paymentMethods'])
+            : null;
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.paymentMethods != null) {
-      data['paymentMethods'] = this.paymentMethods.toJson();
-    }
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['paymentMethods'] = paymentMethods?.toJson();
     return data;
   }
 }
@@ -22,96 +21,106 @@ class PaymentMethods {
   bool hasMore;
   String url;
 
-  PaymentMethods({this.object, this.data, this.hasMore, this.url});
+  PaymentMethods({
+    this.object = 'default_object',
+    List<Data>? data,
+    this.hasMore = false,
+    this.url = 'default_url',
+  }) : data = data ?? [];
 
-  PaymentMethods.fromJson(Map<String, dynamic> json) {
-    object = json['object'];
-    if (json['data'] != null) {
-      data = <Data>[];
-      json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
-      });
-    }
-    hasMore = json['has_more'];
-    url = json['url'];
-  }
+  PaymentMethods.fromJson(Map<String, dynamic> json)
+      : object = json['object'] ?? 'default_object',
+        data = (json['data'] as List<dynamic>?)
+                ?.map((item) => Data.fromJson(item))
+                .toList() ??
+            [],
+        hasMore = json['has_more'] ?? false,
+        url = json['url'] ?? 'default_url';
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['object'] = this.object;
-    if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
-    }
-    data['has_more'] = this.hasMore;
-    data['url'] = this.url;
-    return data;
+    return {
+      'object': object,
+      'data': data.map((v) => v.toJson()).toList(),
+      'has_more': hasMore,
+      'url': url,
+    };
   }
 }
 
 class Data {
   String id;
   String object;
-  BillingDetails billingDetails;
-  Card card;
+  BillingDetails? billingDetails;
+  Card? card;
   int created;
   String customer;
   bool livemode;
   String type;
 
-  Data({this.id, this.object, this.billingDetails, this.card, this.created, this.customer, this.livemode, this.type});
+  Data({
+    this.id = '',
+    this.object = '',
+    this.billingDetails,
+    this.card,
+    this.created = 0,
+    this.customer = '',
+    this.livemode = false,
+    this.type = '',
+  });
 
-  Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    object = json['object'];
-    billingDetails = json['billing_details'] != null ? new BillingDetails.fromJson(json['billing_details']) : null;
-    card = json['card'] != null ? new Card.fromJson(json['card']) : null;
-    created = json['created'];
-    customer = json['customer'];
-    livemode = json['livemode'];
-    type = json['type'];
-  }
+  Data.fromJson(Map<String, dynamic> json)
+      : id = json['id'] ?? '',
+        object = json['object'] ?? '',
+        billingDetails = json['billing_details'] != null
+            ? BillingDetails.fromJson(json['billing_details'])
+            : null,
+        card = json['card'] != null ? Card.fromJson(json['card']) : null,
+        created = json['created'] ?? 0,
+        customer = json['customer'] ?? '',
+        livemode = json['livemode'] ?? false,
+        type = json['type'] ?? '';
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['object'] = this.object;
-    if (this.billingDetails != null) {
-      data['billing_details'] = this.billingDetails.toJson();
-    }
-    if (this.card != null) {
-      data['card'] = this.card.toJson();
-    }
-    data['created'] = this.created;
-    data['customer'] = this.customer;
-    data['livemode'] = this.livemode;
-    data['type'] = this.type;
+    final Map<String, dynamic> data = <String, dynamic>{
+      'id': id,
+      'object': object,
+      'created': created,
+      'customer': customer,
+      'livemode': livemode,
+      'type': type,
+    };
+    data['billing_details'] = billingDetails?.toJson();
+    data['card'] = card?.toJson();
     return data;
   }
 }
 
 class BillingDetails {
-  Address address;
+  Address? address;
   String email;
   String name;
   String phone;
 
-  BillingDetails({this.address, this.email, this.name, this.phone});
+  BillingDetails({
+    this.address,
+    this.email = '',
+    this.name = '',
+    this.phone = '',
+  });
 
-  BillingDetails.fromJson(Map<String, dynamic> json) {
-    address = json['address'] != null ? new Address.fromJson(json['address']) : null;
-    email = json['email'];
-    name = json['name'];
-    phone = json['phone'];
-  }
+  BillingDetails.fromJson(Map<String, dynamic> json)
+      : address = json['address'] != null ? Address.fromJson(json['address']) : null,
+        email = json['email'] ?? '',
+        name = json['name'] ?? '',
+        phone = json['phone'] ?? '';
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.address != null) {
-      data['address'] = this.address.toJson();
-    }
-    data['email'] = this.email;
-    data['name'] = this.name;
-    data['phone'] = this.phone;
+    final Map<String, dynamic> data = <String, dynamic>{
+      'email': email,
+      'name': name,
+      'phone': phone,
+    };
+    data['address'] = address?.toJson();
     return data;
   }
 }
@@ -120,84 +129,92 @@ class Address {
   String city;
   String country;
   String line1;
-  String line2;
+  String? line2;
   String postalCode;
   String state;
 
-  Address({this.city, this.country, this.line1, this.line2, this.postalCode, this.state});
+  Address({
+    this.city = '',
+    this.country = '',
+    this.line1 = '',
+    this.line2,
+    this.postalCode = '',
+    this.state = '',
+  });
 
-  Address.fromJson(Map<String, dynamic> json) {
-    city = json['city'];
-    country = json['country'];
-    line1 = json['line1'];
-    line2 = json['line2'];
-    postalCode = json['postal_code'];
-    state = json['state'];
-  }
+  Address.fromJson(Map<String, dynamic> json)
+      : city = json['city'] ?? '',
+        country = json['country'] ?? '',
+        line1 = json['line1'] ?? '',
+        line2 = json['line2'],
+        postalCode = json['postal_code'] ?? '',
+        state = json['state'] ?? '';
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['city'] = this.city;
-    data['country'] = this.country;
-    data['line1'] = this.line1;
-    data['line2'] = this.line2;
-    data['postal_code'] = this.postalCode;
-    data['state'] = this.state;
+    final Map<String, dynamic> data = <String, dynamic>{
+      'city': city,
+      'country': country,
+      'line1': line1,
+      'postal_code': postalCode,
+      'state': state,
+    };
+    if (line2 != null) {
+      data['line2'] = line2;
+    }
     return data;
   }
 }
 
 class Card {
   String brand;
-  Checks checks;
+  Checks? checks;
   String country;
   int expMonth;
   int expYear;
-  String fingerprint;
   String funding;
-  String generatedFrom;
   String last4;
-  Networks networks;
-  ThreeDSecureUsage threeDSecureUsage;
-  String wallet;
+  Networks? networks;
+  ThreeDSecureUsage? threeDSecureUsage;
+  var wallet;
 
-  Card({this.brand, this.checks, this.country, this.expMonth, this.expYear, this.fingerprint, this.funding, this.generatedFrom, this.last4, this.networks, this.threeDSecureUsage, this.wallet});
+  Card({
+    this.brand = '',
+    this.checks,
+    this.country = '',
+    this.expMonth = 0,
+    this.expYear = 0,
+    this.funding = '',
+    this.last4 = '',
+    this.networks,
+    this.threeDSecureUsage,
+    this.wallet,
+  });
 
-  Card.fromJson(Map<String, dynamic> json) {
-    brand = json['brand'];
-    checks = json['checks'] != null ? new Checks.fromJson(json['checks']) : null;
-    country = json['country'];
-    expMonth = json['exp_month'];
-    expYear = json['exp_year'];
-    fingerprint = json['fingerprint'];
-    funding = json['funding'];
-    generatedFrom = json['generated_from'];
-    last4 = json['last4'];
-    networks = json['networks'] != null ? new Networks.fromJson(json['networks']) : null;
-    threeDSecureUsage = json['three_d_secure_usage'] != null ? new ThreeDSecureUsage.fromJson(json['three_d_secure_usage']) : null;
-    wallet = json['wallet'];
-  }
+  Card.fromJson(Map<String, dynamic> json)
+      : brand = json['brand'] ?? '',
+        checks = json['checks'] != null ? Checks.fromJson(json['checks']) : null,
+        country = json['country'] ?? '',
+        expMonth = json['exp_month'] ?? 0,
+        expYear = json['exp_year'] ?? 0,
+        funding = json['funding'] ?? '',
+        last4 = json['last4'] ?? '',
+        networks = json['networks'] != null ? Networks.fromJson(json['networks']) : null,
+        threeDSecureUsage = json['three_d_secure_usage'] != null
+            ? ThreeDSecureUsage.fromJson(json['three_d_secure_usage'])
+            : null;
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['brand'] = this.brand;
-    if (this.checks != null) {
-      data['checks'] = this.checks.toJson();
-    }
-    data['country'] = this.country;
-    data['exp_month'] = this.expMonth;
-    data['exp_year'] = this.expYear;
-    data['fingerprint'] = this.fingerprint;
-    data['funding'] = this.funding;
-    data['generated_from'] = this.generatedFrom;
-    data['last4'] = this.last4;
-    if (this.networks != null) {
-      data['networks'] = this.networks.toJson();
-    }
-    if (this.threeDSecureUsage != null) {
-      data['three_d_secure_usage'] = this.threeDSecureUsage.toJson();
-    }
-    data['wallet'] = this.wallet;
+    final Map<String, dynamic> data = <String, dynamic>{
+      'brand': brand,
+      'country': country,
+      'exp_month': expMonth,
+      'exp_year': expYear,
+      'funding': funding,
+      'last4': last4,
+    };
+    data['checks'] = checks?.toJson();
+    data['networks'] = networks?.toJson();
+    data['three_d_secure_usage'] = threeDSecureUsage?.toJson();
     return data;
   }
 }
@@ -207,54 +224,60 @@ class Checks {
   String addressPostalCodeCheck;
   String cvcCheck;
 
-  Checks({this.addressLine1Check, this.addressPostalCodeCheck, this.cvcCheck});
+  Checks({
+    this.addressLine1Check = '',
+    this.addressPostalCodeCheck = '',
+    this.cvcCheck = '',
+  });
 
-  Checks.fromJson(Map<String, dynamic> json) {
-    addressLine1Check = json['address_line1_check'];
-    addressPostalCodeCheck = json['address_postal_code_check'];
-    cvcCheck = json['cvc_check'];
-  }
+  Checks.fromJson(Map<String, dynamic> json)
+      : addressLine1Check = json['address_line1_check'] ?? '',
+        addressPostalCodeCheck = json['address_postal_code_check'] ?? '',
+        cvcCheck = json['cvc_check'] ?? '';
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['address_line1_check'] = this.addressLine1Check;
-    data['address_postal_code_check'] = this.addressPostalCodeCheck;
-    data['cvc_check'] = this.cvcCheck;
-    return data;
+    return {
+      'address_line1_check': addressLine1Check,
+      'address_postal_code_check': addressPostalCodeCheck,
+      'cvc_check': cvcCheck,
+    };
   }
 }
 
 class Networks {
   List<String> available;
-  String preferred;
+  String? preferred;
 
-  Networks({this.available, this.preferred});
+  Networks({
+    List<String>? available,
+    this.preferred,
+  }) : available = available ?? [];
 
-  Networks.fromJson(Map<String, dynamic> json) {
-    available = json['available'].cast<String>();
-    preferred = json['preferred'];
-  }
+  Networks.fromJson(Map<String, dynamic> json)
+      : available = List<String>.from(json['available'] ?? []),
+        preferred = json['preferred'];
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['available'] = this.available;
-    data['preferred'] = this.preferred;
-    return data;
+    return {
+      'available': available,
+      'preferred': preferred,
+    };
   }
 }
 
 class ThreeDSecureUsage {
   bool supported;
 
-  ThreeDSecureUsage({this.supported});
+  ThreeDSecureUsage({
+    this.supported = false,
+  });
 
-  ThreeDSecureUsage.fromJson(Map<String, dynamic> json) {
-    supported = json['supported'];
-  }
+  ThreeDSecureUsage.fromJson(Map<String, dynamic> json)
+      : supported = json['supported'] ?? false;
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['supported'] = this.supported;
-    return data;
+    return {
+      'supported': supported,
+    };
   }
 }

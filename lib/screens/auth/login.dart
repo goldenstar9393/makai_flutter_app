@@ -47,8 +47,8 @@ class _LoginState extends State<Login> {
 
   init() async {
     final storage = new FlutterSecureStorage();
-    emailTEC.text = await storage.read(key: 'email');
-    passwordTEC.text = await storage.read(key: 'password');
+    emailTEC.text = (await storage.read(key: 'email'))!;
+    passwordTEC.text = (await storage.read(key: 'password'))!;
     setState(() {});
   }
 
@@ -115,17 +115,17 @@ class _LoginState extends State<Login> {
                           FutureBuilder(
                               future: Preferences.getBiometricStatus(),
                               builder: (context, snapshot) {
-                                bool biometric = snapshot.data ?? false;
-                                RxBool value = biometric.obs;
+                                Object biometric = snapshot.data ?? false;
+                                RxBool? value = biometric.obs as RxBool?;
                                 return Obx(() {
                                   return Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text('Use FaceID/Fingerprint to authenticate'),
                                       Checkbox(
-                                        value: value.value,
+                                        value: value!.value,
                                         onChanged: (val) async {
-                                          await Preferences.setBiometricStatus(val);
+                                          await Preferences.setBiometricStatus(val!);
                                           value.toggle();
                                         },
                                       ),
@@ -209,7 +209,7 @@ class _LoginState extends State<Login> {
   }
 
   login() async {
-    if (!formKey.currentState.validate()) {
+    if (!formKey.currentState!.validate()) {
       showRedAlert('Please fill the necessary details');
       return;
     }
@@ -224,7 +224,7 @@ class _LoginState extends State<Login> {
   }
 
   signUp() async {
-    if (!formKey.currentState.validate()) {
+    if (!formKey.currentState!.validate()) {
       showRedAlert('Please fill the necessary details');
       return;
     }
@@ -258,7 +258,7 @@ class _LoginState extends State<Login> {
             final storage = new FlutterSecureStorage();
             await storage.write(key: 'email', value: emailTEC.text.toLowerCase());
             await storage.write(key: 'password', value: passwordTEC.text);
-            authService.signUp(User(email: emailTEC.text.toLowerCase(), fullName: nameTEC.text), passwordTEC.text);
+            authService.signUp(User(email: emailTEC.text.toLowerCase(), fullName: nameTEC.text, unreadNotifications: true, unreadMessages: true, bookingNotifications: true, messageNotifications: true, generalNotifications: true, transactionNotifications: true), passwordTEC.text);
           },
           child: Text('Sign Up')),
     );

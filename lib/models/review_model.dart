@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Review {
-  final String userID;
-  final String reviewID;
-  final String vesselID;
-  final String comment;
-  final bool flagged;
-  final num rating;
-  final Timestamp creationDate;
+  final String? userID;
+  final String? reviewID;
+  final String? vesselID;
+  final String? comment;
+  final bool? flagged;
+  final num? rating;
+  final Timestamp? creationDate;
 
   Review({
     this.userID,
@@ -21,22 +21,24 @@ class Review {
 
   factory Review.fromDocument(DocumentSnapshot doc) {
     try {
-      Map<String, dynamic> snapshot = doc.data();
+      // Casting with null safety
+      Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
 
-      DateTime date = DateTime(2021);
+      // Provide defaults or allow null for each field
       return Review(
-        userID: snapshot.containsKey('userID') ? doc.get('userID') : '',
-        reviewID: snapshot.containsKey('reviewID') ? doc.get('reviewID') : '',
-        vesselID: snapshot.containsKey('vesselID') ? doc.get('vesselID') : '',
-        comment: snapshot.containsKey('comment') ? doc.get('comment') : '',
-        flagged: snapshot.containsKey('flagged') ? doc.get('flagged') : false,
-        rating: snapshot.containsKey('rating') ? doc.get('rating') : 0,
-        creationDate: snapshot.containsKey('creationDate') ? doc.get('creationDate') : Timestamp.fromDate(date),
+        userID: data?['userID'] as String?,
+        reviewID: data?['reviewID'] as String?,
+        vesselID: data?['vesselID'] as String?,
+        comment: data?['comment'] as String?,
+        flagged: data?['flagged'] as bool?,
+        rating: data?['rating'] as num?,
+        creationDate: data?['creationDate'] as Timestamp?,
       );
     } catch (e) {
       print('****** REVIEW MODEL ******');
       print(e);
-      return null;
+      // Use rethrow to throw the exception again instead of returning null.
+      rethrow;
     }
   }
 }

@@ -1,42 +1,51 @@
 class SeatAvailabilityModel {
-  Vessel vessel;
+  Vessel? vessel; // Vessel can now be nullable
 
   SeatAvailabilityModel({this.vessel});
 
-  SeatAvailabilityModel.fromJson(Map<String, dynamic> json) {
-    vessel = json['vessel'] != null ? new Vessel.fromJson(json['vessel']) : null;
+  factory SeatAvailabilityModel.fromJson(Map<String, dynamic> json) {
+    return SeatAvailabilityModel(
+      vessel: json['vessel'] != null ? Vessel.fromJson(json['vessel']) : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.vessel != null) {
-      data['vessel'] = this.vessel.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (vessel != null) {
+      data['vessel'] = vessel!.toJson(); // Use of ! asserts that vessel is not null
     }
     return data;
   }
 }
 
 class Vessel {
-  int capacity;
-  int bookings;
-  int guestCount;
-  int availableSeats;
+  int? capacity;
+  int? bookings;
+  int? guestCount;
+  int? availableSeats;
 
-  Vessel({this.capacity, this.bookings, this.guestCount, this.availableSeats});
+  Vessel({
+    this.capacity,
+    this.bookings,
+    this.guestCount,
+    this.availableSeats,
+  });
 
-  Vessel.fromJson(Map<String, dynamic> json) {
-    capacity = json['capacity'];
-    bookings = json['bookings'];
-    guestCount = json['guestCount'];
-    availableSeats = json['availableSeats'];
+  factory Vessel.fromJson(Map<String, dynamic> json) {
+    return Vessel(
+      capacity: json['capacity'] as int?,
+      bookings: json['bookings'] as int?,
+      guestCount: json['guestCount'] as int?,
+      availableSeats: json['availableSeats'] as int?,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['capacity'] = this.capacity;
-    data['bookings'] = this.bookings;
-    data['guestCount'] = this.guestCount;
-    data['availableSeats'] = this.availableSeats;
-    return data;
+    return {
+      'capacity': capacity,       // nulls are allowed by default
+      'bookings': bookings,
+      'guestCount': guestCount,
+      'availableSeats': availableSeats,
+    };
   }
 }

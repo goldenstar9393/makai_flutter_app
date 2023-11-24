@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -16,7 +18,7 @@ class WritePost extends StatefulWidget {
   final Vessel vessel;
   final Forum forum;
 
-  WritePost({this.vessel, this.forum});
+  WritePost({required this.vessel, required this.forum});
 
   @override
   State<WritePost> createState() => _WritePostState();
@@ -34,17 +36,15 @@ class _WritePostState extends State<WritePost> {
 
   @override
   void initState() {
-    if (widget.forum != null) {
-      postTEC.text = widget.forum.comment;
-      imageURLs.value = widget.forum.images;
-    }
-    super.initState();
+    postTEC.text = widget.forum.comment!;
+    imageURLs.value = widget.forum.images!;
+      super.initState();
   }
 
   @override
   void dispose() {
-    imageURLs = null;
-    images = null;
+    imageURLs = null as RxList;
+    images = null as RxList;
     super.dispose();
   }
 
@@ -142,7 +142,7 @@ class _WritePostState extends State<WritePost> {
     return InkWell(
       onTap: () async {
         File file = await storageService.pickImage();
-        if (file != null) images.add(file);
+        images.add(file);
       },
       child: Container(
         height: double.infinity,

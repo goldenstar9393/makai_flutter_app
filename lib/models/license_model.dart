@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class License {
-  final String licenseID;
-  final String userID;
-  final String vesselID;
-  final List licenses;
-  final String documentNumber;
-  final String licenseType;
-  final String countryCode;
-  final String referenceNumber;
-  final String fullName;
-  final String address;
-  final String citizenship;
-  final Timestamp dob;
-  final Timestamp issueDate;
-  final Timestamp expiryDate;
+  final String? licenseID;
+  final String? userID;
+  final String? vesselID;
+  final List? licenses;
+  final String? documentNumber;
+  final String? licenseType;
+  final String? countryCode;
+  final String? referenceNumber;
+  final String? fullName;
+  final String? address;
+  final String? citizenship;
+  final Timestamp? dob;
+  final Timestamp? issueDate;
+  final Timestamp? expiryDate;
 
   License({
     this.licenseID,
@@ -34,29 +34,27 @@ class License {
   });
 
   factory License.fromDocument(DocumentSnapshot doc) {
-    try {
-      Map<String, dynamic> snapshot = doc.data();
-
-      return License(
-        licenseID: snapshot.containsKey('licenseID') ? doc.get('licenseID') : '',
-        userID: snapshot.containsKey('userID') ? doc.get('userID') : '',
-        vesselID: snapshot.containsKey('vesselID') ? doc.get('vesselID') : '',
-        licenses: snapshot.containsKey('licenses') ? doc.get('licenses') : [],
-        documentNumber: snapshot.containsKey('documentNumber') ? doc.get('documentNumber') : '',
-        licenseType: snapshot.containsKey('licenseType') ? doc.get('licenseType') : '',
-        countryCode: snapshot.containsKey('countryCode') ? doc.get('countryCode') : '',
-        referenceNumber: snapshot.containsKey('referenceNumber') ? doc.get('referenceNumber') : '',
-        fullName: snapshot.containsKey('fullName') ? doc.get('fullName') : '',
-        address: snapshot.containsKey('address') ? doc.get('address') : '',
-        citizenship: snapshot.containsKey('citizenship') ? doc.get('citizenship') : '',
-        dob: snapshot.containsKey('dob') ? doc.get('dob') : Timestamp.fromDate(DateTime.now()),
-        issueDate: snapshot.containsKey('issueDate') ? doc.get('issueDate') : Timestamp.fromDate(DateTime.now()),
-        expiryDate: snapshot.containsKey('expiryDate') ? doc.get('expiryDate') : Timestamp.fromDate(DateTime(2100)),
-      );
-    } catch (e) {
-      print('****** CERTIFICATE MODEL ******');
-      print(e);
-      return null;
+    Map<String, dynamic>? snapshot = doc.data() as Map<String, dynamic>?;
+    if (snapshot == null) {
+      // Handle the case where the snapshot is null
+      // Perhaps by logging the error and returning a default License instance
+      // Or by throwing an appropriate exception
     }
+    return License(
+      licenseID: snapshot?['licenseID'] as String? ?? '',
+      userID: snapshot?['userID'] as String? ?? '',
+      vesselID: snapshot?['vesselID'] as String? ?? '',
+      licenses: snapshot?['licenses'] as List<dynamic>? ?? [],
+      documentNumber: snapshot?['documentNumber'] as String? ?? '',
+      licenseType: snapshot?['licenseType'] as String? ?? '',
+      countryCode: snapshot?['countryCode'] as String? ?? '',
+      referenceNumber: snapshot?['referenceNumber'] as String? ?? '',
+      fullName: snapshot?['fullName'] as String? ?? '',
+      address: snapshot?['address'] as String? ?? '',
+      citizenship: snapshot?['citizenship'] as String? ?? '',
+      dob: snapshot?['dob'] as Timestamp? ?? Timestamp.fromDate(DateTime.now()),
+      issueDate: snapshot?['issueDate'] as Timestamp? ?? Timestamp.fromDate(DateTime.now()),
+      expiryDate: snapshot?['expiryDate'] as Timestamp? ?? Timestamp.fromDate(DateTime(2100)),
+    );
   }
 }

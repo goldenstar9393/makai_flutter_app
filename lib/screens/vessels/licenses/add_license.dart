@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,27 +21,48 @@ import 'package:makaiapp/widgets/custom_text_field.dart';
 import 'package:makaiapp/widgets/empty_box.dart';
 import 'package:makaiapp/widgets/loading.dart';
 
-class AddLicense extends StatelessWidget {
+class AddLicense extends StatefulWidget {
   final String vesselID;
 
-  AddLicense({this.vesselID});
+  AddLicense({required this.vesselID});
 
+  @override
+  State<AddLicense> createState() => _AddLicenseState();
+}
+
+class _AddLicenseState extends State<AddLicense> {
   final GlobalKey<FormState> step4Key = GlobalKey<FormState>();
+
   RxList licenses = [].obs;
+
   final TextEditingController documentNumberTEC = TextEditingController();
+
   final TextEditingController countryCodeTEC = TextEditingController();
+
   final TextEditingController referenceNumberTEC = TextEditingController();
+
   final Rx<TextEditingController> fullNameTEC = TextEditingController().obs;
+
   final TextEditingController addressTEC = TextEditingController();
+
   final TextEditingController citizenshipTEC = TextEditingController();
+
   final TextEditingController dobTEC = TextEditingController();
+
   final TextEditingController buildDateTEC = TextEditingController();
+
   final TextEditingController expiryDateTEC = TextEditingController();
+
   Rx<String> certificateType = 'Six-pack or Charter Boat License'.obs;
-  Timestamp issueDate, buildDate, expiryDate;
+
+  late Timestamp issueDate, buildDate, expiryDate;
+
   final vesselService = Get.find<VesselService>();
+
   final userController = Get.find<UserController>();
+
   final dialogService = Get.find<DialogService>();
+
   final storageService = Get.find<StorageService>();
 
   @override
@@ -97,21 +120,21 @@ class AddLicense extends StatelessWidget {
                           height: 100,
                           width: Get.width,
                           child: StreamBuilder(
-                              stream: vesselService.getVesselCaptainsStream(vesselID),
+                              stream: vesselService.getVesselCaptainsStream(widget.vesselID),
                               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                 if (snapshot.hasData)
-                                  return snapshot.data.docs.length > 0
+                                  return snapshot.data!.docs.length > 0
                                       ? ListView.builder(
                                           padding: const EdgeInsets.all(15),
-                                          itemCount: snapshot.data.docs.length,
+                                          itemCount: snapshot.data!.docs.length,
                                           itemBuilder: (context, i) {
-                                            DocumentSnapshot doc = snapshot.data.docs[i];
+                                            DocumentSnapshot doc = snapshot.data!.docs[i];
                                             User user = User.fromDocument(doc);
                                             return ListTile(
-                                              title: Text(user.fullName),
+                                              title: Text(user.fullName!),
                                               trailing: Text('SELECT', textScaleFactor: 0.9, style: TextStyle(color: Colors.green)),
                                               onTap: () {
-                                                fullNameTEC.value.text = user.fullName;
+                                                fullNameTEC.value.text = user.fullName!;
                                                 Get.back();
                                               },
                                             );
@@ -141,7 +164,7 @@ class AddLicense extends StatelessWidget {
               CustomButton(
                 text: 'Add License',
                 function: () async {
-                  if (!step4Key.currentState.validate()) {
+                  if (!step4Key.currentState!.validate()) {
                     showRedAlert('Please fill the necessary details');
                   } else if (licenses.isEmpty) {
                     showRedAlert('Please add at least one license image');
@@ -167,8 +190,8 @@ class AddLicense extends StatelessWidget {
     await vesselService.addLicense(
       License(
         licenses: finalLicenses,
-        userID: userController.currentUser.value.userID,
-        vesselID: vesselID,
+        userID: userController.currentUser.value.userID!,
+        vesselID: widget.vesselID,
         issueDate: issueDate,
         dob: buildDate,
         expiryDate: expiryDate,
@@ -178,7 +201,7 @@ class AddLicense extends StatelessWidget {
         referenceNumber: referenceNumberTEC.text,
         fullName: fullNameTEC.value.text,
         address: addressTEC.text,
-        citizenship: citizenshipTEC.text,
+        citizenship: citizenshipTEC.text, licenseID: '',
       ),
     );
   }
@@ -187,7 +210,7 @@ class AddLicense extends StatelessWidget {
     return InkWell(
       onTap: () async {
         File file = await storageService.pickImage();
-        if (file != null) licenses.add(file);
+        licenses.add(file);
       },
       child: Container(
         height: 80,
@@ -215,7 +238,7 @@ class AddLicense extends StatelessWidget {
       items: items.map((value) {
         return DropdownMenuItem<String>(value: value, child: Text(value, textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
-      onChanged: (value) => certificateType.value = value,
+      onChanged: (value) => certificateType.value = value!,
     );
   }
 

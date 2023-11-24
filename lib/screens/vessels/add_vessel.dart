@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -58,8 +60,8 @@ class _AddVesselState extends State<AddVessel> {
   RxList durations = [].obs;
   RxList prices = [].obs;
 
-  Timestamp issueDate, buildDate, expiryDate;
-  LatLng latLng;
+  late Timestamp issueDate, buildDate, expiryDate;
+  late LatLng latLng;
   Rx<String> vesselType = 'Fishing'.obs;
   Rx<String> bookingTime = 'Hourly'.obs;
   Rx<String> yachtBuilder = 'Any'.obs;
@@ -111,7 +113,7 @@ class _AddVesselState extends State<AddVessel> {
             },
           ),
         );
-        return;
+        return Future.value(false);
       },
       child: Scaffold(
         appBar: AppBar(title: Text('ADD YOUR VESSEL')),
@@ -126,7 +128,7 @@ class _AddVesselState extends State<AddVessel> {
                 currentStep: currentStep,
                 size: 40,
                 selectedColor: Colors.black,
-                unselectedColor: Colors.grey[400],
+                unselectedColor: Colors.grey[400]!,
                 customStep: (index, color, _) {
                   if (currentStep > index + 1)
                     return InkWell(
@@ -174,7 +176,7 @@ class _AddVesselState extends State<AddVessel> {
                 function: () async {
                   switch (currentStep) {
                     case 1:
-                      if (!step1Key.currentState.validate()) {
+                      if (!step1Key.currentState!.validate()) {
                         showRedAlert('Please fill the necessary details');
                       } else if (images.isEmpty) {
                         showRedAlert('Please add at least one vessel image');
@@ -184,7 +186,7 @@ class _AddVesselState extends State<AddVessel> {
                       }
                       return;
                     case 2:
-                      if (!step2Key.currentState.validate()) {
+                      if (!step2Key.currentState!.validate()) {
                         showRedAlert('Please fill the necessary details');
                         return;
                       }
@@ -196,7 +198,7 @@ class _AddVesselState extends State<AddVessel> {
                       }
                       return;
                     case 3:
-                      if (!step3Key.currentState.validate()) {
+                      if (!step3Key.currentState!.validate()) {
                         showRedAlert('Please fill the necessary details');
                       } else {
                         setState(() => currentStep++);
@@ -231,7 +233,7 @@ class _AddVesselState extends State<AddVessel> {
       items: items.map((value) {
         return DropdownMenuItem<String>(value: value, child: Text(value, textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
-      onChanged: (value) => setValue(i, value),
+      onChanged: (value) => setValue(i, value!),
     );
   }
 
@@ -281,7 +283,7 @@ class _AddVesselState extends State<AddVessel> {
     return InkWell(
       onTap: () async {
         File file = await storageService.pickImage();
-        if (file != null) images.add(file);
+        images.add(file);
       },
       child: Container(
         height: 80,
@@ -337,9 +339,9 @@ class _AddVesselState extends State<AddVessel> {
 
   void showPlacePicker() async {
     LocationResult result = await Get.to(() => PlacePicker(GOOGLE_MAP_KEY, displayLocation: LatLng(myLatitude, myLongitude)));
-    locationTEC.value.text = result.formattedAddress;
-    shortAddress = result.city.name + ', ' + result.country.name;
-    latLng = result.latLng;
+    locationTEC.value.text = result.formattedAddress!;
+    shortAddress = result.city!.name! + ', ' + result.country!.name!;
+    latLng = result.latLng!;
   }
 
   String shortAddress = '';
@@ -466,8 +468,9 @@ class _AddVesselState extends State<AddVessel> {
                       future: vesselService.getMakaiFees(costPerHourTEC.text.isEmpty ? 0 : num.parse(costPerHourTEC.text)),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          MakaiFee makaiFees = snapshot.data;
-                          if (makaiFees == null || makaiFees.fee == null)
+                          MakaiFee makaiFees = snapshot.data as MakaiFee;
+                          // ignore: unnecessary_null_comparison
+                          if (makaiFees.fee == null)
                             makaiFee = '0.00';
                           else
                             makaiFee = makaiFees.fee.total;

@@ -38,8 +38,8 @@ class _SplashScreenState extends State<SplashScreen> {
           await userService.updateUser(
             {
               'stripeCustomerID': await bookingService.createCustomer(
-                userController.currentUser.value.email,
-                userController.currentUser.value.fullName,
+                userController.currentUser.value.email?? "blank",
+                userController.currentUser.value.fullName ?? "blank",
               ),
             },
           );

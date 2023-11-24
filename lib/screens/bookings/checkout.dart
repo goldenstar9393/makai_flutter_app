@@ -30,7 +30,7 @@ class Checkout extends StatefulWidget {
   final num duration;
   final num price;
 
-  Checkout({this.vessel, this.guestCount, this.date, this.isPreMadeTrip, this.duration, this.price});
+  Checkout({required this.vessel, required this.guestCount, required this.date, required this.isPreMadeTrip, required this.duration, required this.price});
 
   @override
   _CheckoutState createState() => _CheckoutState();
@@ -53,8 +53,8 @@ class _CheckoutState extends State<Checkout> {
           future: buyService.getFees(widget.price),
           builder: (context, AsyncSnapshot<FeesModel> snapshot) {
             if (snapshot.hasData) {
-              FeesModel feesModel = snapshot.data;
-              num total = ((widget.price) - myDiscount + num.parse(feesModel.fees.total.feesTotal)) + tipAmount;
+              FeesModel? feesModel = snapshot.data;
+              num total = ((widget.price) - myDiscount + num.parse(feesModel!.fees!.total!.feesTotal!)) + tipAmount;
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(15),
                 child: Column(
@@ -128,15 +128,15 @@ class _CheckoutState extends State<Checkout> {
                             ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: feesModel.fees.types.length,
+                              itemCount: feesModel.fees!.types!.length,
                               itemBuilder: (context, i) {
                                 return Column(
                                   children: [
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(feesModel.fees.summary[i].name, style: TextStyle(color: primaryColor)),
-                                        Text(formatCurrency.format(double.parse(feesModel.fees.summary[i].total)), style: TextStyle(color: primaryColor)),
+                                        Text(feesModel.fees!.summary![i].name??"NUN", style: TextStyle(color: primaryColor)),
+                                        Text(formatCurrency.format(double.parse(feesModel.fees!.summary![i].total ?? "NONE")), style: TextStyle(color: primaryColor)),
                                       ],
                                     ),
                                     Divider(color: Colors.transparent),
@@ -187,7 +187,7 @@ class _CheckoutState extends State<Checkout> {
                               value: checkedTnC.value,
                               focusColor: primaryColor,
                               activeColor: primaryColor,
-                              onChanged: (bool newValue) {
+                              onChanged: (newValue) {
                                 checkedTnC.value = !checkedTnC.value;
                               });
                         }),
@@ -210,7 +210,7 @@ class _CheckoutState extends State<Checkout> {
                               value: checkedPrivacy.value,
                               focusColor: primaryColor,
                               activeColor: primaryColor,
-                              onChanged: (bool newValue) {
+                              onChanged: ( newValue) {
                                 checkedPrivacy.value = !checkedPrivacy.value;
                               });
                         }),
@@ -243,17 +243,13 @@ class _CheckoutState extends State<Checkout> {
                               String paymentIntentID = data['paymentIntent']['id'];
                               print(paymentIntentID);
                               String bookingAgreement = miscService.getBookingAgreement(
-                                vesselID: widget.vessel.vesselID,
-                                address: widget.vessel.address,
+                                vesselID: widget.vessel.vesselID!,
+                                address: widget.vessel.address!,
                                 amount: total - myDiscount,
                                 discount: myDiscount,
                                 startDateTime: DateFormat('MMMM dd, yyyy, hh:mm aa').format(widget.date),
-                                endDateTime: DateFormat('MMMM dd, yyyy, hh:mm aa').format(widget.date.add(Duration(hours: widget.duration))),
-                                vesselName: widget.vessel.vesselName,
-                                model: widget.vessel.builder,
-                                vesselOwner: vesselOwner.fullName,
-                                bookingRef: bookingRef,
-                              );
+                                endDateTime: DateFormat('MMMM dd, yyyy, hh:mm aa').format(widget.date.add(Duration(hours: widget.duration as int),
+                              )));                              
                               Get.back();
                               Get.defaultDialog(
                                 title: 'Booking Agreement',
@@ -264,9 +260,9 @@ class _CheckoutState extends State<Checkout> {
                                   function: () async {
                                     dialogService.showLoading();
                                     await buyService.sendBookingRequest(Booking(
-                                      vesselID: widget.vessel.vesselID,
+                                      vesselID: widget.vessel.vesselID!,
                                       guestCount: widget.guestCount,
-                                      seatCost: widget.vessel.prices[0] * widget.vessel.durations[0],
+                                      seatCost: widget.vessel.prices![0] * widget.vessel.durations![0],
                                       totalCost: total - myDiscount,
                                       travelDate: Timestamp.fromDate(widget.date),
                                       tipAmount: tipAmount,
@@ -274,9 +270,9 @@ class _CheckoutState extends State<Checkout> {
                                       bookingID: bookingID,
                                       bookingAgreement: bookingAgreement,
                                       bookingRef: bookingRef,
-                                      paymentMethodID: userController.currentUser.value.paymentID,
+                                      paymentMethodID: userController.currentUser.value.paymentID ?? "",
                                       paymentIntentID: paymentIntentID,
-                                      isPreMadeTrip: widget.isPreMadeTrip,
+                                      isPreMadeTrip: widget.isPreMadeTrip, userID: '', paid: true, status: '', creationDate: widget.duration as Timestamp,
                                     ));
                                     Get.back();
                                     Get.back();
@@ -377,11 +373,11 @@ class _CheckoutState extends State<Checkout> {
               if (couponCodeTEC.value.text.isNotEmpty) {
                 num amount = widget.isPreMadeTrip ? widget.price : getFeesForDuration(widget.duration * widget.guestCount);
                 final bookingService = Get.find<BookingService>();
-                Discount discount = await bookingService.calculateCouponDiscount(amount, couponCodeTEC.value.text);
+                Discount? discount = await bookingService.calculateCouponDiscount(amount, couponCodeTEC.value.text);
                 if (discount == null)
                   showRedAlert('Invalid Coupon code');
                 else {
-                  myDiscount = discount.coupon.discount;
+                  myDiscount = discount.coupon!.discount!;
                   showGreenAlert('Coupon applied');
                   setState(() {});
                 }
@@ -396,6 +392,6 @@ class _CheckoutState extends State<Checkout> {
   }
 
   getFeesForDuration(num duration) {
-    for (int i = 0; i < widget.vessel.durations.length; i++) if (widget.vessel.durations[i] == duration) return widget.vessel.prices[i];
+    for (int i = 0; i < widget.vessel.durations!.length; i++) if (widget.vessel.durations![i] == duration) return widget.vessel.prices![i];
   }
 }

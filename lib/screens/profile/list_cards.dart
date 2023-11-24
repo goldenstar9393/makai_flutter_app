@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:get/get.dart';
 import 'package:makaiapp/controllers/user_controller.dart';
@@ -28,17 +27,17 @@ class ListCards extends StatelessWidget {
                 future: buyService.getCards(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    card.PaymentMethodsList payments = snapshot.data;
-                    return payments.paymentMethods.data.isNotEmpty
+                    card.PaymentMethodsList payments = snapshot.data as card.PaymentMethodsList;
+                    return payments.paymentMethods!.data!.isNotEmpty
                         ? ListView.builder(
                             itemBuilder: (context, i) {
                               return Column(
                                 children: [
                                   CreditCardWidget(
-                                    cardNumber: '0000 0000 0000 ' + payments.paymentMethods.data[i].card.last4,
-                                    expiryDate: payments.paymentMethods.data[i].card.expMonth.toString() + '/' + payments.paymentMethods.data[i].card.expYear.toString(),
-                                    cardHolderName: userController.currentUser.value.fullName,
-                                    cardType: getCardType(payments.paymentMethods.data[i].card.brand),
+                                    cardNumber: '0000 0000 0000 ' + payments.paymentMethods!.data![i].card!.last4,
+                                    expiryDate: payments.paymentMethods!.data[i].card!.expMonth.toString() + '/' + payments.paymentMethods!.data[i].card!.expYear.toString(),
+                                    cardHolderName: userController.currentUser.value.fullName!,
+                                    cardType: getCardType(payments.paymentMethods!.data[i].card!.brand),
                                     cvvCode: '***',
                                     showBackView: false,
                                     obscureCardNumber: true,
@@ -54,17 +53,17 @@ class ListCards extends StatelessWidget {
                                       Obx(() {
                                         return InkWell(
                                           onTap: () async {
-                                            if (userController.currentUser.value.paymentID != payments.paymentMethods.data[i].id) {
+                                            if (userController.currentUser.value.paymentID != payments.paymentMethods!.data![i].id) {
                                               final userService = Get.find<UserService>();
                                               dialogService.showLoading();
-                                              await userService.updateUser({'paymentID': payments.paymentMethods.data[i].id});
+                                              await userService.updateUser({'paymentID': payments.paymentMethods!.data![i].id});
                                               Get.back();
                                               showGreenAlert('Default Card set successfully');
                                             }
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.fromLTRB(15, 0, 25, 20),
-                                            child: Text(userController.currentUser.value.paymentID == payments.paymentMethods.data[i].id ? 'DEFAULT CARD' : 'SET AS DEFAULT CARD', style: TextStyle(color: userController.currentUser.value.paymentID == payments.paymentMethods.data[i].id ? Colors.green : redColor)),
+                                            child: Text(userController.currentUser.value.paymentID == payments.paymentMethods!.data![i].id ? 'DEFAULT CARD' : 'SET AS DEFAULT CARD', style: TextStyle(color: userController.currentUser.value.paymentID == payments.paymentMethods!.data![i].id ? Colors.green : redColor)),
                                           ),
                                         );
                                       }),
@@ -75,7 +74,7 @@ class ListCards extends StatelessWidget {
                                           confirm: () async {
                                             Get.back();
                                             dialogService.showLoading();
-                                            var response = await buyService.removeCard({'payment_method_id': payments.paymentMethods.data[i].id});
+                                            var response = await buyService.removeCard({'payment_method_id': payments.paymentMethods!.data![i].id});
                                             Get.back();
                                             Get.back();
                                             if (response['success']) {
@@ -96,7 +95,7 @@ class ListCards extends StatelessWidget {
                                 ],
                               );
                             },
-                            itemCount: payments.paymentMethods.data.length,
+                            itemCount: payments.paymentMethods!.data!.length,
                           )
                         : EmptyBox(text: 'No cards added yet.');
                   } else

@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: InkWell(
           onLongPress: () {
-            if (FirebaseAuth.instance.currentUser.email == 'ujwalchordiya@gmail.com') adminControls(context);
+            if (FirebaseAuth.instance.currentUser!.email == 'ujwalchordiya@gmail.com') adminControls(context);
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 15),
@@ -110,8 +110,8 @@ class _HomeState extends State<Home> {
       padding: const EdgeInsets.only(bottom: 25),
       itemBuilderType: PaginateBuilderType.listView,
       itemBuilder: (context, documentSnapshot, i) {
-        Vessel vessel = Vessel.fromDocument(documentSnapshot[i]);
-        if (vessel.licensed && vessel.captainLicensed)
+        Vessel vessel = Vessel.fromDocument(documentSnapshot[i] as DocumentSnapshot<Map<String, dynamic>>);
+        if (vessel.licensed! && vessel.captainLicensed!)
           return VesselItem(vessel: vessel);
         else
           return Container();
@@ -165,7 +165,7 @@ class _HomeState extends State<Home> {
                           groupValue: sortBy,
                           title: Text('Popularity', textScaleFactor: 1.1),
                           value: 'popular',
-                          onChanged: (val) => setState(() => sortBy = val),
+                          onChanged: (val) => setState(() => sortBy = val as String),
                         ),
                         RadioListTile(
                           dense: true,
@@ -173,7 +173,7 @@ class _HomeState extends State<Home> {
                           groupValue: sortBy,
                           title: Text('Ratings', textScaleFactor: 1.1),
                           value: 'ratings',
-                          onChanged: (val) => setState(() => sortBy = val),
+                          onChanged: (val) => setState(() => sortBy = val as String),
                         ),
                         RadioListTile(
                           dense: true,
@@ -181,7 +181,7 @@ class _HomeState extends State<Home> {
                           groupValue: sortBy,
                           title: Text('Price: High to Low', textScaleFactor: 1.1),
                           value: 'priceH',
-                          onChanged: (val) => setState(() => sortBy = val),
+                          onChanged: (val) => setState(() => sortBy = val as String),
                         ),
                         RadioListTile(
                           dense: true,
@@ -189,7 +189,7 @@ class _HomeState extends State<Home> {
                           groupValue: sortBy,
                           title: Text('Price: Low to High', textScaleFactor: 1.1),
                           value: 'priceL',
-                          onChanged: (val) => setState(() => sortBy = val),
+                          onChanged: (val) => setState(() => sortBy = val as String),
                         ),
                         ElevatedButton(
                             onPressed: () {
@@ -227,10 +227,10 @@ class _HomeState extends State<Home> {
               QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: mobile).get();
               if (querySnapshot.docs.isNotEmpty) {
                 userController.currentUser.value = u.User.fromDocument(querySnapshot.docs[0]);
-                await Preferences.setUser(userController.currentUser.value.userID);
+                await Preferences.setUser(userController.currentUser.value.userID!);
                 await userService.getCurrentUser();
                 Get.back();
-                showGreenAlert('You are now logged in as ' + userController.currentUser.value.fullName);
+                showGreenAlert('You are now logged in as ' + userController.currentUser.value.fullName!);
               } else {
                 Get.back();
                 showRedAlert('User does not exist. Please check the mobile number');

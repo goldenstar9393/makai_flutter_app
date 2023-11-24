@@ -74,6 +74,8 @@
 	<string>This app needs your location to get nearby vessels</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need to access Photos Library to upload photos for vessels</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -93,7 +95,5 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<string>YES</string>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
 </dict>
 </plist>

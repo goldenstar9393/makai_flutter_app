@@ -19,7 +19,7 @@ class UserService {
     if (Platform.isIOS) {
       await messaging.requestPermission(alert: true, announcement: false, badge: true, carPlay: false, criticalAlert: false, provisional: false, sound: true);
     }
-    String firebaseToken = await messaging.getToken();
+    String? firebaseToken = await messaging.getToken();
     await updateUser({
       'token': firebaseToken,
       'updatedDate': Timestamp.now(),
@@ -30,7 +30,7 @@ class UserService {
     QuerySnapshot querySnapshot = await ref.collection('users').where('email', isEqualTo: email).get();
     DocumentSnapshot doc = querySnapshot.docs[0];
     userController.currentUser.value = User.fromDocument(doc);
-    await Preferences.setUser(userController.currentUser.value.userID);
+    await Preferences.setUser(userController.currentUser.value.userID!);
     await getCurrentUser();
   }
 
@@ -43,7 +43,7 @@ class UserService {
       return;
     } catch (e) {
       print(e);
-      userController.currentUser.value = null;
+      userController.currentUser.value = User as User;
       return;
     }
   }
@@ -68,7 +68,7 @@ class UserService {
       'creationDate': Timestamp.now(),
       'updatedDate': Timestamp.now(),
       'status': 'Active',
-      'stripeCustomerID': await bookingService.createCustomer(user.email, user.fullName),
+      'stripeCustomerID': await bookingService.createCustomer(user.email!, user.fullName!),
     });
     userController.currentUser.value = user;
     Get.offAll(() => SplashScreen());
@@ -106,7 +106,7 @@ class UserService {
     return ref.collection('users').doc(id).snapshots();
   }
 
-  Future<User> getUserFromEmail(String email) async {
+  Future<User?> getUserFromEmail(String email) async {
     QuerySnapshot querySnapshot = await ref.collection('users').where('email', isEqualTo: email).get();
     if (querySnapshot.docs.isEmpty) {
       return null;
@@ -115,11 +115,11 @@ class UserService {
   }
 
   addBanking(Map bank) async {
-    await ref.collection('banking').doc(userController.currentUser.value.userID).set(bank);
+    await ref.collection('banking').doc(userController.currentUser.value.userID).set(bank as Map<String, dynamic>);
   }
 
   updateBanking(Map bank) async {
-    await ref.collection('banking').doc(userController.currentUser.value.userID).update(bank);
+    await ref.collection('banking').doc(userController.currentUser.value.userID).update(bank as Map<String, dynamic>);
   }
 
   getBankingDetails() async {

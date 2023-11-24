@@ -24,7 +24,7 @@ import 'package:makaiapp/widgets/custom_text_field.dart';
 class ManageVessels extends StatelessWidget {
   final Vessel vessel;
 
-  ManageVessels({this.vessel});
+  ManageVessels({required this.vessel});
 
   final userController = Get.find<UserController>();
   final vesselService = Get.find<VesselService>();
@@ -48,7 +48,7 @@ class ManageVessels extends StatelessWidget {
               CustomListTile(
                 leading: Icon(Icons.calendar_today, color: primaryColor),
                 title: Text('Pre-made Trips'),
-                onTap: () => Get.to(() => PreMadeTrips(vesselID: vessel.vesselID)),
+                onTap: () => Get.to(() => PreMadeTrips(vesselID: vessel.vesselID!)),
               ),
             CustomListTile(
               leading: Icon(Icons.directions_boat_outlined, color: primaryColor),
@@ -59,7 +59,7 @@ class ManageVessels extends StatelessWidget {
               CustomListTile(
                 leading: Icon(Icons.sticky_note_2_outlined, color: primaryColor),
                 title: Text('Reports'),
-                onTap: () => Get.to(() => Reports(vesselID: vessel.vesselID)),
+                onTap: () => Get.to(() => Reports(vesselID: vessel.vesselID!)),
               ),
             CustomListTile(
               leading: Icon(Icons.account_box_outlined, color: primaryColor),
@@ -69,12 +69,12 @@ class ManageVessels extends StatelessWidget {
             CustomListTile(
               leading: Icon(Icons.account_balance_wallet_outlined, color: primaryColor),
               title: Text('Certificates'),
-              onTap: () => Get.to(() => MyCertificates(vesselID: vessel.vesselID)),
+              onTap: () => Get.to(() => MyCertificates(vesselID: vessel.vesselID!)),
             ),
             CustomListTile(
               leading: Icon(Icons.credit_card, color: primaryColor),
               title: Text('Licenses'),
-              onTap: () => Get.to(() => MyLicenses(vesselID: vessel.vesselID)),
+              onTap: () => Get.to(() => MyLicenses(vesselID: vessel.vesselID!)),
             ),
             if (MY_ROLE == VESSEL_CAPTAIN || MY_ROLE == VESSEL_OWNER)
               vessel.disabledUntil == null
@@ -101,7 +101,7 @@ class ManageVessels extends StatelessWidget {
                                       onChanged: (date) {},
                                       onConfirm: (date) async {
                                         dialogService.showLoading();
-                                        await vesselService.disableVessel(vessel.vesselID, Timestamp.fromDate(date));
+                                        await vesselService.disableVessel(vessel.vesselID!, Timestamp.fromDate(date));
                                         Get.back();
                                         Get.back();
                                         showGreenAlert('Vessel disabled');
@@ -117,7 +117,7 @@ class ManageVessels extends StatelessWidget {
                                   onPressed: () async {
                                     Get.back();
                                     dialogService.showLoading();
-                                    await vesselService.disableVessel(vessel.vesselID, Timestamp.fromDate(DateTime(2100)));
+                                    await vesselService.disableVessel(vessel.vesselID!, Timestamp.fromDate(DateTime(2100)));
                                     Get.back();
                                     Get.back();
                                     showGreenAlert('Vessel disabled permanently');
@@ -135,7 +135,7 @@ class ManageVessels extends StatelessWidget {
                       title: Text('Enable Vessel', style: TextStyle(color: Colors.green)),
                       onTap: () async {
                         dialogService.showLoading();
-                        await vesselService.enableVessel(vessel.vesselID);
+                        await vesselService.enableVessel(vessel.vesselID!);
                         Get.back();
                         Get.back();
                         showGreenAlert('Vessel enabled');
@@ -146,7 +146,7 @@ class ManageVessels extends StatelessWidget {
                 builder: (context, snapshot) {
                   print(vessel.vesselChatUserID);
                   if (snapshot.hasData) {
-                    User user = User.fromDocument(snapshot.data);
+                    User user = User.fromDocument(snapshot.data as DocumentSnapshot<Object?>);
                     return ListTile(
                       onTap: () async {
                         TextEditingController emailTEC = TextEditingController();
@@ -182,7 +182,7 @@ class ManageVessels extends StatelessWidget {
                                                 onPressed: () async {
                                                   dialogService.showLoading();
                                                   String email = emailTEC.text.trim();
-                                                  User user = await userService.getUserFromEmail(email);
+                                                  User? user = await userService.getUserFromEmail(email);
                                                   if (user == null) {
                                                     Get.back();
                                                     showRedAlert('User with this email does not exist');

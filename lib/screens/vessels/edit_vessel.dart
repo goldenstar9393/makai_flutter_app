@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member, unnecessary_null_comparison
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,7 +28,7 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 class EditVessel extends StatefulWidget {
   final Vessel vessel;
 
-  EditVessel({this.vessel});
+  EditVessel({required this.vessel});
 
   @override
   _EditVesselState createState() => _EditVesselState();
@@ -63,7 +65,7 @@ class _EditVesselState extends State<EditVessel> {
   RxList durations = [].obs;
   RxList prices = [].obs;
 
-  LatLng latLng;
+  late LatLng latLng;
   Rx<String> vesselType = 'Fishing'.obs;
   Rx<String> bookingTime = 'Hourly'.obs;
   Rx<String> yachtBuilder = 'Any'.obs;
@@ -82,21 +84,21 @@ class _EditVesselState extends State<EditVessel> {
 
   @override
   void initState() {
-    imageURLs.value = widget.vessel.images;
-    vesselType.value = widget.vessel.vesselType;
-    yachtType = widget.vessel.yachtType;
-    fishingVesselType = widget.vessel.fishingVesselType;
-    fishingType = widget.vessel.fishingType;
-    vesselNameTEC.text = widget.vessel.vesselName;
+    imageURLs.value = widget.vessel.images!;
+    vesselType.value = widget.vessel.vesselType!;
+    yachtType = widget.vessel.yachtType!;
+    fishingVesselType = widget.vessel.fishingVesselType!;
+    fishingType = widget.vessel.fishingType!;
+    vesselNameTEC.text = widget.vessel.vesselName!;
     //costPerHourTEC.text = widget.vessel.costPerHour.toString();
-    vesselDescriptionTEC.text = widget.vessel.description;
+    vesselDescriptionTEC.text = widget.vessel.description!;
 
-    locationTEC.value.text = widget.vessel.address;
-    latLng = LatLng(widget.vessel.geoPoint.latitude, widget.vessel.geoPoint.longitude);
+    locationTEC.value.text = widget.vessel.address!;
+    latLng = LatLng(widget.vessel.geoPoint!.latitude, widget.vessel.geoPoint!.longitude);
     //durationTEC.text = widget.vessel.duration.toString();
-    durations.value = widget.vessel.durations;
-    prices.value = widget.vessel.prices;
-    shortAddress = widget.vessel.shortAddress;
+    durations.value = widget.vessel.durations!;
+    prices.value = widget.vessel.prices!;
+    shortAddress = widget.vessel.shortAddress!;
 
     vesselLengthTEC.text = widget.vessel.length.toString();
     passengerCapacityTEC.text = widget.vessel.passengerCapacity.toString();
@@ -105,23 +107,23 @@ class _EditVesselState extends State<EditVessel> {
     crewSizeTEC.text = widget.vessel.crewSize.toString();
     speedTEC.text = widget.vessel.speed.toString();
     yachtBuilder.value = widget.vessel.builder.toString();
-    features.value = widget.vessel.features;
-    species.value = widget.vessel.fishingSpecies;
-    techniques.value = widget.vessel.fishingTechniques;
-    thingsAllowed.value = widget.vessel.thingsAllowed;
+    features.value = widget.vessel.features!;
+    species.value = widget.vessel.fishingSpecies!;
+    techniques.value = widget.vessel.fishingTechniques!;
+    thingsAllowed.value = widget.vessel.thingsAllowed!;
     featuresTEC.text = features.length.toString() + ' features selected';
     speciesTEC.text = species.length.toString() + ' species selected';
     techniquesTEC.text = techniques.length.toString() + ' techniques selected';
     thingsAllowedTEC.text = thingsAllowed.length.toString() + ' items selected';
-    cancellationPolicy.value = widget.vessel.cancellationPolicy;
+    cancellationPolicy.value = widget.vessel.cancellationPolicy!;
 
-    SelectJourneyTiming.selectedMondayTimings = widget.vessel.monday;
-    SelectJourneyTiming.selectedTuesdayTimings = widget.vessel.tuesday;
-    SelectJourneyTiming.selectedWednesdayTimings = widget.vessel.wednesday;
-    SelectJourneyTiming.selectedThursdayTimings = widget.vessel.thursday;
-    SelectJourneyTiming.selectedFridayTimings = widget.vessel.friday;
-    SelectJourneyTiming.selectedSaturdayTimings = widget.vessel.saturday;
-    SelectJourneyTiming.selectedSundayTimings = widget.vessel.sunday;
+    SelectJourneyTiming.selectedMondayTimings = widget.vessel.monday!;
+    SelectJourneyTiming.selectedTuesdayTimings = widget.vessel.tuesday!;
+    SelectJourneyTiming.selectedWednesdayTimings = widget.vessel.wednesday!;
+    SelectJourneyTiming.selectedThursdayTimings = widget.vessel.thursday!;
+    SelectJourneyTiming.selectedFridayTimings = widget.vessel.friday!;
+    SelectJourneyTiming.selectedSaturdayTimings = widget.vessel.saturday!;
+    SelectJourneyTiming.selectedSundayTimings = widget.vessel.sunday!;
 
     costPerHourTEC.addListener(() {
       getMakaiFees();
@@ -156,7 +158,7 @@ class _EditVesselState extends State<EditVessel> {
             },
           ),
         );
-        return;
+        return Future.value(false);
       },
       child: Scaffold(
         appBar: AppBar(title: Text('EDIT YOUR VESSEL')),
@@ -171,7 +173,7 @@ class _EditVesselState extends State<EditVessel> {
                 currentStep: currentStep,
                 size: 40,
                 selectedColor: Colors.black,
-                unselectedColor: Colors.grey[400],
+                unselectedColor: Colors.grey[400] ?? Colors.grey,
                 customStep: (index, color, _) {
                   if (currentStep > index + 1)
                     return InkWell(
@@ -219,7 +221,7 @@ class _EditVesselState extends State<EditVessel> {
                 function: () async {
                   switch (currentStep) {
                     case 1:
-                      if (!step1Key.currentState.validate()) {
+                      if (!step1Key.currentState!.validate()) {
                         showRedAlert('Please fill the necessary details');
                       } else if (imageURLs.isEmpty && images.isEmpty) {
                         showRedAlert('Please add at least one vessel image');
@@ -229,7 +231,7 @@ class _EditVesselState extends State<EditVessel> {
                       }
                       return;
                     case 2:
-                      if (!step2Key.currentState.validate()) {
+                      if (!step2Key.currentState!.validate()) {
                         showRedAlert('Please fill the necessary details');
                         return;
                       }
@@ -241,7 +243,7 @@ class _EditVesselState extends State<EditVessel> {
                       }
                       return;
                     case 3:
-                      if (!step3Key.currentState.validate()) {
+                      if (!step3Key.currentState!.validate()) {
                         showRedAlert('Please fill the necessary details');
                       } else {
                         setState(() => currentStep++);
@@ -282,7 +284,7 @@ class _EditVesselState extends State<EditVessel> {
       items: items.map((value) {
         return DropdownMenuItem<String>(value: value, child: Text(value, textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
-      onChanged: (value) => setValue(i, value),
+      onChanged: (value) => setValue(i, value!),
     );
   }
 
@@ -332,7 +334,7 @@ class _EditVesselState extends State<EditVessel> {
     return InkWell(
       onTap: () async {
         File file = await storageService.pickImage();
-        if (file != null) images.add(file);
+        images.add(file);
       },
       child: Container(
         height: 80,
@@ -346,7 +348,7 @@ class _EditVesselState extends State<EditVessel> {
 
   update() async {
     dialogService.showLoading();
-    List finalImages = widget.vessel.images;
+    List finalImages = widget.vessel.images!;
     for (int i = 0; i < images.length; i++) {
       finalImages.add(await storageService.uploadPhoto(images[i], 'vessels'));
     }
@@ -386,9 +388,9 @@ class _EditVesselState extends State<EditVessel> {
 
   void showPlacePicker() async {
     LocationResult result = await Get.to(() => PlacePicker(GOOGLE_MAP_KEY, displayLocation: LatLng(myLatitude, myLongitude)));
-    locationTEC.value.text = result.formattedAddress;
-    shortAddress = result.city.name + ', ' + result.country.name;
-    latLng = result.latLng;
+    locationTEC.value.text = result.formattedAddress!;
+    shortAddress = result.city!.name! + ', ' + result.country!.name!;
+    latLng = result.latLng!;
   }
 
   String shortAddress = '';
@@ -535,8 +537,8 @@ class _EditVesselState extends State<EditVessel> {
                       future: vesselService.getMakaiFees(costPerHourTEC.text.isEmpty ? 0 : num.parse(costPerHourTEC.text)),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          MakaiFee makaiFees = snapshot.data;
-                          if (makaiFees == null || makaiFees.fee == null)
+                          MakaiFee makaiFees = snapshot.data as MakaiFee;
+                          if (makaiFees.fee == null)
                             makaiFee = '0.00';
                           else
                             makaiFee = makaiFees.fee.total;

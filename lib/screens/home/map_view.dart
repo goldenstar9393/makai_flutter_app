@@ -28,16 +28,16 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   Future getMarkers() async {
     QuerySnapshot vesselDocs = await vesselService.getVesselsOnMap();
     for (int j = 0; j < vesselDocs.docs.length; j++) {
-      Vessel vessel = Vessel.fromDocument(vesselDocs.docs[j]);
-      if (vessel.licensed && vessel.captainLicensed)
+      Vessel vessel = Vessel.fromDocument(vesselDocs.docs[j] as DocumentSnapshot<Map<String, dynamic>>);
+      if (vessel.licensed! && vessel.captainLicensed!)
         markers.add(
           new Marker(
             visible: true,
             markerId: MarkerId((vesselDocs.docs.length + j).toString()),
-            position: LatLng(vessel?.geoPoint?.latitude, vessel?.geoPoint?.longitude),
+            position: LatLng(vessel.geoPoint!.latitude, vessel.geoPoint!.longitude),
             icon: BitmapDescriptor.defaultMarkerWithHue(200),
             infoWindow: InfoWindow(
-              onTap: () => Get.to(() => ViewVessel(false, vesselID: vessel.vesselID)),
+              onTap: () => Get.to(() => ViewVessel(false, vesselID: vessel.vesselID!)),
               title: vessel.vesselName,
               snippet: vessel.address,
             ),
@@ -89,8 +89,8 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
           future: LocationService().determinePosition(),
           builder: (context, AsyncSnapshot<Position> locSnapshot) {
             if (locSnapshot.hasData) {
-              myLatitude = locSnapshot.data.latitude;
-              myLongitude = locSnapshot.data.longitude;
+              myLatitude = locSnapshot.data!.latitude;
+              myLongitude = locSnapshot.data!.longitude;
               center = LatLng(myLatitude, myLongitude);
               return FutureBuilder(
                 future: getMarkers(),

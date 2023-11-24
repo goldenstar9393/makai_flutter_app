@@ -1,5 +1,10 @@
+// ignore_for_file: unnecessary_null_comparison
+
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher_icons/main.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -24,8 +29,8 @@ import 'package:makaiapp/widgets/custom_button.dart';
 import 'package:uuid/uuid.dart';
 
 class BookingItem extends StatelessWidget {
-  final Booking booking;
-  final NotificationModel notification;
+  final Booking? booking;
+  final NotificationModel? notification;
 
   BookingItem({this.booking, this.notification});
 
@@ -45,32 +50,31 @@ class BookingItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
-            if (notification != null)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  notification.type == 'vesselBookingResponse' ? getMessage(booking.status) : 'You have received a booking request',
-                  style: TextStyle(color: getColor(booking.status)),
-                ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                notification!.type == 'vesselBookingResponse' ? getMessage(booking!.status!) : 'You have received a booking request',
+                style: TextStyle(color: getColor(booking!.status!)),
               ),
+            ),
             getVessel(),
             Divider(height: 10),
-            item('Travel Date', DateFormat('MMMM dd, yyyy hh:mm aa').format(booking.travelDate.toDate()), primaryColor),
-            item('Duration', booking.duration.toString() + ' hrs', primaryColor),
-            item('Total Guests', booking.guestCount.toString(), primaryColor),
-            item('Total Amount', formatCurrency.format(booking.totalCost).toString(), primaryColor),
-            item('Booking Status', getStatus(booking.status), getColor(booking.status)),
+            item('Travel Date', DateFormat('MMMM dd, yyyy hh:mm aa').format(booking!.travelDate!.toDate()), primaryColor),
+            item('Duration', booking!.duration.toString() + ' hrs', primaryColor),
+            item('Total Guests', booking!.guestCount.toString(), primaryColor),
+            item('Total Amount', formatCurrency.format(booking!.totalCost).toString(), primaryColor),
+            item('Booking Status', getStatus(booking!.status!), getColor(booking!.status!)),
             if (MY_ROLE != VESSEL_USER) getUser(),
-            item('Booking Date', DateFormat('MMMM dd, yyyy').format(booking.creationDate.toDate()), primaryColor),
+            item('Booking Date', DateFormat('MMMM dd, yyyy').format(booking!.creationDate!.toDate()), primaryColor),
 
             //item('Payment status', booking.paid ? 'Paid' : 'Not Paid', booking.paid ? Colors.green : Colors.red),
 
             Divider(height: 10),
             if (MY_ROLE == VESSEL_USER)
-              if (booking.travelDate.toDate().isAfter(DateTime.now())) messageAndCancelButtons(),
+              if (booking!.travelDate!.toDate().isAfter(DateTime.now())) messageAndCancelButtons(),
             if (MY_ROLE == VESSEL_OWNER)
-              if (booking.travelDate.toDate().isAfter(DateTime.now()))
-                if (booking.status == null) approveAndDisapproveButtons(booking),
+              if (booking!.travelDate!.toDate().isAfter(DateTime.now()))
+                if (booking!.status == null) approveAndDisapproveButtons(booking!),
           ],
         ),
       ),
@@ -79,17 +83,17 @@ class BookingItem extends StatelessWidget {
 
   getVessel() {
     return FutureBuilder(
-      future: vesselService.getVesselForVesselID(booking.vesselID),
+      future: vesselService.getVesselForVesselID(booking!.vesselID!),
       builder: (context, snapshot) {
         return !snapshot.hasData
             ? Container()
             : ListTile(
-                onTap: () => Get.to(() => ViewVessel(true, vesselID: booking.vesselID)),
+                onTap: () => Get.to(() => ViewVessel(true, vesselID: booking!.vesselID!)),
                 contentPadding: EdgeInsets.zero,
-                title: Text(Vessel.fromDocument(snapshot.data).vesselName, style: TextStyle(fontWeight: FontWeight.bold)),
+                title: Text(Vessel.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>).vesselName!, style: TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: Text('Click to view vessel', style: TextStyle(color: Colors.grey)),
-                leading: CachedImage(url: snapshot.hasData ? Vessel.fromDocument(snapshot.data).images[0] : '', height: 50, roundedCorners: true),
-                trailing: userController.currentUser.value.userID == Vessel.fromDocument(snapshot.data).vesselChatUserID
+                leading: CachedImage(url: snapshot.hasData ? Vessel.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>).images![0] : '', height: 50, roundedCorners: true, circular: true, imageFile: fileOption as File),
+                trailing: userController.currentUser.value.userID == Vessel.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>).vesselChatUserID
                     ? SizedBox(width: 10)
                     : TextButton.icon(
                         style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero)),
@@ -97,14 +101,14 @@ class BookingItem extends StatelessWidget {
                           final userService = Get.find<UserService>();
                           final messageService = Get.find<MessageService>();
                           dialogService.showLoading();
-                          QuerySnapshot querySnapshot = await vesselService.getVesselReceptionistForChat(booking.vesselID);
-                          User user = querySnapshot.docs.isEmpty ? null : User.fromDocument(querySnapshot.docs[0]);
-                          String userID = user == null ? booking.userID : user.userID;
-                          String chatRoomID = await messageService.checkIfVesselChatRoomExists(userID, booking.vesselID, true, false);
+                          QuerySnapshot querySnapshot = await vesselService.getVesselReceptionistForChat(booking!.vesselID!);
+                          User? user = querySnapshot.docs.isEmpty ? null : User.fromDocument(querySnapshot.docs[0]);
+                          String? userID = user == null ? booking!.userID : user.userID;
+                          String chatRoomID = await messageService.checkIfVesselChatRoomExists(userID!, booking!.vesselID!, true, false);
                           DocumentSnapshot doc = await userService.getUser(userID);
                           User chatUser = User.fromDocument(doc);
                           Get.back();
-                          Get.to(Chats(user: chatUser, chatRoomID: chatRoomID, vessel: Vessel.fromDocument(snapshot.data)));
+                          Get.to(Chats(user: chatUser, chatRoomID: chatRoomID, vessel: Vessel.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>)));
                         },
                         icon: Icon(FontAwesomeIcons.comment, color: secondaryColor, size: 18),
                         label: Text('Chat', style: TextStyle(color: secondaryColor, fontWeight: FontWeight.bold)),
@@ -116,11 +120,11 @@ class BookingItem extends StatelessWidget {
 
   getUser() {
     return FutureBuilder(
-      future: userService.getUser(booking.userID),
+      future: userService.getUser(booking!.userID),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasData) {
-          User user = User.fromDocument(snapshot.data);
-          return item('Booked by', user.fullName, primaryColor);
+          User user = User.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>);
+          return item('Booked by', user.fullName!, primaryColor);
         } else
           return Container(height: 56);
       },
@@ -131,7 +135,7 @@ class BookingItem extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (booking.status != 'cancelled')
+        if (booking!.status != 'cancelled')
           TextButton.icon(
             onPressed: () async {
               dialogService.showConfirmationDialog(
@@ -140,16 +144,16 @@ class BookingItem extends StatelessWidget {
                 confirm: () async {
                   Get.back();
                   dialogService.showLoading();
-                  QuerySnapshot docs = await bookingService.getTransactionFromPaymentID(booking.paymentIntentID);
+                  QuerySnapshot docs = await bookingService.getTransactionFromPaymentID(booking!.paymentIntentID!);
                   TransactionModel transaction = TransactionModel.fromDocument(docs.docs[0]);
 
                   var response;
-                  if (booking.status == null)
-                    response = await bookingService.cancelBooking(booking.paymentIntentID, 'requested_by_customer');
+                  if (booking!.status == null)
+                    response = await bookingService.cancelBooking(booking!.paymentIntentID!, 'requested_by_customer');
                   else
-                    response = await bookingService.refundPayment(transaction.stripeChargeID, booking.totalCost * 100, 'requested_by_customer');
+                    response = await bookingService.refundPayment(transaction.stripeChargeID!, booking!.totalCost! * 100, 'requested_by_customer');
                   if (response['success']) {
-                    await bookingService.updateBookingRequest(booking, 'cancelled');
+                    await bookingService.updateBookingRequest(booking!, 'cancelled');
                     Get.back();
                     showGreenAlert(response['message']);
                   } else {
@@ -176,7 +180,7 @@ class BookingItem extends StatelessWidget {
               title: 'Booking Agreement',
               content: Container(
                 height: 250,
-                child: Scrollbar(thumbVisibility: true, child: SingleChildScrollView(child: Text(booking.bookingAgreement))),
+                child: Scrollbar(thumbVisibility: true, child: SingleChildScrollView(child: Text(booking.bookingAgreement!))),
               ),
               confirm: CustomButton(function: () => Get.back(), text: 'Cancel', color: Colors.grey),
               cancel: CustomButton(
@@ -189,7 +193,7 @@ class BookingItem extends StatelessWidget {
                       confirm: () async {
                         Get.back();
                         dialogService.showLoading();
-                        c.ConfirmPaymentModel confirmPaymentModel = await bookingService.confirmPayment(booking.paymentIntentID);
+                        c.ConfirmPaymentModel confirmPaymentModel = await bookingService.confirmPayment(booking.paymentIntentID!);
                         if (confirmPaymentModel.success) {
                           await bookingService.updateBookingRequest(booking, 'accepted');
                           TransactionModel transaction = TransactionModel(
@@ -270,7 +274,7 @@ class BookingItem extends StatelessWidget {
       children: [
         Text(title),
         SizedBox(height: 30),
-        Text(value ?? 'Requested', style: TextStyle(fontWeight: FontWeight.bold, color: color)),
+        Text(value, style: TextStyle(fontWeight: FontWeight.bold, color: color)),
       ],
     );
   }

@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/services.dart';
@@ -19,7 +18,7 @@ class MiscService {
     ByteData data = await rootBundle.load(path);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
     ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
   }
 
   getPinColor(String venueImpactStatus) {
@@ -37,7 +36,7 @@ class MiscService {
     }
   }
 
-  getBookingAgreement({String vesselID, String vesselOwner, String vesselName, String model, String bookingRef, num discount, num amount, String startDateTime, String endDateTime, String address}) {
+  getBookingAgreement({String? vesselID, String? vesselOwner, String? vesselName, String? model, String? bookingRef, num? discount, num? amount, String? startDateTime, String? endDateTime, String? address}) {
     final userController = Get.find<UserController>();
     String agreement = "This agreement is between $vesselOwner of $address (“Owner”), owner of $model identified by Makai as BOAT $vesselID, and ${userController.currentUser.value.fullName} of  (\"Renter\") for Booking $bookingRef (\"$vesselName\")."
         "\n\n1. In consideration of the promises herein, the Owner agrees to let and the Renter agrees to hire the Boat from $startDateTime to $endDateTime via Makai for the sum of \$$amount USD exclusive of service fees and taxes, (the “Rental Fees”) which amount has been paid via the Makai system subject to the terms and conditions to which Owner and Renter have individually agreed with Makai, which in this instance includes a discount of \$$discount USD off the full price of \$$amount USD which does not affect the Owner’s payment."

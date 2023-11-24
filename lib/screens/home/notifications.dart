@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:makaiapp/models/booking_model.dart';
+import 'package:makaiapp/models/confirm_payment_model.dart';
 import 'package:makaiapp/models/notification_model.dart';
 import 'package:makaiapp/screens/home/notification_settings.dart';
 import 'package:makaiapp/screens/profile/reports.dart';
@@ -62,49 +64,49 @@ class Notifications extends StatelessWidget {
               print(notification.notificationID);
               if (notification.type == 'vesselBookingRequest' && MY_ROLE != VESSEL_USER) {
                 return Dismissible(
-                  key: Key(notification.notificationID),
+                  key: Key(notification.notificationID ?? ""),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(DateFormat('  dd MMM yyyy, hh:mm a').format(notification.creationDate.toDate()), style: TextStyle(color: Colors.grey), textScaleFactor: 0.9),
+                      Text(DateFormat('  dd MMM yyyy, hh:mm a').format(notification.creationDate!.toDate()), style: TextStyle(color: Colors.grey), textScaleFactor: 0.9),
                       SizedBox(height: 5),
                       FutureBuilder(
-                          future: bookingService.getBookingForBookingID(notification.bookingID),
+                          future: bookingService.getBookingForBookingID(notification.bookingID ?? ""),
                           builder: (context, snapshot) {
-                            return snapshot.hasData ? BookingItem(notification: notification, booking: Booking.fromDocument(snapshot.data)) : Container();
+                            return snapshot.hasData ? BookingItem(notification: notification, booking: Booking.fromDocument(snapshot.data as DocumentSnapshot<Object?>)) : Container();
                           }),
                     ],
                   ),
                   onDismissed: (direction) async {
-                    await notificationService.archiveNotification(notification.notificationID);
+                    await notificationService.archiveNotification(notification.notificationID ?? "");
                   },
                 );
               } else if (notification.type == 'vesselBookingResponse' && MY_ROLE == VESSEL_USER) {
                 return Dismissible(
-                  key: Key(notification.notificationID),
+                  key: Key(notification.notificationID ?? ""),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(DateFormat('  dd MMM yyyy, hh:mm a').format(notification.creationDate.toDate()), style: TextStyle(color: Colors.grey), textScaleFactor: 0.9),
+                      Text(DateFormat('  dd MMM yyyy, hh:mm a').format(notification.creationDate!.toDate()), style: TextStyle(color: Colors.grey), textScaleFactor: 0.9),
                       SizedBox(height: 5),
                       FutureBuilder(
-                          future: bookingService.getBookingForBookingID(notification.bookingID),
+                          future: bookingService.getBookingForBookingID(notification.bookingID ?? ""),
                           builder: (context, snapshot) {
-                            return snapshot.hasData ? BookingItem(notification: notification, booking: Booking.fromDocument(snapshot.data)) : Container();
+                            return snapshot.hasData ? BookingItem(notification: notification, booking: Booking.fromDocument(snapshot.data as DocumentSnapshot<Object?>)) : Container();
                           }),
                     ],
                   ),
                   onDismissed: (direction) async {
-                    await notificationService.archiveNotification(notification.notificationID);
+                    await notificationService.archiveNotification(notification.notificationID ?? "");
                   },
                 );
               } else if (notification.type == 'general') {
                 return Dismissible(
-                  key: Key(notification.notificationID),
+                  key: Key(notification.notificationID ?? ""),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(DateFormat('  dd MMM yyyy, hh:mm a').format(notification.creationDate.toDate()), style: TextStyle(color: Colors.grey), textScaleFactor: 0.9),
+                      Text(DateFormat('  dd MMM yyyy, hh:mm a').format(notification.creationDate!.toDate()), style: TextStyle(color: Colors.grey), textScaleFactor: 0.9),
                       SizedBox(height: 5),
                       Container(
                         margin: const EdgeInsets.only(bottom: 25),
@@ -114,7 +116,7 @@ class Notifications extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Linkify(
-                          text: notification.messageText,
+                          text: notification.messageText ?? "",
                           onOpen: (element) {
                             print(element.url);
                             MiscService().openLink(element.url);
@@ -124,27 +126,27 @@ class Notifications extends StatelessWidget {
                     ],
                   ),
                   onDismissed: (direction) async {
-                    await notificationService.archiveNotification(notification.notificationID);
+                    await notificationService.archiveNotification(notification.notificationID ?? "");
                   },
                 );
               } else if (notification.type == 'transaction') {
                 return Dismissible(
-                  key: Key(notification.notificationID),
+                  key: Key(notification.notificationID ?? ""),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(DateFormat('  dd MMM yyyy, hh:mm a').format(notification.creationDate.toDate()), style: TextStyle(color: Colors.grey), textScaleFactor: 0.9),
+                      Text(DateFormat('  dd MMM yyyy, hh:mm a').format(notification.creationDate!.toDate()), style: TextStyle(color: Colors.grey), textScaleFactor: 0.9),
                       SizedBox(height: 5),
                       CustomListTile(
-                        onTap: () => Get.to(() => Reports(vesselID: notification.vesselID)),
-                        title: Text(notification.messageText, style: TextStyle(color: Colors.green)),
+                        onTap: () => Get.to(() => Reports(vesselID: notification.vesselID ?? "")),
+                        title: Text(notification.messageText ?? "", style: TextStyle(color: Colors.green)),
                         leading: Icon(Icons.monetization_on, color: Colors.green),
                         trailing: Icon(Icons.keyboard_arrow_right_rounded, color: Colors.green),
                       ),
                     ],
                   ),
                   onDismissed: (direction) async {
-                    await notificationService.archiveNotification(notification.notificationID);
+                    await notificationService.archiveNotification(notification.notificationID ?? "");
                   },
                 );
               } else

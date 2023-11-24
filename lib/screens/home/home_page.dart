@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
                     children: [
                       if (FirebaseAuth.instance.currentUser != null)
                         Obx(() {
-                          if (userController.currentUser.value.unreadMessages)
+                          if (userController.currentUser.value.unreadMessages!)
                             return Align(
                                 alignment: Alignment.topRight,
                                 child: Padding(

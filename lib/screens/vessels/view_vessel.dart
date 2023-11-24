@@ -38,7 +38,7 @@ class ViewVessel extends StatefulWidget {
   final String vesselID;
   final bool showFullAddress;
 
-  ViewVessel(this.showFullAddress, {this.vesselID});
+  ViewVessel(this.showFullAddress, {required this.vesselID});
 
   @override
   State<ViewVessel> createState() => _ViewVesselState();
@@ -85,7 +85,7 @@ class _ViewVesselState extends State<ViewVessel> {
             stream: vesselService.getVesselForVesselIDStream(widget.vesselID),
             builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasData) {
-                Vessel vessel = Vessel.fromDocument(snapshot.data);
+                Vessel vessel = Vessel.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>);
                 return Padding(
                   padding: const EdgeInsets.all(15),
                   child: DefaultTabController(
@@ -96,14 +96,14 @@ class _ViewVesselState extends State<ViewVessel> {
                           padding: const EdgeInsets.only(bottom: 25),
                           child: Row(
                             children: [
-                              Expanded(child: Text(vessel.vesselName, textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold))),
+                              Expanded(child: Text(vessel.vesselName!, textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold))),
                               Container(
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(FontAwesomeIcons.solidStar, size: 10, color: Colors.white),
                                     SizedBox(width: 5),
-                                    Text(vessel.rating.toStringAsFixed(1), textScaleFactor: 0.9, style: TextStyle(color: Colors.white)),
+                                    Text(vessel.rating!.toStringAsFixed(1), textScaleFactor: 0.9, style: TextStyle(color: Colors.white)),
                                   ],
                                 ),
                                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
@@ -162,10 +162,10 @@ class _ViewVesselState extends State<ViewVessel> {
                                         Get.offAll(() => Login());
                                       else {
                                         dialogService.showLoading();
-                                        QuerySnapshot querySnapshot = await vesselService.getVesselReceptionistForChat(vessel.vesselID);
-                                        User user = querySnapshot.docs.isEmpty ? null : User.fromDocument(querySnapshot.docs[0]);
-                                        String userID = user == null ? vessel.vesselChatUserID : user.userID;
-                                        String chatRoomID = await messageService.checkIfVesselChatRoomExists(userID, vessel.vesselID, true, false);
+                                        QuerySnapshot querySnapshot = await vesselService.getVesselReceptionistForChat(vessel.vesselID!);
+                                        User? user = querySnapshot.docs.isEmpty ? null : User.fromDocument(querySnapshot.docs[0]);
+                                        String? userID = user == null ? vessel.vesselChatUserID : user.userID;
+                                        String chatRoomID = await messageService.checkIfVesselChatRoomExists(userID!, vessel.vesselID!, true, false);
                                         DocumentSnapshot doc = await userService.getUser(userID);
                                         User chatUser = User.fromDocument(doc);
                                         Get.back();
@@ -253,12 +253,12 @@ class _ViewVesselState extends State<ViewVessel> {
               Expanded(
                 child: PageView.builder(
                   controller: reviewController,
-                  itemCount: vessel.images.length,
+                  itemCount: vessel.images!.length,
                   itemBuilder: (context, i) {
                     return InkWell(
-                      onTap: () => Get.to(() => ViewImages(images: vessel.images, index: i)),
+                      onTap: () => Get.to(() => ViewImages(images: vessel.images!, index: i)),
                       child: CachedImage(
-                        url: vessel.images[i],
+                        url: vessel.images![i],
                         height: 100,
                         roundedCorners: true,
                         circular: false,
@@ -271,7 +271,7 @@ class _ViewVesselState extends State<ViewVessel> {
                 height: 40,
                 child: SmoothPageIndicator(
                   controller: reviewController, // PageController
-                  count: vessel.images.length,
+                  count: vessel.images!.length,
                   effect: WormEffect(activeDotColor: primaryColor, radius: 5, dotHeight: 10, dotWidth: 10),
                   onDotClicked: (index) {},
                 ),
@@ -280,23 +280,25 @@ class _ViewVesselState extends State<ViewVessel> {
           ),
         ),
         SizedBox(height: 30),
-        Text('Vessel Category: ' + vessel.vesselType, textScaleFactor: 1.1, style: TextStyle(fontWeight: FontWeight.bold)),
+        Text('Vessel Category: ' + vessel.vesselType!, textScaleFactor: 1.1, style: TextStyle(fontWeight: FontWeight.bold)),
         if (vessel.vesselType == 'Yacht')
           Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: Text('Vessel Type: ' + vessel.yachtType, textScaleFactor: 1.1, style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text('Vessel Type: ' + vessel.yachtType!, textScaleFactor: 1.1, style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         SizedBox(height: 30),
         Text('Description', textScaleFactor: 1.1, style: TextStyle(fontWeight: FontWeight.bold)),
         SizedBox(height: 20),
-        Text(vessel.description),
+        Text(vessel.description!),
         SizedBox(height: 20),
         Text('Details', textScaleFactor: 1.1, style: TextStyle(fontWeight: FontWeight.bold)),
         SizedBox(height: 20),
         CustomListTile(
-          onTap: () => widget.showFullAddress ? openMap(vessel.geoPoint.latitude, vessel.geoPoint.longitude) : showNoticeAlert('Full address will be shown once your booking is confirmed'),
+          onTap: () => widget.showFullAddress ? openMap(vessel.geoPoint!.latitude, vessel.geoPoint!.longitude) : showNoticeAlert('Full address will be shown once your booking is confirmed'),
           leading: Icon(Icons.location_on_outlined, color: secondaryColor),
-          title: Text(widget.showFullAddress ? vessel.address : vessel.shortAddress, style: TextStyle(color: secondaryColor, fontWeight: FontWeight.bold)),
+          title: Text(widget.showFullAddress 
+  ? (vessel.address ?? 'Default Address') 
+  : (vessel.shortAddress ?? 'Short Address'), style: TextStyle(color: secondaryColor, fontWeight: FontWeight.bold)),
           trailing: Icon(Icons.directions_outlined, color: secondaryColor),
         ),
         CustomListTile(
@@ -338,8 +340,8 @@ class _ViewVesselState extends State<ViewVessel> {
                       child: ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: vessel.durations.length,
-                        itemBuilder: (context, index) => fishingFeatures('Cost for ${vessel.durations[index].toString()} hours', formatCurrency.format(vessel.prices[index]).toString()),
+                        itemCount: vessel.durations!.length,
+                        itemBuilder: (context, index) => fishingFeatures('Cost for ${vessel.durations![index].toString()} hours', formatCurrency.format(vessel.prices![index]).toString()),
                       ),
                     ),
                   ],
@@ -374,8 +376,8 @@ class _ViewVesselState extends State<ViewVessel> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      fishingFeatures('Fishing Type', vessel.fishingType),
-                      fishingFeatures('Vessel Type', vessel.fishingVesselType),
+                      fishingFeatures('Fishing Type', vessel.fishingType!),
+                      fishingFeatures('Vessel Type', vessel.fishingVesselType!),
                       fishingFeatures('Fishing Techniques', ''),
                       Container(
                         padding: const EdgeInsets.all(10),
@@ -386,9 +388,9 @@ class _ViewVesselState extends State<ViewVessel> {
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: vessel.fishingTechniques.length,
+                          itemCount: vessel.fishingTechniques!.length,
                           itemBuilder: (context, index) => Text(
-                            "- ${vessel.fishingTechniques[index]}",
+                            "- ${vessel.fishingTechniques![index]}",
                           ),
                         ),
                       ),
@@ -402,9 +404,9 @@ class _ViewVesselState extends State<ViewVessel> {
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: vessel.fishingSpecies.length,
+                          itemCount: vessel.fishingSpecies!.length,
                           itemBuilder: (context, index) => Text(
-                            "- ${vessel.fishingSpecies[index]}",
+                            "- ${vessel.fishingSpecies![index]}",
                           ),
                         ),
                       ),
@@ -439,7 +441,7 @@ class _ViewVesselState extends State<ViewVessel> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(vessel.cancellationPolicy, textScaleFactor: 1.25, style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text(vessel.cancellationPolicy!, textScaleFactor: 1.25, style: TextStyle(fontWeight: FontWeight.bold)),
                     SizedBox(height: 20),
                     Text(getCancellationPolicyText(vessel)),
                   ],
@@ -476,7 +478,7 @@ class _ViewVesselState extends State<ViewVessel> {
         CustomListTile(
           leading: Icon(FontAwesomeIcons.rulerHorizontal),
           title: Text('Length'),
-          trailing: Text((vessel.length * 3.28084).toString() + 'm', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+          trailing: Text((vessel.length! * 3.28084).toString() + 'm', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
         ),
         CustomListTile(
           leading: Icon(FontAwesomeIcons.personBooth),
@@ -496,7 +498,7 @@ class _ViewVesselState extends State<ViewVessel> {
         CustomListTile(
           leading: Icon(FontAwesomeIcons.gaugeHigh),
           title: Text('Top Speed'),
-          trailing: Text((vessel.speed * 1.150779).toString() + ' mph', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+          trailing: Text((vessel.speed! * 1.150779).toString() + ' mph', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
         ),
         Container(
           margin: EdgeInsets.only(bottom: 20),
@@ -524,9 +526,9 @@ class _ViewVesselState extends State<ViewVessel> {
                   shrinkWrap: true,
                   padding: const EdgeInsets.only(left: 60),
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: vessel.features.length,
+                  itemCount: vessel.features!.length,
                   itemBuilder: (context, index) => Text(
-                    "- ${vessel.features[index]}",
+                    "- ${vessel.features![index]}",
                   ),
                 ),
               ),
@@ -559,9 +561,9 @@ class _ViewVesselState extends State<ViewVessel> {
                   shrinkWrap: true,
                   padding: const EdgeInsets.only(left: 60),
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: vessel.thingsAllowed.length,
+                  itemCount: vessel.thingsAllowed!.length,
                   itemBuilder: (context, index) => Text(
-                    "- ${vessel.thingsAllowed[index]}",
+                    "- ${vessel.thingsAllowed![index]}",
                   ),
                 ),
               ),
@@ -597,7 +599,7 @@ class _ViewVesselState extends State<ViewVessel> {
                                   image: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      CachedImage(roundedCorners: true, circular: false, height: 75, url: vessel.images[0]),
+                                      CachedImage(roundedCorners: true, circular: false, height: 75, url: vessel.images![0]),
                                     ],
                                   ),
                                   title: Text("Rate ${vessel.vesselName}"),
@@ -641,7 +643,7 @@ class _ViewVesselState extends State<ViewVessel> {
               Review review = Review.fromDocument(documentSnapshot[i]);
               return ReviewItem(review: review);
             },
-            query: vesselService.getVesselReviews(vessel.vesselID, 5000),
+            query: vesselService.getVesselReviews(vessel.vesselID!, 5000),
             onEmpty: Padding(
               padding: EdgeInsets.only(bottom: Get.height / 2 - 100),
               child: EmptyBox(text: 'Book this vessel to review'),
@@ -670,7 +672,7 @@ class _ViewVesselState extends State<ViewVessel> {
                         if (u.FirebaseAuth.instance.currentUser == null)
                           Get.offAll(() => Login());
                         else
-                          Get.to(() => WritePost(vessel: vessel));
+                          Get.to(() => WritePost(vessel: vessel, forum: null as Forum,));
                       },
                       child: Text('Write a Post', style: TextStyle(decoration: TextDecoration.underline))),
                 ],
@@ -689,7 +691,7 @@ class _ViewVesselState extends State<ViewVessel> {
               Forum forum = Forum.fromDocument(documentSnapshot[i]);
               return PostItem(forum: forum, vessel: vessel);
             },
-            query: vesselService.getVesselForumPosts(vessel.vesselID, 5000),
+            query: vesselService.getVesselForumPosts(vessel.vesselID!, 5000),
             onEmpty: Padding(
               padding: EdgeInsets.only(bottom: Get.height / 2 - 100),
               child: EmptyBox(text: 'Book this vessel to post'),

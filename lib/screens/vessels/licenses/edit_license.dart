@@ -22,7 +22,7 @@ import 'package:makaiapp/widgets/loading.dart';
 class EditLicense extends StatefulWidget {
   final License license;
 
-  EditLicense({this.license});
+  EditLicense({required this.license});
 
   @override
   State<EditLicense> createState() => _EditLicenseState();
@@ -42,7 +42,7 @@ class _EditLicenseState extends State<EditLicense> {
   final TextEditingController buildDateTEC = TextEditingController();
   final TextEditingController expiryDateTEC = TextEditingController();
   Rx<String> certificateType = 'Six-pack or Charter Boat License'.obs;
-  Timestamp issueDate, buildDate, expiryDate;
+  late Timestamp issueDate, buildDate, expiryDate;
   final vesselService = Get.find<VesselService>();
   final userController = Get.find<UserController>();
   final dialogService = Get.find<DialogService>();
@@ -51,20 +51,20 @@ class _EditLicenseState extends State<EditLicense> {
 
   @override
   void initState() {
-    imageURLs.value = widget.license.licenses;
-    documentNumberTEC.text = widget.license.documentNumber;
-    certificateType.value = widget.license.licenseType;
-    countryCodeTEC.text = widget.license.countryCode;
-    referenceNumberTEC.text = widget.license.referenceNumber;
-    fullNameTEC.value.text = widget.license.fullName;
-    addressTEC.text = widget.license.address;
-    citizenshipTEC.text = widget.license.citizenship;
-    dobTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.issueDate.toDate());
-    buildDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.dob.toDate());
-    expiryDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.expiryDate.toDate());
-    issueDate = widget.license.issueDate;
-    buildDate = widget.license.dob;
-    expiryDate = widget.license.expiryDate;
+    imageURLs.value = widget.license.licenses!;
+    documentNumberTEC.text = widget.license.documentNumber!;
+    certificateType.value = widget.license.licenseType!;
+    countryCodeTEC.text = widget.license.countryCode!;
+    referenceNumberTEC.text = widget.license.referenceNumber!;
+    fullNameTEC.value.text = widget.license.fullName!;
+    addressTEC.text = widget.license.address!;
+    citizenshipTEC.text = widget.license.citizenship!;
+    dobTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.issueDate!.toDate());
+    buildDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.dob!.toDate());
+    expiryDateTEC.text = DateFormat('MMMM dd, yyyy').format(widget.license.expiryDate!.toDate());
+    issueDate = widget.license.issueDate!;
+    buildDate = widget.license.dob!;
+    expiryDate = widget.license.expiryDate!;
     super.initState();
   }
 
@@ -123,21 +123,21 @@ class _EditLicenseState extends State<EditLicense> {
                           height: 100,
                           width: Get.width,
                           child: StreamBuilder(
-                              stream: vesselService.getVesselCaptainsStream(widget.license.vesselID),
+                              stream: vesselService.getVesselCaptainsStream(widget.license.vesselID!),
                               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                 if (snapshot.hasData)
-                                  return snapshot.data.docs.length > 0
+                                  return snapshot.data!.docs.length > 0
                                       ? ListView.builder(
                                           padding: const EdgeInsets.all(15),
-                                          itemCount: snapshot.data.docs.length,
+                                          itemCount: snapshot.data!.docs.length,
                                           itemBuilder: (context, i) {
-                                            DocumentSnapshot doc = snapshot.data.docs[i];
+                                            DocumentSnapshot doc = snapshot.data!.docs[i];
                                             User user = User.fromDocument(doc);
                                             return ListTile(
-                                              title: Text(user.fullName),
+                                              title: Text(user.fullName!),
                                               trailing: Text('SELECT', textScaleFactor: 0.9, style: TextStyle(color: Colors.green)),
                                               onTap: () {
-                                                fullNameTEC.value.text = user.fullName;
+                                                fullNameTEC.value.text = user.fullName!;
                                                 Get.back();
                                               },
                                             );
@@ -167,7 +167,7 @@ class _EditLicenseState extends State<EditLicense> {
               CustomButton(
                 text: 'Edit License',
                 function: () async {
-                  if (!step4Key.currentState.validate()) {
+                  if (!step4Key.currentState!.validate()) {
                     showRedAlert('Please fill the necessary details');
                   } else if (imageURLs.isEmpty && licenses.isEmpty) {
                     showRedAlert('Please add at least one license image');
@@ -186,7 +186,7 @@ class _EditLicenseState extends State<EditLicense> {
 
   update() async {
     dialogService.showLoading();
-    List finalLicenses = widget.license.licenses;
+    List finalLicenses = widget.license.licenses!;
     for (int i = 0; i < licenses.length; i++) {
       finalLicenses.add(await storageService.uploadPhoto(licenses[i], 'licenses'));
     }
@@ -194,7 +194,7 @@ class _EditLicenseState extends State<EditLicense> {
       License(
         licenseID: widget.license.licenseID,
         licenses: finalLicenses,
-        userID: userController.currentUser.value.userID,
+        userID: userController.currentUser.value.userID!,
         vesselID: widget.license.vesselID,
         issueDate: issueDate,
         dob: buildDate,
@@ -214,7 +214,7 @@ class _EditLicenseState extends State<EditLicense> {
     return InkWell(
       onTap: () async {
         File file = await storageService.pickImage();
-        if (file != null) licenses.add(file);
+        licenses.add(file);
       },
       child: Container(
         height: 80,
@@ -242,7 +242,7 @@ class _EditLicenseState extends State<EditLicense> {
       items: items.map((value) {
         return DropdownMenuItem<String>(value: value, child: Text(value, textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
-      onChanged: (value) => certificateType.value = value,
+      onChanged: (value) => certificateType.value = value!,
     );
   }
 

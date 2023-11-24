@@ -18,17 +18,17 @@ class Saved extends StatelessWidget {
         stream: vesselService.getSavedVessels(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
-            return snapshot.data.docs.isNotEmpty
+            return snapshot.data!.docs.isNotEmpty
                 ? ListView.builder(
                     padding: const EdgeInsets.all(15),
                     shrinkWrap: true,
-                    itemCount: snapshot.data.docs.length,
+                    itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, i) {
                       return FutureBuilder(
-                        future: vesselService.getVesselForVesselID(snapshot.data.docs[i].get('vesselID')),
+                        future: vesselService.getVesselForVesselID(snapshot.data!.docs[i].get('vesselID')),
                         builder: (context, vesselData) {
                           if (vesselData.hasData)
-                            return VesselItem(vessel: Vessel.fromDocument(vesselData.data));
+                            return VesselItem(vessel: Vessel.fromDocument(vesselData.data as DocumentSnapshot<Map<String, dynamic>>));
                           else
                             return Container();
                         },

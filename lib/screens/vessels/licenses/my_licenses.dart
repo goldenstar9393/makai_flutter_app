@@ -17,7 +17,7 @@ import 'package:paginate_firestore/paginate_firestore.dart';
 class MyLicenses extends StatelessWidget {
   final String vesselID;
 
-  MyLicenses({this.vesselID});
+  MyLicenses({required this.vesselID});
 
   final vesselService = Get.find<VesselService>();
   final userController = Get.find<UserController>();
@@ -37,7 +37,7 @@ class MyLicenses extends StatelessWidget {
                   title: Text('Add a New License'),
                   onTap: () async {
                     QuerySnapshot docs = await vesselService.getVesselCaptains(vesselID);
-                    if (docs != null && docs.docs.isEmpty)
+                    if (docs.docs.isEmpty)
                       showRedAlert('Please add a captain to the vessel before adding a license');
                     else
                       Get.to(() => AddLicense(vesselID: vesselID));
@@ -55,7 +55,7 @@ class MyLicenses extends StatelessWidget {
                   License certificate = License.fromDocument(documentSnapshot[i]);
                   return CustomListTile(
                     onTap: () => Get.to(() => ViewLicense(license: certificate)),
-                    title: Text(certificate.licenseType),
+                    title: Text(certificate.licenseType!),
                     leading: Icon(Icons.verified_user_outlined),
                     trailing: Icon(Icons.keyboard_arrow_right_rounded),
                   );
@@ -81,7 +81,7 @@ class MyLicenses extends StatelessWidget {
         return StreamBuilder(
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              Vessel vessel = Vessel.fromDocument(snapshot.data);
+              Vessel vessel = Vessel.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>);
               return VesselItem(vessel: vessel);
             } else
               return Container();

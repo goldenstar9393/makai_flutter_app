@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:makaiapp/controllers/user_controller.dart';
@@ -16,7 +17,7 @@ import 'package:paginate_firestore/paginate_firestore.dart';
 class MyCertificates extends StatelessWidget {
   final String vesselID;
 
-  MyCertificates({this.vesselID});
+  MyCertificates({required this.vesselID});
 
   final vesselService = Get.find<VesselService>();
   final userController = Get.find<UserController>();
@@ -34,7 +35,7 @@ class MyCertificates extends StatelessWidget {
                   marginBottom: 0,
                   leading: Icon(Icons.add),
                   title: Text('Add a New Certificate'),
-                  onTap: () => Get.to(() => AddCertificate(vesselID: vesselID)),
+                  onTap: () => Get.to(() => AddCertificate(vesselID: '',)),
                 ),
               ),
             SizedBox(height: 15),
@@ -48,7 +49,7 @@ class MyCertificates extends StatelessWidget {
                   Certificate certificate = Certificate.fromDocument(documentSnapshot[i]);
                   return CustomListTile(
                     onTap: () => Get.to(() => ViewCertificate(certificate: certificate)),
-                    title: Text(certificate.certificateType),
+                    title: Text(certificate.certificateType!),
                     leading: Icon(Icons.verified_user_outlined),
                     trailing: Icon(Icons.keyboard_arrow_right_rounded),
                   );
@@ -74,7 +75,7 @@ class MyCertificates extends StatelessWidget {
         return StreamBuilder(
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              Vessel vessel = Vessel.fromDocument(snapshot.data);
+              Vessel vessel = Vessel.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>);
               return VesselItem(vessel: vessel);
             } else
               return Container();

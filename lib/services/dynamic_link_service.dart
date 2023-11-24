@@ -16,22 +16,20 @@ class DynamicLinkService {
   void _handleDeepLink(PendingDynamicLinkData data) async {
     final dialogService = Get.find<DialogService>();
     final userController = Get.find<UserController>();
-    final Uri deepLink = data?.link;
-    if (deepLink != null) {
-      print('_handleDeepLink | deeplink: $deepLink');
+    final Uri deepLink = data.link;
+    print('_handleDeepLink | deeplink: $deepLink');
 
-      var isVoucher = deepLink.pathSegments.contains('voucher');
-      if (isVoucher) {}
-      // if (scanCode) {
-      //   var issuedByAccountId = deepLink.queryParameters['issuedByAccountId'];
-      //   var displayMessage = deepLink.queryParameters['displayMessage'];
-      //   if (issuedByAccountId != null && displayMessage != null) {
-      //     await addVoucher(issuedByAccountId, displayMessage, data.link.toString());
-      //     Get.to(()=> MyVouchers());
-      //   }
-      // }
+    var isVoucher = deepLink.pathSegments.contains('voucher');
+    if (isVoucher) {}
+    // if (scanCode) {
+    //   var issuedByAccountId = deepLink.queryParameters['issuedByAccountId'];
+    //   var displayMessage = deepLink.queryParameters['displayMessage'];
+    //   if (issuedByAccountId != null && displayMessage != null) {
+    //     await addVoucher(issuedByAccountId, displayMessage, data.link.toString());
+    //     Get.to(()=> MyVouchers());
+    //   }
+    // }
 
-      print('Link handled');
+    print('Link handled');
     }
-  }
 }

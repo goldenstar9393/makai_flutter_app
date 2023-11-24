@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart' hide Card;
-import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:get/get.dart';
 import 'package:makaiapp/controllers/user_controller.dart';
@@ -27,7 +26,7 @@ class _AddCardState extends State<AddCard> {
   bool useGlassMorphism = false;
   bool useBackgroundImage = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  CreditCardModel creditCardModel;
+  late CreditCardModel creditCardModel;
   bool isDefaultCard = true;
 
   @override
@@ -69,34 +68,19 @@ class _AddCardState extends State<AddCard> {
                     isExpiryDateVisible: true,
                     cardHolderName: cardHolderName,
                     expiryDate: expiryDate,
-                    themeColor: primaryColor,
-                    cardNumberDecoration: InputDecoration(
-                      labelText: 'Card Number',
-                      hintText: 'XXXX XXXX XXXX XXXX',
-                    ),
-                    expiryDateDecoration: InputDecoration(
-                      labelText: 'Expiry Date',
-                      hintText: 'XX/XX',
-                    ),
-                    cvvCodeDecoration: InputDecoration(
-                      labelText: 'CVV',
-                      hintText: 'XXX',
-                    ),
-                    cardHolderDecoration: InputDecoration(
-                      labelText: 'Card Holder Name',
-                    ),
+                   
                     onCreditCardModelChange: onCreditCardModelChange,
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  CheckboxListTile(value: isDefaultCard, onChanged: (val) => setState(() => isDefaultCard = val), title: Text('Set this card as your default payment method')),
+                  CheckboxListTile(value: isDefaultCard, onChanged: (val) => setState(() => isDefaultCard = val!), title: Text('Set this card as your default payment method')),
                   Padding(
                     padding: const EdgeInsets.all(15),
                     child: CustomButton(
                       text: 'Add Card',
                       function: () async {
-                        if (formKey.currentState.validate()) {
+                        if (formKey.currentState!.validate()) {
                           Map params = {
                             'number': creditCardModel.cardNumber,
                             'exp_month': creditCardModel.expiryDate.substring(0, 2),

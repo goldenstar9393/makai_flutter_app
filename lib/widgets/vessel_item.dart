@@ -9,7 +9,7 @@ import 'package:makaiapp/utils/constants.dart';
 import 'package:makaiapp/widgets/cached_image.dart';
 
 class VesselItem extends StatelessWidget {
-  final Vessel vessel;
+  final Vessel? vessel;
 
   VesselItem({this.vessel});
   final formatCurrency = new NumberFormat.simpleCurrency();
@@ -17,13 +17,13 @@ class VesselItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.to(() => ViewVessel(false, vesselID: vessel.vesselID)),
+      onTap: () => Get.to(() => ViewVessel(false, vesselID: vessel!.vesselID!)),
       child: Container(
         height: MY_ROLE != VESSEL_USER ? 320 : 250,
         margin: const EdgeInsets.only(bottom: 20),
         foregroundDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: vessel.disabledByAdmin ? Colors.grey : Colors.transparent,
+          color: vessel!.disabledByAdmin! ? Colors.grey : Colors.transparent,
           backgroundBlendMode: BlendMode.saturation,
         ),
         decoration: BoxDecoration(
@@ -39,7 +39,7 @@ class VesselItem extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-                    child: CachedImage(url: vessel.images[0], height: double.infinity, roundedCorners: false),
+                    child: CachedImage(url: vessel!.images![0], height: double.infinity, roundedCorners: false),
                   ),
                   Container(
                     child: Row(
@@ -47,14 +47,14 @@ class VesselItem extends StatelessWidget {
                       children: [
                         Icon(FontAwesomeIcons.solidStar, size: 10, color: Colors.white),
                         SizedBox(width: 5),
-                        Text(vessel.rating.toStringAsFixed(1), textScaleFactor: 0.9, style: TextStyle(color: Colors.white)),
+                        Text(vessel!.rating!.toStringAsFixed(1), textScaleFactor: 0.9, style: TextStyle(color: Colors.white)),
                       ],
                     ),
                     margin: const EdgeInsets.all(15),
                     padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                     decoration: BoxDecoration(color: Colors.deepOrangeAccent, borderRadius: BorderRadius.circular(5)),
                   ),
-                  if (vessel.disabledUntil != null)
+                  if (vessel!.disabledUntil != null)
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Container(
@@ -64,7 +64,7 @@ class VesselItem extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(vessel.disabledUntil.toDate().isBefore(DateTime(2100)) ? 'Disabled Until: ' + DateFormat('dd MMM yyyy').format(vessel.disabledUntil.toDate()) : 'Disabled permanently', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                              Text(vessel!.disabledUntil!.toDate().isBefore(DateTime(2100)) ? 'Disabled Until: ' + DateFormat('dd MMM yyyy').format(vessel!.disabledUntil!.toDate()) : 'Disabled permanently', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                             ],
                           )),
                     )
@@ -83,8 +83,8 @@ class VesselItem extends StatelessWidget {
                       children: <Widget>[
                         Row(
                           children: [
-                            Expanded(child: Text(vessel.vesselName, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold))),
-                            Text('From ' + formatCurrency.format(vessel.prices[0]).toString(), style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                            Expanded(child: Text(vessel!.vesselName!, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold))),
+                            Text('From ' + formatCurrency.format(vessel!.prices![0]).toString(), style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ],
@@ -93,7 +93,7 @@ class VesselItem extends StatelessWidget {
                 ],
               ),
             ),
-            if (MY_ROLE != VESSEL_USER && !vessel.licensed || !vessel.captainLicensed)
+            if (MY_ROLE != VESSEL_USER && !vessel!.licensed! || !vessel!.captainLicensed!)
               Container(
                 color: redColor,
                 child: Row(
@@ -108,8 +108,8 @@ class VesselItem extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      TextButton.icon(icon: Icon(Icons.remove_red_eye, color: Colors.green, size: 20), onPressed: () => Get.to(() => ViewVessel(true, vesselID: vessel.vesselID)), label: Text('View', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold))),
-                      TextButton.icon(icon: Icon(Icons.settings, color: secondaryColor, size: 20), onPressed: () => Get.to(() => ManageVessels(vessel: vessel)), label: Text('Manage', style: TextStyle(color: secondaryColor, fontWeight: FontWeight.bold))),
+                      TextButton.icon(icon: Icon(Icons.remove_red_eye, color: Colors.green, size: 20), onPressed: () => Get.to(() => ViewVessel(true, vesselID: vessel!.vesselID!)), label: Text('View', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold))),
+                      TextButton.icon(icon: Icon(Icons.settings, color: secondaryColor, size: 20), onPressed: () => Get.to(() => ManageVessels(vessel: vessel!)), label: Text('Manage', style: TextStyle(color: secondaryColor, fontWeight: FontWeight.bold))),
                     ],
                   ),
                 ],

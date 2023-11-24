@@ -77,8 +77,8 @@ class _SelectJourneyTimingState extends State<SelectJourneyTiming> {
                     contentPadding: const EdgeInsets.all(0),
                     title: Text(item),
                     value: SelectJourneyTiming.selectedMondayTimings.contains(item),
-                    onChanged: (bool value) {
-                      if (value) {
+                    onChanged: (bool? value) {
+                      if (value != null) {
                         setState(() {
                           SelectJourneyTiming.selectedMondayTimings.add(item);
                         });
@@ -114,8 +114,8 @@ class _SelectJourneyTimingState extends State<SelectJourneyTiming> {
                     contentPadding: const EdgeInsets.all(0),
                     title: Text(item),
                     value: SelectJourneyTiming.selectedTuesdayTimings.contains(item),
-                    onChanged: (bool value) {
-                      if (value) {
+                    onChanged: (bool? value) {
+                      if (value != null) {
                         setState(() {
                           SelectJourneyTiming.selectedTuesdayTimings.add(item);
                         });
@@ -151,8 +151,8 @@ class _SelectJourneyTimingState extends State<SelectJourneyTiming> {
                     contentPadding: const EdgeInsets.all(0),
                     title: Text(item),
                     value: SelectJourneyTiming.selectedWednesdayTimings.contains(item),
-                    onChanged: (bool value) {
-                      if (value) {
+                    onChanged: (bool? value) {
+                      if (value != null) {
                         setState(() {
                           SelectJourneyTiming.selectedWednesdayTimings.add(item);
                         });
@@ -188,8 +188,8 @@ class _SelectJourneyTimingState extends State<SelectJourneyTiming> {
                     contentPadding: const EdgeInsets.all(0),
                     title: Text(item),
                     value: SelectJourneyTiming.selectedThursdayTimings.contains(item),
-                    onChanged: (bool value) {
-                      if (value) {
+                    onChanged: (bool? value) {
+                      if (value != null) {
                         setState(() {
                           SelectJourneyTiming.selectedThursdayTimings.add(item);
                         });
@@ -225,8 +225,8 @@ class _SelectJourneyTimingState extends State<SelectJourneyTiming> {
                     contentPadding: const EdgeInsets.all(0),
                     title: Text(item),
                     value: SelectJourneyTiming.selectedFridayTimings.contains(item),
-                    onChanged: (bool value) {
-                      if (value) {
+                    onChanged: (bool? value) {
+                      if (value != null) {
                         setState(() {
                           SelectJourneyTiming.selectedFridayTimings.add(item);
                         });
@@ -262,8 +262,8 @@ class _SelectJourneyTimingState extends State<SelectJourneyTiming> {
                     contentPadding: const EdgeInsets.all(0),
                     title: Text(item),
                     value: SelectJourneyTiming.selectedSaturdayTimings.contains(item),
-                    onChanged: (bool value) {
-                      if (value) {
+                    onChanged: (bool? value) {
+                      if (value != null) {
                         setState(() {
                           SelectJourneyTiming.selectedSaturdayTimings.add(item);
                         });
@@ -299,8 +299,8 @@ class _SelectJourneyTimingState extends State<SelectJourneyTiming> {
                     contentPadding: const EdgeInsets.all(0),
                     title: Text(item),
                     value: SelectJourneyTiming.selectedSundayTimings.contains(item),
-                    onChanged: (bool value) {
-                      if (value) {
+                    onChanged: (bool? value) {
+                      if (value != null) {
                         setState(() {
                           SelectJourneyTiming.selectedSundayTimings.add(item);
                         });

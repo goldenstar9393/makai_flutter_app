@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:makaiapp/widgets/loading.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -8,14 +7,14 @@ class ViewImages extends StatefulWidget {
   final List images;
   final int index;
 
-  ViewImages({this.images, this.index});
+  ViewImages({required this.images,required this.index});
 
   @override
   _RestaurantPage2State createState() => _RestaurantPage2State();
 }
 
 class _RestaurantPage2State extends State<ViewImages> {
-  PageController pageController;
+  late PageController pageController;
 
   @override
   void initState() {

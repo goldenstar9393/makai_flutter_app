@@ -17,7 +17,7 @@ import 'package:makaiapp/widgets/loading.dart';
 class ManageCrew extends StatelessWidget {
   final Vessel vessel;
 
-  ManageCrew({this.vessel});
+  ManageCrew({required this.vessel});
 
   final vesselsService = Get.find<VesselService>();
   final userService = Get.find<UserService>();
@@ -77,14 +77,14 @@ class ManageCrew extends StatelessWidget {
       stream: getQuery(type),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData)
-          return snapshot.data.docs.length > 0
+          return snapshot.data!.docs.length > 0
               ? ListView.builder(
                   padding: const EdgeInsets.all(15),
-                  itemCount: snapshot.data.docs.length,
+                  itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, i) {
-                    DocumentSnapshot doc = snapshot.data.docs[i];
+                    DocumentSnapshot doc = snapshot.data!.docs[i];
                     User user = User.fromDocument(doc);
-                    return CrewItem(user: user, vesselID: vessel.vesselID);
+                    return CrewItem(user: user, vesselID: vessel.vesselID!);
                   },
                 )
               : EmptyBox(text: 'No one added yet');
@@ -97,16 +97,16 @@ class ManageCrew extends StatelessWidget {
   getQuery(String type) {
     switch (type) {
       case 'Captain':
-        return vesselsService.getVesselCaptainsStream(vessel.vesselID);
+        return vesselsService.getVesselCaptainsStream(vessel.vesselID!);
       case 'Crew':
-        return vesselsService.getVesselCrew(vessel.vesselID);
+        return vesselsService.getVesselCrew(vessel.vesselID!);
     }
   }
 
   addMember(context) async {
     bool check = true; //await vesselsService.checkIfVesselHasCertificates(vessel.vesselID);
     if (check) {
-      String staffType = 'Crew';
+      String? staffType = 'Crew';
       TextEditingController staffTEC = TextEditingController();
       showDialog(
         context: context,
@@ -138,7 +138,7 @@ class ManageCrew extends StatelessWidget {
                         groupValue: staffType,
                         onChanged: (value) {
                           setState(() {
-                            staffType = value;
+                            staffType = value as String?;
                           });
                         },
                       ),
@@ -159,7 +159,7 @@ class ManageCrew extends StatelessWidget {
                         groupValue: staffType,
                         onChanged: (value) {
                           setState(() {
-                            staffType = value;
+                            staffType = value as String;
                           });
                         },
                       ),
@@ -182,8 +182,8 @@ class ManageCrew extends StatelessWidget {
                               onPressed: () async {
                                 dialogService.showLoading();
                                 String mobile = staffTEC.text.trim();
-                                if (staffType == 'Crew') await vesselsService.addCrew(mobile, vessel.vesselID);
-                                if (staffType == 'Captain') await vesselsService.addCaptains(mobile, vessel.vesselID);
+                                if (staffType == 'Crew') await vesselsService.addCrew(mobile, vessel.vesselID!);
+                                if (staffType == 'Captain') await vesselsService.addCaptains(mobile, vessel.vesselID!);
                               },
                               child: Text('Add')),
                         ),

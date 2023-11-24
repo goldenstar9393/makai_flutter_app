@@ -67,7 +67,7 @@ class MessageService {
   }
 
   createVesselChatRoom(String userID, String vesselID, bool userToAdmin, bool adminToUser) async {
-    String chatRoomID = userController.currentUser.value.userID + "|" + userID;
+    String chatRoomID = userController.currentUser.value.userID! + "|" + userID;
     ref.collection("chats").doc(chatRoomID).set({
       'chatRoomID': chatRoomID,
       'vesselID': vesselID,
@@ -82,7 +82,7 @@ class MessageService {
       showRedAlert('Something went wrong');
     });
 
-    return userController.currentUser.value.userID + "|" + userID;
+    return userController.currentUser.value.userID! + "|" + userID;
   }
 
   checkIfChatRoomExists(String userID) async {
@@ -108,7 +108,7 @@ class MessageService {
   }
 
   createChatRoom(String userID) async {
-    String chatRoomID = userController.currentUser.value.userID + "|" + userID;
+    String chatRoomID = userController.currentUser.value.userID! + "|" + userID;
     ref.collection("chats").doc(chatRoomID).set({
       'chatRoomID': chatRoomID,
       'lastMessage': '',
@@ -119,6 +119,6 @@ class MessageService {
       showRedAlert('Something went wrong');
     });
 
-    return userController.currentUser.value.userID + "|" + userID;
+    return userController.currentUser.value.userID! + "|" + userID;
   }
 }

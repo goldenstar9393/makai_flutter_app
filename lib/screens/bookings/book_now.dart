@@ -17,7 +17,7 @@ import 'package:paginate_firestore/paginate_firestore.dart';
 class BookNow extends StatefulWidget {
   final Vessel vessel;
 
-  BookNow({this.vessel});
+  BookNow({required this.vessel});
 
   @override
   State<BookNow> createState() => _BookNowState();
@@ -25,11 +25,11 @@ class BookNow extends StatefulWidget {
 
 class _BookNowState extends State<BookNow> {
   final GlobalKey<FormState> step1Key = GlobalKey<FormState>();
-  DateTime bookingDate;
+  late DateTime bookingDate;
   final TextEditingController dateTEC = TextEditingController();
   final TextEditingController timeTEC = TextEditingController();
   final vesselService = Get.find<VesselService>();
-  String slot;
+  late String slot;
   int seatsAvailable = 0;
   Rx<String> duration = '1'.obs;
   Rx<String> seats = '1'.obs;
@@ -38,9 +38,9 @@ class _BookNowState extends State<BookNow> {
 
   @override
   void initState() {
-    duration.value = widget.vessel.durations[0].toString();
+    duration.value = widget.vessel.durations![0].toString();
     seatsList.clear();
-    for (int i = 0; i < widget.vessel.passengerCapacity; i++) seatsList.add('${i + 1}');
+    for (int i = 0; i < widget.vessel.passengerCapacity!; i++) seatsList.add('${i + 1}');
     super.initState();
   }
 
@@ -120,7 +120,7 @@ class _BookNowState extends State<BookNow> {
                 validate: true,
                 enabled: false,
               ),
-            CustomTextField(dropdown: dropDown(widget.vessel.durations, 8), label: 'Hours *'),
+            CustomTextField(dropdown: dropDown(widget.vessel.durations!, 8), label: 'Hours *'),
             SizedBox(height: 15),
             if (seatsAvailable == -1) LoadingData(),
             if (seatsAvailable > 0) Text('Seats available: $seatsAvailable', style: TextStyle(color: Colors.green)),
@@ -129,7 +129,7 @@ class _BookNowState extends State<BookNow> {
                 style: ButtonStyle(backgroundColor: MaterialStateProperty.all(seatsAvailable > 0 ? primaryColor : Colors.grey)),
                 onPressed: () async {
                   if (seatsAvailable > 0) {
-                    if (!step1Key.currentState.validate()) {
+                    if (!step1Key.currentState!.validate()) {
                       showRedAlert('Please fill the necessary details');
                     } else {
                       Get.off(() => Checkout(
@@ -171,20 +171,20 @@ class _BookNowState extends State<BookNow> {
                 margin: EdgeInsets.only(bottom: 15),
                 child: ListTile(
                   onTap: () => Get.off(() => Checkout(
-                        price: preMadeTrip.type == 'Per Passenger' ? int.parse(noOfSeats.value) * preMadeTrip.price : preMadeTrip.price,
-                        duration: preMadeTrip.duration,
+                        price: preMadeTrip.type == 'Per Passenger' ? int.parse(noOfSeats.value) * preMadeTrip.price! : preMadeTrip.price!,
+                        duration: preMadeTrip.duration!,
                         vessel: widget.vessel,
                         guestCount: int.parse(noOfSeats.value),
-                        date: preMadeTrip.tripDate.toDate(),
+                        date: preMadeTrip.tripDate!.toDate(),
                         isPreMadeTrip: true,
                       )),
-                  title: Text(DateFormat('dd MMM yyyy - hh:mm aa ').format(preMadeTrip.tripDate.toDate()) + '(${preMadeTrip.duration} hrs)'),
-                  subtitle: Text('\$' + preMadeTrip.price.toString() + ' - ' + preMadeTrip.type),
+                  title: Text(DateFormat('dd MMM yyyy - hh:mm aa ').format(preMadeTrip.tripDate!.toDate()) + '(${preMadeTrip.duration} hrs)'),
+                  subtitle: Text('\$' + preMadeTrip.price.toString() + ' - ' + preMadeTrip.type!),
                   trailing: Text('BOOK', textScaleFactor: 0.95, style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
                 ),
               );
             },
-            query: vesselService.viewTripsForVessel(widget.vessel.vesselID),
+            query: vesselService.viewTripsForVessel(widget.vessel.vesselID!),
             onEmpty: Padding(
               padding: const EdgeInsets.all(8.0),
               child: EmptyBox(text: 'No pre made trips to show'),
@@ -203,25 +203,25 @@ class _BookNowState extends State<BookNow> {
     DateTime dateTime = bookingDate;
     switch (dateTime.weekday) {
       case 1:
-        items = widget.vessel.monday;
+        items = widget.vessel.monday!;
         break;
       case 2:
-        items = widget.vessel.tuesday;
+        items = widget.vessel.tuesday!;
         break;
       case 3:
-        items = widget.vessel.wednesday;
+        items = widget.vessel.wednesday!;
         break;
       case 4:
-        items = widget.vessel.thursday;
+        items = widget.vessel.thursday!;
         break;
       case 5:
-        items = widget.vessel.friday;
+        items = widget.vessel.friday!;
         break;
       case 6:
-        items = widget.vessel.saturday;
+        items = widget.vessel.saturday!;
         break;
       case 7:
-        items = widget.vessel.sunday;
+        items = widget.vessel.sunday!;
         break;
     }
 
@@ -238,11 +238,11 @@ class _BookNowState extends State<BookNow> {
         });
         final bookingService = Get.find<BookingService>();
         print(slot);
-        timeTEC.text = value;
+        timeTEC.text = value!;
         bookingDate = DateTime(bookingDate.year, bookingDate.month, bookingDate.day, int.parse(timeTEC.text.substring(0, 2)), int.parse(timeTEC.text.substring(3, 5)));
         //dateTime = dateTime.toUtc().add(Duration(hours: 5, minutes: 30));
         print(DateFormat('dd MM yyyy hh:mm').format(bookingDate));
-        seatsAvailable = await bookingService.checkSeatAvailability(widget.vessel.vesselID, (bookingDate.toUtc().millisecondsSinceEpoch ~/ 1000).toInt().toString());
+        seatsAvailable = await bookingService.checkSeatAvailability(widget.vessel.vesselID!, (bookingDate.toUtc().millisecondsSinceEpoch ~/ 1000).toInt().toString());
         setState(() {
           slot = value;
         });
@@ -271,14 +271,14 @@ class _BookNowState extends State<BookNow> {
         return DropdownMenuItem<String>(value: value.toString(), child: Text(value.toString(), textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
       onChanged: (value) => i == 9
-          ? seats.value = value
+          ? seats.value = value!
           : i == 10
-              ? noOfSeats.value = value
-              : duration.value = value,
+              ? noOfSeats.value = value!
+              : duration.value = value!,
     );
   }
 
   getFeesForDuration(num duration) {
-    for (int i = 0; i < widget.vessel.durations.length; i++) if (widget.vessel.durations[i] == duration) return widget.vessel.prices[i];
+    for (int i = 0; i < widget.vessel.durations!.length; i++) if (widget.vessel.durations![i] == duration) return widget.vessel.prices![i];
   }
 }

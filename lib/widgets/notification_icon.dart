@@ -11,7 +11,7 @@ import 'package:makaiapp/utils/constants.dart';
 import '../models/users_model.dart';
 
 class NotificationIcon extends StatefulWidget {
-  NotificationIcon({Key key}) : super(key: key);
+  NotificationIcon(); //check this and compare if get error
 
   @override
   State<NotificationIcon> createState() => _NotificationIconState();
@@ -44,7 +44,7 @@ class _NotificationIconState extends State<NotificationIcon> {
           User user = userController.currentUser.value;
           if (snapshot.hasData) {
             //userController.currentUser.value = User.fromDocument(snapshot.data);
-            user = User.fromDocument(snapshot.data);
+            user = User.fromDocument(snapshot.data as DocumentSnapshot<Object?>);
           }
           return IconButton(
             padding: EdgeInsets.zero,

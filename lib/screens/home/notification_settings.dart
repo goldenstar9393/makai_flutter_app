@@ -23,10 +23,10 @@ class _NotificationSettingsState extends State<NotificationSettings> {
 
   @override
   void initState() {
-    bookingNotifications.value = userController.currentUser.value.bookingNotifications;
-    messageNotifications.value = userController.currentUser.value.messageNotifications;
-    generalNotifications.value = userController.currentUser.value.generalNotifications;
-    transactionNotifications.value = userController.currentUser.value.transactionNotifications;
+    bookingNotifications.value = userController.currentUser.value.bookingNotifications!;
+    messageNotifications.value = userController.currentUser.value.messageNotifications!;
+    generalNotifications.value = userController.currentUser.value.generalNotifications!;
+    transactionNotifications.value = userController.currentUser.value.transactionNotifications!;
     super.initState();
   }
 

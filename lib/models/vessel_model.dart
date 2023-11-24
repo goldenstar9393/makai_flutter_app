@@ -1,52 +1,51 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Vessel {
-  final String userID;
-  String vesselChatUserID;
-  final String vesselID;
-  final String vesselName;
-  final String description;
-  final List thingsAllowed;
-  final num rating;
-  final num ratingCount;
-  final List prices;
-  final num passengerCapacity;
-  final num availableSeats;
-  final List durations;
-  final List images;
-  final bool disabledByAdmin;
-  final bool approved;
-  bool licensed;
-  bool captainLicensed;
-  final Timestamp disabledUntil;
-  final GeoPoint geoPoint;
-  final String address;
-  final String shortAddress;
-  final num length;
-  final num cabins;
-  final num bathrooms;
-  final num crewSize;
-  final num speed;
-  final String builder;
-  final String vesselType;
-  final String yachtType;
-  final String fishingVesselType;
-  final String fishingType;
-  final String cancellationPolicy;
-  final List features;
-  final List fishingSpecies;
-  final List fishingTechniques;
-  final List monday;
-  final List tuesday;
-  final List wednesday;
-  final List thursday;
-  final List friday;
-  final List saturday;
-  final List sunday;
+  final String? userID;
+  String? vesselChatUserID;
+  final String? vesselID;
+  final String? vesselName;
+  final String? description;
+  final List<dynamic>? thingsAllowed;
+  final num? rating;
+  final num? ratingCount;
+  final List<dynamic>? prices;
+  final num? passengerCapacity;
+  final num? availableSeats;
+  final List<dynamic>? durations;
+  final List<dynamic>? images;
+  final bool? disabledByAdmin;
+  final bool? approved;
+  late final bool? licensed;
+  late final bool? captainLicensed;
+  final Timestamp? disabledUntil;
+  final GeoPoint? geoPoint;
+  final String? address;
+  final String? shortAddress;
+  final num? length;
+  final num? cabins;
+  final num? bathrooms;
+  final num? crewSize;
+  final num? speed;
+  final String? builder;
+  final String? vesselType;
+  final String? yachtType;
+  final String? fishingVesselType;
+  final String? fishingType;
+  final String? cancellationPolicy;
+  final List<dynamic>? features;
+  final List<dynamic>? fishingSpecies;
+  final List<dynamic>? fishingTechniques;
+  final List<dynamic>? monday;
+  final List<dynamic>? tuesday;
+  final List<dynamic>? wednesday;
+  final List<dynamic>? thursday;
+  final List<dynamic>? friday;
+  final List<dynamic>? saturday;
+  final List<dynamic>? sunday;
 
   Vessel({
     this.userID,
-    this.vesselChatUserID,
     this.vesselID,
     this.vesselName,
     this.description,
@@ -62,7 +61,6 @@ class Vessel {
     this.approved,
     this.licensed,
     this.captainLicensed,
-    this.disabledUntil,
     this.geoPoint,
     this.address,
     this.shortAddress,
@@ -87,64 +85,59 @@ class Vessel {
     this.friday,
     this.saturday,
     this.sunday,
+    this.vesselChatUserID,
+    this.disabledUntil,
   });
 
-  factory Vessel.fromDocument(DocumentSnapshot doc) {
-    try {
-      Map<String, dynamic> snapshot = doc.data();
-
+  factory Vessel.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
+    final snapshot = doc.data();
+    if (snapshot != null) {
       return Vessel(
-        userID: snapshot.containsKey('userID') ? doc.get('userID') : '',
-        vesselChatUserID: snapshot.containsKey('vesselChatUserID')
-            ? doc.get('vesselChatUserID')
-            : snapshot.containsKey('userID')
-                ? doc.get('userID')
-                : '',
-        vesselID: snapshot.containsKey('vesselID') ? doc.get('vesselID') : '',
-        vesselName: snapshot.containsKey('vesselName') ? doc.get('vesselName') : '',
-        description: snapshot.containsKey('description') ? doc.get('description') : '',
-        thingsAllowed: snapshot.containsKey('thingsAllowed') ? doc.get('thingsAllowed') : [],
-        rating: snapshot.containsKey('rating') ? doc.get('rating') : 0,
-        ratingCount: snapshot.containsKey('ratingCount') ? doc.get('ratingCount') : 0,
-        prices: snapshot.containsKey('prices') ? doc.get('prices') : [0],
-        passengerCapacity: snapshot.containsKey('passengerCapacity') ? doc.get('passengerCapacity') : 0,
-        availableSeats: snapshot.containsKey('availableSeats') ? doc.get('availableSeats') : 0,
-        durations: snapshot.containsKey('durations') ? doc.get('durations') : [0],
-        images: snapshot.containsKey('images') ? doc.get('images') : [],
-        disabledByAdmin: snapshot.containsKey('disabledByAdmin') ? doc.get('disabledByAdmin') : false,
-        approved: snapshot.containsKey('approved') ? doc.get('approved') : false,
-        licensed: snapshot.containsKey('licensed') ? doc.get('licensed') : false,
-        captainLicensed: snapshot.containsKey('captainLicensed') ? doc.get('captainLicensed') : false,
-        disabledUntil: snapshot.containsKey('disabledUntil') ? doc.get('disabledUntil') : null,
-        geoPoint: snapshot.containsKey('geoPoint') ? doc.get('geoPoint') : GeoPoint(25.76, -80.19),
-        address: snapshot.containsKey('address') ? doc.get('address') : '',
-        shortAddress: snapshot.containsKey('shortAddress') ? doc.get('shortAddress') : '',
-        length: snapshot.containsKey('length') ? doc.get('length') : 0,
-        cabins: snapshot.containsKey('cabins') ? doc.get('cabins') : 0,
-        bathrooms: snapshot.containsKey('bathrooms') ? doc.get('bathrooms') : 0,
-        crewSize: snapshot.containsKey('crewSize') ? doc.get('crewSize') : 0,
-        speed: snapshot.containsKey('speed') ? doc.get('speed') : 0,
-        builder: snapshot.containsKey('builder') ? doc.get('builder') : 'Any',
-        vesselType: snapshot.containsKey('vesselType') ? doc.get('vesselType') : 'Yacht',
-        yachtType: snapshot.containsKey('yachtType') ? doc.get('yachtType') : 'Motor',
-        fishingVesselType: snapshot.containsKey('fishingVesselType') ? doc.get('fishingVesselType') : 'Air',
-        fishingType: snapshot.containsKey('fishingType') ? doc.get('fishingType') : 'Backcountry',
-        cancellationPolicy: snapshot.containsKey('cancellationPolicy') ? doc.get('cancellationPolicy') : 'Flexible',
-        features: snapshot.containsKey('features') ? doc.get('features') : [],
-        fishingSpecies: snapshot.containsKey('fishingSpecies') ? doc.get('fishingSpecies') : [],
-        fishingTechniques: snapshot.containsKey('fishingTechniques') ? doc.get('fishingTechniques') : [],
-        monday: snapshot.containsKey('monday') ? doc.get('monday') : [],
-        tuesday: snapshot.containsKey('tuesday') ? doc.get('tuesday') : [],
-        wednesday: snapshot.containsKey('wednesday') ? doc.get('wednesday') : [],
-        thursday: snapshot.containsKey('thursday') ? doc.get('thursday') : [],
-        friday: snapshot.containsKey('friday') ? doc.get('friday') : [],
-        saturday: snapshot.containsKey('saturday') ? doc.get('saturday') : [],
-        sunday: snapshot.containsKey('sunday') ? doc.get('sunday') : [],
+        userID: snapshot['userID'] as String,
+        vesselID: snapshot['vesselID'] as String,
+        vesselName: snapshot['vesselName'] as String,
+        description: snapshot['description'] as String,
+        thingsAllowed: snapshot['thingsAllowed'] as List<dynamic>,
+        rating: snapshot['rating'] as num,
+        ratingCount: snapshot['ratingCount'] as num,
+        prices: snapshot['prices'] as List<dynamic>,
+        passengerCapacity: snapshot['passengerCapacity'] as num,
+        availableSeats: snapshot['availableSeats'] as num,
+        durations: snapshot['durations'] as List<dynamic>,
+        images: snapshot['images'] as List<dynamic>,
+        disabledByAdmin: snapshot['disabledByAdmin'] as bool,
+        approved: snapshot['approved'] as bool,
+        licensed: snapshot['licensed'] as bool,
+        captainLicensed: snapshot['captainLicensed'] as bool,
+        geoPoint: snapshot['geoPoint'] as GeoPoint,
+        address: snapshot['address'] as String,
+        shortAddress: snapshot['shortAddress'] as String,
+        length: snapshot['length'] as num,
+        cabins: snapshot['cabins'] as num,
+        bathrooms: snapshot['bathrooms'] as num,
+        crewSize: snapshot['crewSize'] as num,
+        speed: snapshot['speed'] as num,
+        builder: snapshot['builder'] as String,
+        vesselType: snapshot['vesselType'] as String,
+        yachtType: snapshot['yachtType'] as String,
+        fishingVesselType: snapshot['fishingVesselType'] as String,
+        fishingType: snapshot['fishingType'] as String,
+        cancellationPolicy: snapshot['cancellationPolicy'] as String,
+        features: snapshot['features'] as List<dynamic>,
+        fishingSpecies: snapshot['fishingSpecies'] as List<dynamic>,
+        fishingTechniques: snapshot['fishingTechniques'] as List<dynamic>,
+        monday: snapshot['monday'] as List<dynamic>,
+        tuesday: snapshot['tuesday'] as List<dynamic>,
+        wednesday: snapshot['wednesday'] as List<dynamic>,
+        thursday: snapshot['thursday'] as List<dynamic>,
+        friday: snapshot['friday'] as List<dynamic>,
+        saturday: snapshot['saturday'] as List<dynamic>,
+        sunday: snapshot['sunday'] as List<dynamic>,
+        vesselChatUserID: snapshot['vesselChatUserID'] as String?,
+        disabledUntil: snapshot['disabledUntil'] as Timestamp?,
       );
-    } catch (e) {
-      print('****** VESSEL MODEL ******');
-      print(e);
-      return null;
+    } else {
+      throw Exception('Document data is null');
     }
   }
 }

@@ -14,7 +14,7 @@ class AlgoliaApplication {
 }
 
 class SearchBar extends StatefulWidget {
-  SearchBar({Key key}) : super(key: key);
+  SearchBar({Key? key}) : super(key: key);
 
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -22,7 +22,7 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   final Algolia _algoliaApp = AlgoliaApplication.algolia;
-  String _searchTerm;
+  late String _searchTerm;
 
   Future<List<AlgoliaObjectSnapshot>> _operation(String input) async {
     AlgoliaQuery query = _algoliaApp.instance.index("dev_makaiapp").search(input);
@@ -60,7 +60,7 @@ class _SearchBarState extends State<SearchBar> {
                     style: TextStyle(color: Colors.black),
                   );
                 else {
-                  List<AlgoliaObjectSnapshot> currSearchStuff = snapshot.data;
+                  List<AlgoliaObjectSnapshot>? currSearchStuff = snapshot.data;
 
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
@@ -77,13 +77,13 @@ class _SearchBarState extends State<SearchBar> {
                                 (context, index) {
                                   return _searchTerm.length > 0
                                       ? SearchItem(
-                                          vesselID: currSearchStuff[index].data["vesselID"],
+                                          vesselID: currSearchStuff![index].data["vesselID"],
                                           vesselName: currSearchStuff[index].data["vesselName"],
-                                          images: currSearchStuff[index].data["images"],
+                                          images: currSearchStuff[index].data["images"], description: '',
                                         )
                                       : Container();
                                 },
-                                childCount: currSearchStuff.length ?? 0,
+                                childCount: currSearchStuff!.length ?? 0,
                               ),
                             ),
                           ],
@@ -105,7 +105,7 @@ class SearchItem extends StatelessWidget {
   final String description;
   final List images;
 
-  SearchItem({Key key, this.vesselName, this.vesselID, this.images, this.description}) : super(key: key);
+  SearchItem({Key? key, required this.vesselName,required this.vesselID,required this.images,required this.description}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

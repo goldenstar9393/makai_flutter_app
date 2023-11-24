@@ -13,19 +13,32 @@ import 'package:makaiapp/widgets/empty_box.dart';
 import 'package:makaiapp/widgets/loading.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
-class PreMadeTrips extends StatelessWidget {
+class PreMadeTrips extends StatefulWidget {
   final String vesselID;
 
-  PreMadeTrips({this.vesselID});
+  PreMadeTrips({required this.vesselID});
 
+  @override
+  State<PreMadeTrips> createState() => _PreMadeTripsState();
+}
+
+class _PreMadeTripsState extends State<PreMadeTrips> {
   String dayOfTheWeek = 'Monday';
+
   String bookingType = 'Per Passenger';
-  Timestamp issueDate;
+
+  late Timestamp issueDate;
+
   final TextEditingController tripDateTEC = TextEditingController();
+
   final TextEditingController priceTEC = TextEditingController();
+
   final TextEditingController durationTEC = TextEditingController();
+
   final GlobalKey<FormState> step4Key = GlobalKey<FormState>();
+
   final vesselService = Get.find<VesselService>();
+
   final dialogService = Get.find<DialogService>();
 
   @override
@@ -47,7 +60,7 @@ class PreMadeTrips extends StatelessWidget {
               CustomButton(
                 text: 'Add Trip',
                 function: () async {
-                  if (!step4Key.currentState.validate()) {
+                  if (!step4Key.currentState!.validate()) {
                     showRedAlert('Please fill the necessary details');
                   } else {
                     final dialogService = Get.find<DialogService>();
@@ -55,7 +68,7 @@ class PreMadeTrips extends StatelessWidget {
                     await vesselService.addTrip(
                       PreMadeTrip(
                         type: bookingType,
-                        vesselID: vesselID,
+                        vesselID: widget.vesselID,
                         price: int.parse(priceTEC.text),
                         tripDate: issueDate,
                         duration: int.parse(durationTEC.text),
@@ -86,8 +99,8 @@ class PreMadeTrips extends StatelessWidget {
         PreMadeTrip booking = PreMadeTrip.fromDocument(documentSnapshot[i]);
         return Card(
           child: ListTile(
-            title: Text(DateFormat('dd MMM yyyy - hh:mm aa ').format(booking.tripDate.toDate()) + '(${durationTEC.text} hrs)'),
-            subtitle: Text('\$' + booking.price.toString() + ' - ' + booking.type),
+            title: Text(DateFormat('dd MMM yyyy - hh:mm aa ').format(booking.tripDate!.toDate()) + '(${durationTEC.text} hrs)'),
+            subtitle: Text('\$' + booking.price.toString() + ' - ' + booking.type!),
             trailing: IconButton(
                 onPressed: () {
                   dialogService.showConfirmationDialog(
@@ -96,7 +109,7 @@ class PreMadeTrips extends StatelessWidget {
                     confirm: () async {
                       Get.back();
                       dialogService.showLoading();
-                      await vesselService.removeTrip(booking.tripID);
+                      await vesselService.removeTrip(booking.tripID!);
                     },
                   );
                 },
@@ -104,7 +117,7 @@ class PreMadeTrips extends StatelessWidget {
           ),
         );
       },
-      query: vesselService.viewTripsForVessel(vesselID),
+      query: vesselService.viewTripsForVessel(widget.vesselID),
       onEmpty: Padding(
         padding: const EdgeInsets.all(8.0),
         child: EmptyBox(text: 'No pre made trips to show'),
@@ -131,7 +144,7 @@ class PreMadeTrips extends StatelessWidget {
       items: items.map((value) {
         return DropdownMenuItem<String>(value: value, child: Text(value, textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
-      onChanged: (value) => setValue(i, value),
+      onChanged: (value) => setValue(i, value!),
     );
   }
 

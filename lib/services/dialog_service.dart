@@ -57,10 +57,10 @@ class DialogService {
     );
   }
 
-  showConfirmationDialog({String title, String contentText, String confirmText, String cancelText, Function cancel, Function confirm}) {
+  showConfirmationDialog({String? title, String? contentText, String? confirmText, String? cancelText, Function? cancel, Function? confirm}) {
     Get.defaultDialog(
-      title: title,
-      content: Text(contentText),
+      title: title!,
+      content: Text(contentText!),
       actions: [
         CustomButton(
             text: confirmText ?? 'Yes',

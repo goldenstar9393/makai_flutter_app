@@ -15,7 +15,7 @@ import 'package:paginate_firestore/paginate_firestore.dart';
 class Reports extends StatelessWidget {
   final String vesselID;
 
-  Reports({this.vesselID});
+  Reports({required this.vesselID});
 
   final bookingService = Get.find<BookingService>();
   final userService = Get.put(UserService());
@@ -37,7 +37,7 @@ class Reports extends StatelessWidget {
               future: userService.getUser(transaction.userID),
               builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasData) {
-                  User user = User.fromDocument(snapshot.data);
+                  User user = User.fromDocument(snapshot.data!);
                   return Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -48,20 +48,20 @@ class Reports extends StatelessWidget {
                       childrenPadding: const EdgeInsets.all(25),
                       tilePadding: const EdgeInsets.symmetric(horizontal: 15),
                       expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                      leading: CachedImage(url: user.photoURL, height: 40, roundedCorners: false, circular: true),
-                      title: Text(user.fullName),
+                      leading: CachedImage(url: user.photoURL!, height: 40, roundedCorners: false, circular: true),
+                      title: Text(user.fullName!),
                       subtitle: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(DateFormat('MMMM dd, yyyy').format(transaction.creationDate.toDate()), style: TextStyle(color: Colors.grey)),
+                          Text(DateFormat('MMMM dd, yyyy').format(transaction.creationDate!.toDate()), style: TextStyle(color: Colors.grey)),
                           Text(formatCurrency.format(transaction.amount).toString(), style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
                         ],
                       ),
                       children: [
                         item('Total Amount', formatCurrency.format(transaction.amount).toString(), Colors.green),
                         item('Tip Amount', formatCurrency.format(transaction.tipAmount).toString(), secondaryColor),
-                        item('Type', transaction.type, primaryColor),
-                        item('Payment Method', transaction.paymentMethod, primaryColor),
+                        item('Type', transaction.type!, primaryColor),
+                        item('Payment Method', transaction.paymentMethod!, primaryColor),
                         //item('Transaction ID', transaction.transactionID, primaryColor),
                         //item('Stripe Customer ID', transaction.stripeCustomerID, primaryColor),
                         //item('Stripe Payment ID', transaction.stripePaymentID, primaryColor),

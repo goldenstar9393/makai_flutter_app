@@ -15,7 +15,7 @@ class AlgoliaApplication {
 class SearchResults extends StatelessWidget {
   final String searchQuery;
 
-  SearchResults({this.searchQuery});
+  SearchResults({required this.searchQuery});
 
   final vesselService = Get.find<VesselService>();
   final Algolia _algoliaApp = AlgoliaApplication.algolia;
@@ -51,7 +51,7 @@ class SearchResults extends StatelessWidget {
                   if (!snapshot.hasData)
                     return Container();
                   else {
-                    List<AlgoliaObjectSnapshot> currSearchStuff = snapshot.data;
+                    List<AlgoliaObjectSnapshot>? currSearchStuff = snapshot.data;
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
                         return Container();
@@ -59,7 +59,7 @@ class SearchResults extends StatelessWidget {
                         if (snapshot.hasError)
                           return new Text('Error: ${snapshot.error}');
                         else
-                          return currSearchStuff.length > 0
+                          return currSearchStuff!.length > 0
                               ? CustomScrollView(
                                   shrinkWrap: true,
                                   slivers: <Widget>[

@@ -5,7 +5,7 @@ import 'package:makaiapp/widgets/custom_button.dart';
 class SelectThingsAllowed extends StatefulWidget {
   final List thingsAllowed;
 
-  SelectThingsAllowed({this.thingsAllowed});
+  SelectThingsAllowed({required this.thingsAllowed});
 
   @override
   SelectThingsAllowedState createState() => new SelectThingsAllowedState();
@@ -52,10 +52,10 @@ class SelectThingsAllowedState extends State<SelectThingsAllowed> {
                   return new CheckboxListTile(
                     title: new Text(key),
                     value: listOfThings[key],
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        listOfThings[key] = value;
-                        if (value)
+                        listOfThings[key] = value != null;
+                        if (value != null)
                           selectedItems.add(key);
                         else
                           selectedItems.remove(key);

@@ -1,27 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User {
-  final String userID;
-  final String paymentID;
-  final String stripeCustomerID;
-  final String stripeCustomerEphemeralKey;
-  final String fullName;
-  final String email;
-  final String photoURL;
-  final String token;
-  final String status;
-  final String tripStatus;
-  final List owners; // User is an owner of these vessels
-  final List captains; // User is a captain of these vessels
-  final List crew; // User is a crew member of these vessels
-  //final List receptionists; // User is a receptionist of these vessels
-  bool unreadNotifications;
-  bool unreadMessages;
-  String verification;
-  bool bookingNotifications;
-  bool messageNotifications;
-  bool generalNotifications;
-  bool transactionNotifications;
+  final String? userID;
+  final String? paymentID;
+  final String? stripeCustomerID;
+  final String? stripeCustomerEphemeralKey;
+  final String? fullName;
+  final String? email;
+  final String? photoURL;
+  final String? token;
+  final String? status;
+  final String? tripStatus;
+  final List<dynamic>? owners; // User is an owner of these vessels
+  final List<dynamic>? captains; // User is a captain of these vessels
+  final List<dynamic>? crew; // User is a crew member of these vessels
+  //final List<dynamic>? receptionists; // User is a receptionist of these vessels
+  bool? unreadNotifications;
+  bool? unreadMessages;
+  String? verification;
+  bool? bookingNotifications;
+  bool? messageNotifications;
+  bool? generalNotifications;
+  bool? transactionNotifications;
 
   User({
     this.userID,
@@ -48,36 +48,35 @@ class User {
   });
 
   factory User.fromDocument(DocumentSnapshot doc) {
-    try {
-      Map<String, dynamic> snapshot = doc.data();
-
-      return User(
-        userID: snapshot.containsKey('userID') ? doc.get('userID') : '',
-        paymentID: snapshot.containsKey('paymentID') ? doc.get('paymentID') : '',
-        stripeCustomerID: snapshot.containsKey('stripeCustomerID') ? doc.get('stripeCustomerID') : '',
-        stripeCustomerEphemeralKey: snapshot.containsKey('stripeCustomerEphemeralKey') ? doc.get('stripeCustomerEphemeralKey') : '',
-        fullName: snapshot.containsKey('fullName') ? doc.get('fullName') : '',
-        email: snapshot.containsKey('email') ? doc.get('email') : '',
-        photoURL: snapshot.containsKey('photoURL') ? doc.get('photoURL') : 'profile',
-        token: snapshot.containsKey('token') ? doc.get('token') : '',
-        status: snapshot.containsKey('status') ? doc.get('status') : '',
-        tripStatus: snapshot.containsKey('tripStatus') ? doc.get('tripStatus') : 'STOP',
-        owners: snapshot.containsKey('owners') ? doc.get('owners') : [],
-        captains: snapshot.containsKey('captains') ? doc.get('captains') : [],
-        crew: snapshot.containsKey('crew') ? doc.get('crew') : [],
-        //receptionists: snapshot.containsKey('receptionists') ? doc.get('receptionists') : [],
-        unreadNotifications: snapshot.containsKey('unreadNotifications') ? doc.get('unreadNotifications') : false,
-        unreadMessages: snapshot.containsKey('unreadMessages') ? doc.get('unreadMessages') : false,
-        verification: snapshot.containsKey('verification') ? doc.get('verification') : null,
-        bookingNotifications: snapshot.containsKey('bookingNotifications') ? doc.get('bookingNotifications') : true,
-        messageNotifications: snapshot.containsKey('messageNotifications') ? doc.get('messageNotifications') : true,
-        generalNotifications: snapshot.containsKey('generalNotifications') ? doc.get('generalNotifications') : true,
-        transactionNotifications: snapshot.containsKey('transactionNotifications') ? doc.get('transactionNotifications') : true,
-      );
-    } catch (e) {
-      print('****** USER MODEL ******');
-      print(e);
-      return null;
+    Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+    
+    if (data == null) {
+      print('DocumentSnapshot.data() is null');
+      throw Exception('Document data is null');
     }
+
+    return User(
+      userID: data['userID'] as String?,
+      paymentID: data['paymentID'] as String?,
+      stripeCustomerID: data['stripeCustomerID'] as String?,
+      stripeCustomerEphemeralKey: data['stripeCustomerEphemeralKey'] as String?,
+      fullName: data['fullName'] as String?,
+      email: data['email'] as String?,
+      photoURL: data['photoURL'] as String? ?? 'default_profile_picture.png',
+      token: data['token'] as String?,
+      status: data['status'] as String?,
+      tripStatus: data['tripStatus'] as String? ?? 'STOP',
+      owners: data['owners'] as List<dynamic>?,
+      captains: data['captains'] as List<dynamic>?,
+      crew: data['crew'] as List<dynamic>?,
+      //receptionists: data['receptionists'] as List<dynamic>?,
+      unreadNotifications: data['unreadNotifications'] as bool? ?? false,
+      unreadMessages: data['unreadMessages'] as bool? ?? false,
+      verification: data['verification'] as String?,
+      bookingNotifications: data['bookingNotifications'] as bool? ?? true,
+      messageNotifications: data['messageNotifications'] as bool? ?? true,
+      generalNotifications: data['generalNotifications'] as bool? ?? true,
+      transactionNotifications: data['transactionNotifications'] as bool? ?? true,
+    );
   }
 }

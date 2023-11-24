@@ -4,11 +4,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CachedImage extends StatelessWidget {
-  final double height;
-  final String url;
-  final bool roundedCorners;
-  final bool circular;
-  final File imageFile;
+  final double? height;
+  final String? url;
+  final bool? roundedCorners;
+  final bool? circular;
+  final File? imageFile;
 
   CachedImage({this.height, this.url, this.roundedCorners, this.circular, this.imageFile});
 
@@ -22,7 +22,7 @@ class CachedImage extends StatelessWidget {
               : 0),
       child: imageFile != null
           ? Image.file(
-              imageFile,
+              imageFile!,
               fit: BoxFit.cover,
               height: height,
               width: height,

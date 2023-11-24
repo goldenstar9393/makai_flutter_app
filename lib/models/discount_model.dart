@@ -1,33 +1,34 @@
 class Discount {
-  Coupon coupon;
+  Coupon? coupon; // Coupon is nullable
 
   Discount({this.coupon});
 
   Discount.fromJson(Map<String, dynamic> json) {
-    coupon = json['coupon'] != null ? new Coupon.fromJson(json['coupon']) : null;
+    // Using null-aware operators for more concise code
+    coupon = json['coupon'] != null ? Coupon.fromJson(json['coupon']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.coupon != null) {
-      data['coupon'] = this.coupon.toJson();
-    }
+    final Map<String, dynamic> data = <String, dynamic>{};
+    // Using null-aware operators for more concise code
+    data['coupon'] = coupon?.toJson();
     return data;
   }
 }
 
 class Coupon {
-  num discount;
+  num? discount; // Discount is nullable
 
   Coupon({this.discount});
 
   Coupon.fromJson(Map<String, dynamic> json) {
-    discount = json['discount'];
+    // Directly assigning because num can be null, and json['discount'] will be null if it's not there
+    discount = json['discount'] as num?;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['discount'] = this.discount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['discount'] = discount;
     return data;
   }
 }

@@ -13,7 +13,7 @@ import 'package:makaiapp/widgets/loading.dart';
 class More extends StatelessWidget {
   final Vessel vessel;
 
-  More({this.vessel});
+  More({required this.vessel});
 
   final userController = Get.find<UserController>();
   final vesselService = Get.find<VesselService>();
@@ -28,11 +28,11 @@ class More extends StatelessWidget {
             future: vesselService.getConstants(),
             builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasData) {
-                String privacy = snapshot.data['privacy'];
-                String cancellation = snapshot.data['cancellation'];
-                String faq = snapshot.data['faq'];
-                String service = snapshot.data['service'];
-                String houseRules = snapshot.data['houseRules'];
+                String privacy = snapshot.data!['privacy'];
+                String cancellation = snapshot.data!['cancellation'];
+                String faq = snapshot.data!['faq'];
+                String service = snapshot.data!['service'];
+                String houseRules = snapshot.data!['houseRules'];
 
                 return Column(
                   children: [

@@ -6,7 +6,7 @@ class SelectFishingFeatures extends StatefulWidget {
   final List features;
   final String featureType;
 
-  SelectFishingFeatures({this.features, this.featureType});
+  SelectFishingFeatures({required this.features, required this.featureType});
 
   @override
   SelectFishingFeaturesState createState() => new SelectFishingFeaturesState();
@@ -544,43 +544,48 @@ class SelectFishingFeaturesState extends State<SelectFishingFeatures> {
           children: [
             widget.featureType == 'species'
                 ? Expanded(
-                    child: new ListView(
-                      children: fishingSpecies.keys.map((String key) {
-                        return new CheckboxListTile(
-                          title: new Text(key),
-                          value: fishingSpecies[key],
-                          onChanged: (bool value) {
-                            setState(() {
-                              fishingSpecies[key] = value;
-                              if (value)
-                                selectedFeatures.add(key);
-                              else
-                                selectedFeatures.remove(key);
-                            });
-                          },
-                        );
-                      }).toList(),
-                    ),
-                  )
-                : Expanded(
-                    child: new ListView(
-                      children: fishingTechniques.keys.map((String key) {
-                        return new CheckboxListTile(
-                          title: new Text(key),
-                          value: fishingTechniques[key],
-                          onChanged: (bool value) {
-                            setState(() {
-                              fishingTechniques[key] = value;
-                              if (value)
-                                selectedFeatures.add(key);
-                              else
-                                selectedFeatures.remove(key);
-                            });
-                          },
-                        );
-                      }).toList(),
-                    ),
-                  ),
+  child: new ListView(
+    children: fishingSpecies.keys.map((String key) {
+      return new CheckboxListTile(
+        title: new Text(key),
+        value: fishingSpecies[key],
+        onChanged: (bool? value) { // Accept nullable boolean
+          if (value != null) { // Null check
+            setState(() {
+              fishingSpecies[key] = value;
+              if (value)
+                selectedFeatures.add(key);
+              else
+                selectedFeatures.remove(key);
+            });
+          }
+        },
+      );
+    }).toList(),
+  ),
+)
+: Expanded(
+  child: new ListView(
+    children: fishingTechniques.keys.map((String key) {
+      return new CheckboxListTile(
+        title: new Text(key),
+        value: fishingTechniques[key],
+        onChanged: (bool? value) { // Accept nullable boolean
+          if (value != null) { // Null check
+            setState(() {
+              fishingTechniques[key] = value;
+              if (value)
+                selectedFeatures.add(key);
+              else
+                selectedFeatures.remove(key);
+            });
+          }
+        },
+      );
+    }).toList(),
+  ),
+)
+,
             CustomButton(text: 'Save', function: () => Get.back(result: selectedFeatures)),
           ],
         ),

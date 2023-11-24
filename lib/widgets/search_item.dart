@@ -4,18 +4,18 @@ import 'package:makaiapp/screens/vessels/view_vessel.dart';
 import 'package:makaiapp/widgets/cached_image.dart';
 
 class DisplaySearchResult extends StatelessWidget {
-  final String vesselID;
-  final String vesselName;
-  final List images;
+  final String? vesselID;
+  final String? vesselName;
+  final List? images;
 
-  DisplaySearchResult({Key key, this.vesselName, this.vesselID, this.images}) : super(key: key);
+  DisplaySearchResult({ this.vesselName, this.vesselID, this.images});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.to(() => ViewVessel(false, vesselID: vesselID)),
+      onTap: () => Get.to(() => ViewVessel(false, vesselID: vesselID!)),
       child: Row(children: <Widget>[
-        CachedImage(url: images[0], height: 50, circular: true),
+        CachedImage(url: images![0], height: 50, circular: true),
         SizedBox(width: 15),
         Expanded(
           child: Text(

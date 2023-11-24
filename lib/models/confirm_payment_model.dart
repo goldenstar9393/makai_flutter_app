@@ -1,12 +1,12 @@
 // To parse this JSON data, do
 //
-//     final welcome = welcomeFromJson(jsonString);
+//     final welcome = ConfirmPaymentModel.fromJson(jsonString);
 
 class ConfirmPaymentModel {
   ConfirmPaymentModel({
-    this.success,
-    this.message,
-    this.data,
+    required this.success,
+    required this.message,
+    required this.data,
   });
 
   final bool success;
@@ -14,48 +14,48 @@ class ConfirmPaymentModel {
   final Data data;
 
   factory ConfirmPaymentModel.fromJson(Map<String, dynamic> json) => ConfirmPaymentModel(
-        success: json["success"] == null ? null : json["success"],
-        message: json["message"] == null ? null : json["message"],
-        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+        success: json["success"],
+        message: json["message"],
+        data: Data.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "success": success == null ? null : success,
-        "message": message == null ? null : message,
-        "data": data == null ? null : data.toJson(),
+        "success": success,
+        "message": message,
+        "data": data.toJson(),
       };
 }
 
 class Data {
   Data({
-    this.id,
-    this.object,
-    this.amount,
-    this.amountCapturable,
-    this.amountDetails,
-    this.amountReceived,
+    required this.id,
+    required this.object,
+    required this.amount,
+    required this.amountCapturable,
+    required this.amountDetails,
+    required this.amountReceived,
     this.application,
     this.applicationFeeAmount,
     this.automaticPaymentMethods,
     this.canceledAt,
     this.cancellationReason,
-    this.captureMethod,
-    this.charges,
-    this.clientSecret,
-    this.confirmationMethod,
-    this.created,
-    this.currency,
+    required this.captureMethod,
+    required this.charges,
+    required this.clientSecret,
+    required this.confirmationMethod,
+    required this.created,
+    required this.currency,
     this.customer,
     this.description,
     this.invoice,
     this.lastPaymentError,
-    this.livemode,
-    this.metadata,
+    required this.livemode,
+    required this.metadata,
     this.nextAction,
     this.onBehalfOf,
     this.paymentMethod,
-    this.paymentMethodOptions,
-    this.paymentMethodTypes,
+    required this.paymentMethodOptions,
+    required this.paymentMethodTypes,
     this.processing,
     this.receiptEmail,
     this.review,
@@ -63,7 +63,7 @@ class Data {
     this.shipping,
     this.statementDescriptor,
     this.statementDescriptorSuffix,
-    this.status,
+    required this.status,
     this.transferData,
     this.transferGroup,
   });
@@ -108,34 +108,34 @@ class Data {
   final dynamic transferGroup;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        id: json["id"] == null ? null : json["id"],
-        object: json["object"] == null ? null : json["object"],
-        amount: json["amount"] == null ? null : json["amount"],
-        amountCapturable: json["amount_capturable"] == null ? null : json["amount_capturable"],
-        amountDetails: json["amount_details"] == null ? null : AmountDetails.fromJson(json["amount_details"]),
-        amountReceived: json["amount_received"] == null ? null : json["amount_received"],
+        id: json["id"],
+        object: json["object"],
+        amount: json["amount"],
+        amountCapturable: json["amount_capturable"],
+        amountDetails: AmountDetails.fromJson(json["amount_details"]),
+        amountReceived: json["amount_received"],
         application: json["application"],
         applicationFeeAmount: json["application_fee_amount"],
         automaticPaymentMethods: json["automatic_payment_methods"],
         canceledAt: json["canceled_at"],
         cancellationReason: json["cancellation_reason"],
-        captureMethod: json["capture_method"] == null ? null : json["capture_method"],
-        charges: json["charges"] == null ? null : Charges.fromJson(json["charges"]),
-        clientSecret: json["client_secret"] == null ? null : json["client_secret"],
-        confirmationMethod: json["confirmation_method"] == null ? null : json["confirmation_method"],
-        created: json["created"] == null ? null : json["created"],
-        currency: json["currency"] == null ? null : json["currency"],
+        captureMethod: json["capture_method"],
+        charges: Charges.fromJson(json["charges"]),
+        clientSecret: json["client_secret"],
+        confirmationMethod: json["confirmation_method"],
+        created: json["created"],
+        currency: json["currency"],
         customer: json["customer"],
         description: json["description"],
         invoice: json["invoice"],
         lastPaymentError: json["last_payment_error"],
-        livemode: json["livemode"] == null ? null : json["livemode"],
-        metadata: json["metadata"] == null ? null : Metadata.fromJson(json["metadata"]),
+        livemode: json["livemode"],
+        metadata: Metadata.fromJson(json["metadata"]),
         nextAction: json["next_action"],
         onBehalfOf: json["on_behalf_of"],
         paymentMethod: json["payment_method"],
-        paymentMethodOptions: json["payment_method_options"] == null ? null : PaymentMethodOptions.fromJson(json["payment_method_options"]),
-        paymentMethodTypes: json["payment_method_types"] == null ? null : List<String>.from(json["payment_method_types"].map((x) => x)),
+        paymentMethodOptions: PaymentMethodOptions.fromJson(json["payment_method_options"]),
+        paymentMethodTypes: List<String>.from(json["payment_method_types"].map((x) => x)),
         processing: json["processing"],
         receiptEmail: json["receipt_email"],
         review: json["review"],
@@ -143,40 +143,40 @@ class Data {
         shipping: json["shipping"],
         statementDescriptor: json["statement_descriptor"],
         statementDescriptorSuffix: json["statement_descriptor_suffix"],
-        status: json["status"] == null ? null : json["status"],
+        status: json["status"],
         transferData: json["transfer_data"],
         transferGroup: json["transfer_group"],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id == null ? null : id,
-        "object": object == null ? null : object,
-        "amount": amount == null ? null : amount,
-        "amount_capturable": amountCapturable == null ? null : amountCapturable,
-        "amount_details": amountDetails == null ? null : amountDetails.toJson(),
-        "amount_received": amountReceived == null ? null : amountReceived,
+        "id": id,
+        "object": object,
+        "amount": amount,
+        "amount_capturable": amountCapturable,
+        "amount_details": amountDetails.toJson(),
+        "amount_received": amountReceived,
         "application": application,
         "application_fee_amount": applicationFeeAmount,
         "automatic_payment_methods": automaticPaymentMethods,
         "canceled_at": canceledAt,
         "cancellation_reason": cancellationReason,
-        "capture_method": captureMethod == null ? null : captureMethod,
-        "charges": charges == null ? null : charges.toJson(),
-        "client_secret": clientSecret == null ? null : clientSecret,
-        "confirmation_method": confirmationMethod == null ? null : confirmationMethod,
-        "created": created == null ? null : created,
-        "currency": currency == null ? null : currency,
+        "capture_method": captureMethod,
+        "charges": charges.toJson(),
+        "client_secret": clientSecret,
+        "confirmation_method": confirmationMethod,
+        "created": created,
+        "currency": currency,
         "customer": customer,
         "description": description,
         "invoice": invoice,
         "last_payment_error": lastPaymentError,
-        "livemode": livemode == null ? null : livemode,
-        "metadata": metadata == null ? null : metadata.toJson(),
+        "livemode": livemode,
+        "metadata": metadata.toJson(),
         "next_action": nextAction,
         "on_behalf_of": onBehalfOf,
         "payment_method": paymentMethod,
-        "payment_method_options": paymentMethodOptions == null ? null : paymentMethodOptions.toJson(),
-        "payment_method_types": paymentMethodTypes == null ? null : List<dynamic>.from(paymentMethodTypes.map((x) => x)),
+        "payment_method_options": paymentMethodOptions.toJson(),
+        "payment_method_types": List<dynamic>.from(paymentMethodTypes.map((x) => x)),
         "processing": processing,
         "receipt_email": receiptEmail,
         "review": review,
@@ -184,7 +184,7 @@ class Data {
         "shipping": shipping,
         "statement_descriptor": statementDescriptor,
         "statement_descriptor_suffix": statementDescriptorSuffix,
-        "status": status == null ? null : status,
+        "status": status,
         "transfer_data": transferData,
         "transfer_group": transferGroup,
       };
@@ -192,128 +192,92 @@ class Data {
 
 class AmountDetails {
   AmountDetails({
-    this.tip,
+    required this.tip,
+    required this.tax,
   });
 
-  final Tip tip;
+  final int tip;
+  final int tax;
 
   factory AmountDetails.fromJson(Map<String, dynamic> json) => AmountDetails(
-        tip: json["tip"] == null ? null : Tip.fromJson(json["tip"]),
+        tip: json["tip"],
+        tax: json["tax"],
       );
 
   Map<String, dynamic> toJson() => {
-        "tip": tip == null ? null : tip.toJson(),
+        "tip": tip,
+        "tax": tax,
       };
-}
-
-class Tip {
-  Tip();
-
-  factory Tip.fromJson(Map<String, dynamic> json) => Tip();
-
-  Map<String, dynamic> toJson() => {};
 }
 
 class Charges {
   Charges({
-    this.object,
-    this.data,
-    this.hasMore,
-    this.url,
+    required this.object,
+    required this.data,
+    required this.hasMore,
+    required this.totalCount,
+    required this.url,
   });
 
   final String object;
-  final List<Datum> data;
+  final List<dynamic> data;
   final bool hasMore;
+  final int totalCount;
   final String url;
 
   factory Charges.fromJson(Map<String, dynamic> json) => Charges(
-        object: json["object"] == null ? null : json["object"],
-        data: json["data"] == null ? null : List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
-        hasMore: json["has_more"] == null ? null : json["has_more"],
-        url: json["url"] == null ? null : json["url"],
+        object: json["object"],
+        data: List<dynamic>.from(json["data"].map((x) => x)),
+        hasMore: json["has_more"],
+        totalCount: json["total_count"],
+        url: json["url"],
       );
 
   Map<String, dynamic> toJson() => {
-        "object": object == null ? null : object,
-        "data": data == null ? null : List<dynamic>.from(data.map((x) => x.toJson())),
-        "has_more": hasMore == null ? null : hasMore,
-        "url": url == null ? null : url,
-      };
-}
-
-class Datum {
-  Datum({
-    this.id,
-  });
-
-  final String id;
-
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        id: json["id"] == null ? null : json["id"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id == null ? null : id,
+        "object": object,
+        "data": List<dynamic>.from(data.map((x) => x)),
+        "has_more": hasMore,
+        "total_count": totalCount,
+        "url": url,
       };
 }
 
 class Metadata {
-  Metadata({
-    this.orderId,
-  });
+  Metadata();
 
-  final String orderId;
+  factory Metadata.fromJson(Map<String, dynamic> json) => Metadata();
 
-  factory Metadata.fromJson(Map<String, dynamic> json) => Metadata(
-        orderId: json["order_id"] == null ? null : json["order_id"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "order_id": orderId == null ? null : orderId,
-      };
+  Map<String, dynamic> toJson() => {};
 }
 
 class PaymentMethodOptions {
   PaymentMethodOptions({
-    this.card,
+    required this.card,
   });
 
   final Card card;
 
   factory PaymentMethodOptions.fromJson(Map<String, dynamic> json) => PaymentMethodOptions(
-        card: json["card"] == null ? null : Card.fromJson(json["card"]),
+        card: Card.fromJson(json["card"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "card": card == null ? null : card.toJson(),
+        "card": card.toJson(),
       };
 }
 
 class Card {
   Card({
-    this.installments,
-    this.mandateOptions,
-    this.network,
-    this.requestThreeDSecure,
+    required this.requestThreeDSecure,
   });
 
-  final dynamic installments;
-  final dynamic mandateOptions;
-  final dynamic network;
   final String requestThreeDSecure;
 
   factory Card.fromJson(Map<String, dynamic> json) => Card(
-        installments: json["installments"],
-        mandateOptions: json["mandate_options"],
-        network: json["network"],
-        requestThreeDSecure: json["request_three_d_secure"] == null ? null : json["request_three_d_secure"],
+        requestThreeDSecure: json["request_three_d_secure"],
       );
 
   Map<String, dynamic> toJson() => {
-        "installments": installments,
-        "mandate_options": mandateOptions,
-        "network": network,
-        "request_three_d_secure": requestThreeDSecure == null ? null : requestThreeDSecure,
+        "request_three_d_secure": requestThreeDSecure,
       };
 }

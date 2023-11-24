@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:makaiapp/controllers/user_controller.dart';
@@ -21,9 +20,9 @@ import 'package:makaiapp/widgets/message_box.dart';
 class Chats extends StatefulWidget {
   final User user;
   final chatRoomID;
-  final Vessel vessel;
+  final Vessel? vessel;
 
-  Chats({this.chatRoomID, this.user, this.vessel});
+  Chats({this.chatRoomID,required this.user, this.vessel});
 
   @override
   _ChatsState createState() => _ChatsState();
@@ -41,7 +40,7 @@ class _ChatsState extends State<Chats> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.user.fullName, textScaleFactor: 1.15, maxLines: 1, overflow: TextOverflow.ellipsis),
+        title: Text(widget.user.fullName!, textScaleFactor: 1.15, maxLines: 1, overflow: TextOverflow.ellipsis),
       ),
       body: Column(
         children: <Widget>[
@@ -50,9 +49,9 @@ class _ChatsState extends State<Chats> {
             selected: true,
             dense: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 10),
-            leading: CachedImage(url: widget.vessel.images[0], roundedCorners: true, height: 50),
-            onTap: () => Get.to(() => ViewVessel(false, vesselID: widget.vessel.vesselID)),
-            title: Text(MY_ROLE == VESSEL_USER ? 'You are chatting with the owner of ${widget.vessel.vesselName} - ${widget.user.fullName}' : 'This conversation is related to ${widget.vessel.vesselName}', textScaleFactor: 1.1, style: TextStyle(color: secondaryColor)),
+            leading: CachedImage(url: widget.vessel!.images![0], roundedCorners: true, height: 50),
+            onTap: () => Get.to(() => ViewVessel(false, vesselID: widget.vessel!.vesselID!)),
+            title: Text(MY_ROLE == VESSEL_USER ? 'You are chatting with the owner of ${widget.vessel!.vesselName} - ${widget.user.fullName}' : 'This conversation is related to ${widget.vessel!.vesselName}', textScaleFactor: 1.1, style: TextStyle(color: secondaryColor)),
             subtitle: Text('Click to view vessel'),
           ),
           Expanded(
@@ -60,16 +59,16 @@ class _ChatsState extends State<Chats> {
               stream: messageService.getMessages(widget.chatRoomID),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 return snapshot.hasData
-                    ? snapshot.data.docs.isNotEmpty
+                    ? snapshot.data!.docs.isNotEmpty
                         ? ListView.builder(
                             reverse: true,
                             padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
-                            itemCount: snapshot.data.docs.length,
+                            itemCount: snapshot.data!.docs.length,
                             itemBuilder: (context, index) {
-                              index = snapshot.data.docs.length - 1 - index;
-                              Map<String, dynamic> doc = snapshot.data.docs[index].data() as Map<String, dynamic>;
+                              index = snapshot.data!.docs.length - 1 - index;
+                              Map<String, dynamic> doc = snapshot.data!.docs[index].data() as Map<String, dynamic>;
                               return MessageBox(
-                                docID: snapshot.data.docs[index].id,
+                                docID: snapshot.data!.docs[index].id,
                                 time: doc['time'],
                                 message: doc["message"],
                                 imageURL: doc["imageURL"],
@@ -97,7 +96,7 @@ class _ChatsState extends State<Chats> {
                       File image = await storageService.pickImage();
                       showYellowAlert('Uploading image');
                       String profilePhotoURL = await storageService.uploadPhoto(image, 'messages');
-                      if (profilePhotoURL != null) await addImageMsg(profilePhotoURL);
+                      await addImageMsg(profilePhotoURL);
                     },
                   ),
                   suffixIcon: IconButton(
@@ -133,7 +132,7 @@ class _ChatsState extends State<Chats> {
           'chatRoomID': widget.chatRoomID,
         },
         body: messageTEC.value.text,
-        receiverUserID: widget.user.userID,
+        receiverUserID: widget.user.userID!,
         type: 'message',
       );
 
@@ -156,7 +155,7 @@ class _ChatsState extends State<Chats> {
         'chatRoomID': widget.chatRoomID,
       },
       body: '▶ Photo',
-      receiverUserID: widget.user.userID,
+      receiverUserID: widget.user.userID!,
       type: 'message',
     );
   }
