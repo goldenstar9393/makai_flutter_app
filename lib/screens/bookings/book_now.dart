@@ -1,6 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:makaiapp/models/premade_trip_model.dart';
@@ -40,7 +40,8 @@ class _BookNowState extends State<BookNow> {
   void initState() {
     duration.value = widget.vessel.durations![0].toString();
     seatsList.clear();
-    for (int i = 0; i < widget.vessel.passengerCapacity!; i++) seatsList.add('${i + 1}');
+    for (int i = 0; i < widget.vessel.passengerCapacity!; i++)
+      seatsList.add('${i + 1}');
     super.initState();
   }
 
@@ -100,16 +101,22 @@ class _BookNowState extends State<BookNow> {
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(
           children: [
-            CustomTextField(dropdown: dropDown(seatsList, 9), label: 'Number of seats *'),
+            CustomTextField(
+                dropdown: dropDown(seatsList, 9), label: 'Number of seats *'),
             InkWell(
               onTap: () {
-                DatePicker.showDatePicker(context, showTitleActions: true, minTime: DateTime.now().add(Duration(days: 1)), maxTime: DateTime(2100), onChanged: (date) {}, onConfirm: (date) {
-                  dateTEC.text = DateFormat('MMMM dd, yyyy').format(date);
-                  bookingDate = date;
-                  setState(() {});
-                }, currentTime: DateTime.now(), locale: LocaleType.en);
+                // DatePicker.showDatePicker(context, showTitleActions: true, minTime: DateTime.now().add(Duration(days: 1)), maxTime: DateTime(2100), onChanged: (date) {}, onConfirm: (date) {
+                //   dateTEC.text = DateFormat('MMMM dd, yyyy').format(date);
+                //   bookingDate = date;
+                //   setState(() {});
+                // }, currentTime: DateTime.now(), locale: LocaleType.en);
               },
-              child: CustomTextField(controller: dateTEC, label: 'Select Date *', hint: 'Select date', validate: true, enabled: false),
+              child: CustomTextField(
+                  controller: dateTEC,
+                  label: 'Select Date *',
+                  hint: 'Select date',
+                  validate: true,
+                  enabled: false),
             ),
             if (dateTEC.text.isNotEmpty)
               CustomTextField(
@@ -120,20 +127,27 @@ class _BookNowState extends State<BookNow> {
                 validate: true,
                 enabled: false,
               ),
-            CustomTextField(dropdown: dropDown(widget.vessel.durations!, 8), label: 'Hours *'),
+            CustomTextField(
+                dropdown: dropDown(widget.vessel.durations!, 8),
+                label: 'Hours *'),
             SizedBox(height: 15),
             if (seatsAvailable == -1) LoadingData(),
-            if (seatsAvailable > 0) Text('Seats available: $seatsAvailable', style: TextStyle(color: Colors.green)),
+            if (seatsAvailable > 0)
+              Text('Seats available: $seatsAvailable',
+                  style: TextStyle(color: Colors.green)),
             SizedBox(height: 15),
             ElevatedButton(
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(seatsAvailable > 0 ? primaryColor : Colors.grey)),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        seatsAvailable > 0 ? primaryColor : Colors.grey)),
                 onPressed: () async {
                   if (seatsAvailable > 0) {
                     if (!step1Key.currentState!.validate()) {
                       showRedAlert('Please fill the necessary details');
                     } else {
                       Get.off(() => Checkout(
-                            price: getFeesForDuration(num.parse(duration.value)),
+                            price:
+                                getFeesForDuration(num.parse(duration.value)),
                             duration: num.parse(duration.value),
                             vessel: widget.vessel,
                             guestCount: int.parse(seats.value),
@@ -154,7 +168,9 @@ class _BookNowState extends State<BookNow> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomTextField(dropdown: dropDown(seatsList, 10), label: 'Select Number of seats *'),
+        CustomTextField(
+            dropdown: dropDown(seatsList, 10),
+            label: 'Select Number of seats *'),
         SizedBox(height: 35),
         Text('Select one of the following Pre Made Trips to proceed'),
         Expanded(
@@ -166,21 +182,32 @@ class _BookNowState extends State<BookNow> {
             physics: NeverScrollableScrollPhysics(),
             itemBuilderType: PaginateBuilderType.listView,
             itemBuilder: (context, documentSnapshot, i) {
-              PreMadeTrip preMadeTrip = PreMadeTrip.fromDocument(documentSnapshot[i]);
+              PreMadeTrip preMadeTrip =
+                  PreMadeTrip.fromDocument(documentSnapshot[i]);
               return Card(
                 margin: EdgeInsets.only(bottom: 15),
                 child: ListTile(
                   onTap: () => Get.off(() => Checkout(
-                        price: preMadeTrip.type == 'Per Passenger' ? int.parse(noOfSeats.value) * preMadeTrip.price! : preMadeTrip.price!,
+                        price: preMadeTrip.type == 'Per Passenger'
+                            ? int.parse(noOfSeats.value) * preMadeTrip.price!
+                            : preMadeTrip.price!,
                         duration: preMadeTrip.duration!,
                         vessel: widget.vessel,
                         guestCount: int.parse(noOfSeats.value),
                         date: preMadeTrip.tripDate!.toDate(),
                         isPreMadeTrip: true,
                       )),
-                  title: Text(DateFormat('dd MMM yyyy - hh:mm aa ').format(preMadeTrip.tripDate!.toDate()) + '(${preMadeTrip.duration} hrs)'),
-                  subtitle: Text('\$' + preMadeTrip.price.toString() + ' - ' + preMadeTrip.type!),
-                  trailing: Text('BOOK', textScaleFactor: 0.95, style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                  title: Text(DateFormat('dd MMM yyyy - hh:mm aa ')
+                          .format(preMadeTrip.tripDate!.toDate()) +
+                      '(${preMadeTrip.duration} hrs)'),
+                  subtitle: Text('\$' +
+                      preMadeTrip.price.toString() +
+                      ' - ' +
+                      preMadeTrip.type!),
+                  trailing: Text('BOOK',
+                      textScaleFactor: 0.95,
+                      style: TextStyle(
+                          color: Colors.blue, fontWeight: FontWeight.bold)),
                 ),
               );
             },
@@ -228,7 +255,8 @@ class _BookNowState extends State<BookNow> {
     List<String> newItems = List<String>.from(items);
     timeTEC.text = newItems[0];
     return DropdownSearch<String>(
-      dropdownDecoratorProps: DropDownDecoratorProps(dropdownSearchDecoration: InputDecoration(hintText: hint)),
+      dropdownDecoratorProps: DropDownDecoratorProps(
+          dropdownSearchDecoration: InputDecoration(hintText: hint)),
       dropdownButtonProps: DropdownButtonProps(),
       items: newItems,
       selectedItem: slot,
@@ -239,10 +267,19 @@ class _BookNowState extends State<BookNow> {
         final bookingService = Get.find<BookingService>();
         print(slot);
         timeTEC.text = value!;
-        bookingDate = DateTime(bookingDate.year, bookingDate.month, bookingDate.day, int.parse(timeTEC.text.substring(0, 2)), int.parse(timeTEC.text.substring(3, 5)));
+        bookingDate = DateTime(
+            bookingDate.year,
+            bookingDate.month,
+            bookingDate.day,
+            int.parse(timeTEC.text.substring(0, 2)),
+            int.parse(timeTEC.text.substring(3, 5)));
         //dateTime = dateTime.toUtc().add(Duration(hours: 5, minutes: 30));
         print(DateFormat('dd MM yyyy hh:mm').format(bookingDate));
-        seatsAvailable = await bookingService.checkSeatAvailability(widget.vessel.vesselID!, (bookingDate.toUtc().millisecondsSinceEpoch ~/ 1000).toInt().toString());
+        seatsAvailable = await bookingService.checkSeatAvailability(
+            widget.vessel.vesselID!,
+            (bookingDate.toUtc().millisecondsSinceEpoch ~/ 1000)
+                .toInt()
+                .toString());
         setState(() {
           slot = value;
         });
@@ -268,7 +305,10 @@ class _BookNowState extends State<BookNow> {
               ? noOfSeats.value
               : duration.value,
       items: items.map((value) {
-        return DropdownMenuItem<String>(value: value.toString(), child: Text(value.toString(), textScaleFactor: 1, style: TextStyle(color: Colors.black)));
+        return DropdownMenuItem<String>(
+            value: value.toString(),
+            child: Text(value.toString(),
+                textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
       onChanged: (value) => i == 9
           ? seats.value = value!
@@ -279,6 +319,8 @@ class _BookNowState extends State<BookNow> {
   }
 
   getFeesForDuration(num duration) {
-    for (int i = 0; i < widget.vessel.durations!.length; i++) if (widget.vessel.durations![i] == duration) return widget.vessel.prices![i];
+    for (int i = 0; i < widget.vessel.durations!.length; i++)
+      if (widget.vessel.durations![i] == duration)
+        return widget.vessel.prices![i];
   }
 }

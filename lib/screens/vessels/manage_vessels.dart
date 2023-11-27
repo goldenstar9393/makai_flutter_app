@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:makaiapp/controllers/user_controller.dart';
@@ -40,7 +40,8 @@ class ManageVessels extends StatelessWidget {
           children: [
             if (MY_ROLE == VESSEL_CAPTAIN || MY_ROLE == VESSEL_OWNER)
               CustomListTile(
-                leading: Icon(FontAwesomeIcons.penToSquare, color: primaryColor, size: 20),
+                leading: Icon(FontAwesomeIcons.penToSquare,
+                    color: primaryColor, size: 20),
                 title: Text('Edit Vessel'),
                 onTap: () => Get.to(() => EditVessel(vessel: vessel)),
               ),
@@ -48,16 +49,19 @@ class ManageVessels extends StatelessWidget {
               CustomListTile(
                 leading: Icon(Icons.calendar_today, color: primaryColor),
                 title: Text('Pre-made Trips'),
-                onTap: () => Get.to(() => PreMadeTrips(vesselID: vessel.vesselID!)),
+                onTap: () =>
+                    Get.to(() => PreMadeTrips(vesselID: vessel.vesselID!)),
               ),
             CustomListTile(
-              leading: Icon(Icons.directions_boat_outlined, color: primaryColor),
+              leading:
+                  Icon(Icons.directions_boat_outlined, color: primaryColor),
               title: Text('Bookings'),
               onTap: () => Get.to(() => ManageBookings(vessel: vessel)),
             ),
             if (MY_ROLE == VESSEL_CAPTAIN || MY_ROLE == VESSEL_OWNER)
               CustomListTile(
-                leading: Icon(Icons.sticky_note_2_outlined, color: primaryColor),
+                leading:
+                    Icon(Icons.sticky_note_2_outlined, color: primaryColor),
                 title: Text('Reports'),
                 onTap: () => Get.to(() => Reports(vesselID: vessel.vesselID!)),
               ),
@@ -67,9 +71,11 @@ class ManageVessels extends StatelessWidget {
               onTap: () => Get.to(() => ManageCrew(vessel: vessel)),
             ),
             CustomListTile(
-              leading: Icon(Icons.account_balance_wallet_outlined, color: primaryColor),
+              leading: Icon(Icons.account_balance_wallet_outlined,
+                  color: primaryColor),
               title: Text('Certificates'),
-              onTap: () => Get.to(() => MyCertificates(vesselID: vessel.vesselID!)),
+              onTap: () =>
+                  Get.to(() => MyCertificates(vesselID: vessel.vesselID!)),
             ),
             CustomListTile(
               leading: Icon(Icons.credit_card, color: primaryColor),
@@ -80,59 +86,75 @@ class ManageVessels extends StatelessWidget {
               vessel.disabledUntil == null
                   ? CustomListTile(
                       leading: Icon(Icons.delete_forever, color: redColor),
-                      title: Text('Disable Vessel', style: TextStyle(color: redColor)),
+                      title: Text('Disable Vessel',
+                          style: TextStyle(color: redColor)),
                       onTap: () {
                         Get.defaultDialog(
                           titlePadding: const EdgeInsets.only(top: 10),
-                          contentPadding: const EdgeInsets.fromLTRB(15, 20, 15, 0),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(15, 20, 15, 0),
                           title: 'Disable',
                           content: Column(
                             children: [
-                              Text('Are you sure you want to disable this vessel?'),
+                              Text(
+                                  'Are you sure you want to disable this vessel?'),
                               SizedBox(height: 15),
                               ElevatedButton(
                                   onPressed: () {
                                     Get.back();
-                                    DatePicker.showDatePicker(
-                                      context,
-                                      showTitleActions: true,
-                                      minTime: DateTime(2000),
-                                      maxTime: DateTime(2100),
-                                      onChanged: (date) {},
-                                      onConfirm: (date) async {
-                                        dialogService.showLoading();
-                                        await vesselService.disableVessel(vessel.vesselID!, Timestamp.fromDate(date));
-                                        Get.back();
-                                        Get.back();
-                                        showGreenAlert('Vessel disabled');
-                                      },
-                                      currentTime: DateTime.now(),
-                                      locale: LocaleType.en,
-                                    );
+                                    // DatePicker.showDatePicker(
+                                    //   context,
+                                    //   showTitleActions: true,
+                                    //   minTime: DateTime(2000),
+                                    //   maxTime: DateTime(2100),
+                                    //   onChanged: (date) {},
+                                    //   onConfirm: (date) async {
+                                    //     dialogService.showLoading();
+                                    //     await vesselService.disableVessel(vessel.vesselID!, Timestamp.fromDate(date));
+                                    //     Get.back();
+                                    //     Get.back();
+                                    //     showGreenAlert('Vessel disabled');
+                                    //   },
+                                    //   currentTime: DateTime.now(),
+                                    //   locale: LocaleType.en,
+                                    // );
                                   },
                                   child: Text('Disable until..')),
                               SizedBox(height: 10),
                               ElevatedButton(
-                                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(redColor)),
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(redColor)),
                                   onPressed: () async {
                                     Get.back();
                                     dialogService.showLoading();
-                                    await vesselService.disableVessel(vessel.vesselID!, Timestamp.fromDate(DateTime(2100)));
+                                    await vesselService.disableVessel(
+                                        vessel.vesselID!,
+                                        Timestamp.fromDate(DateTime(2100)));
                                     Get.back();
                                     Get.back();
-                                    showGreenAlert('Vessel disabled permanently');
+                                    showGreenAlert(
+                                        'Vessel disabled permanently');
                                   },
                                   child: Text('Disable Permanently')),
                               SizedBox(height: 10),
-                              ElevatedButton(style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueGrey)), onPressed: () => Get.back(), child: Text('Cancel')),
+                              ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.blueGrey)),
+                                  onPressed: () => Get.back(),
+                                  child: Text('Cancel')),
                             ],
                           ),
                         );
                       },
                     )
                   : CustomListTile(
-                      leading: Icon(Icons.account_balance_wallet_outlined, color: Colors.green),
-                      title: Text('Enable Vessel', style: TextStyle(color: Colors.green)),
+                      leading: Icon(Icons.account_balance_wallet_outlined,
+                          color: Colors.green),
+                      title: Text('Enable Vessel',
+                          style: TextStyle(color: Colors.green)),
                       onTap: () async {
                         dialogService.showLoading();
                         await vesselService.enableVessel(vessel.vesselID!);
@@ -146,22 +168,27 @@ class ManageVessels extends StatelessWidget {
                 builder: (context, snapshot) {
                   print(vessel.vesselChatUserID);
                   if (snapshot.hasData) {
-                    User user = User.fromDocument(snapshot.data as DocumentSnapshot<Object?>);
+                    User user = User.fromDocument(
+                        snapshot.data as DocumentSnapshot<Object?>);
                     return ListTile(
                       onTap: () async {
-                        TextEditingController emailTEC = TextEditingController();
+                        TextEditingController emailTEC =
+                            TextEditingController();
                         showDialog(
                           context: context,
                           builder: (BuildContext context1) {
-                            return StatefulBuilder(builder: (context2, setState) {
+                            return StatefulBuilder(
+                                builder: (context2, setState) {
                               return AlertDialog(
                                 insetPadding: const EdgeInsets.all(10),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
                                 content: SingleChildScrollView(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text('Add a Contact Person', textScaleFactor: 1.25),
+                                      Text('Add a Contact Person',
+                                          textScaleFactor: 1.25),
                                       CustomTextField(
                                         label: 'Email address',
                                         hint: 'Enter email address',
@@ -169,28 +196,41 @@ class ManageVessels extends StatelessWidget {
                                         controller: emailTEC,
                                         validate: true,
                                         isEmail: true,
-                                        textInputType: TextInputType.emailAddress,
+                                        textInputType:
+                                            TextInputType.emailAddress,
                                       ),
                                       SizedBox(height: 30),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
-                                          Expanded(child: ElevatedButton(onPressed: () => Get.back(), child: Text('Cancel'))),
+                                          Expanded(
+                                              child: ElevatedButton(
+                                                  onPressed: () => Get.back(),
+                                                  child: Text('Cancel'))),
                                           SizedBox(width: 15),
                                           Expanded(
                                             child: ElevatedButton(
                                                 onPressed: () async {
                                                   dialogService.showLoading();
-                                                  String email = emailTEC.text.trim();
-                                                  User? user = await userService.getUserFromEmail(email);
+                                                  String email =
+                                                      emailTEC.text.trim();
+                                                  User? user = await userService
+                                                      .getUserFromEmail(email);
                                                   if (user == null) {
                                                     Get.back();
-                                                    showRedAlert('User with this email does not exist');
+                                                    showRedAlert(
+                                                        'User with this email does not exist');
                                                   } else {
-                                                    Vessel updatedVessel = vessel;
-                                                    updatedVessel.vesselChatUserID = user.userID;
-                                                    await vesselService.editVessel(vessel);
-                                                    Get.offAll(() => HomePage());
+                                                    Vessel updatedVessel =
+                                                        vessel;
+                                                    updatedVessel
+                                                            .vesselChatUserID =
+                                                        user.userID;
+                                                    await vesselService
+                                                        .editVessel(vessel);
+                                                    Get.offAll(
+                                                        () => HomePage());
                                                   }
                                                 },
                                                 child: Text('Add')),
@@ -209,15 +249,19 @@ class ManageVessels extends StatelessWidget {
                       leading: Icon(Icons.lightbulb, color: Colors.amber),
                       title: RichText(
                         text: TextSpan(
-                          text: 'All the messages from the users for this vessel are received by:  ',
+                          text:
+                              'All the messages from the users for this vessel are received by:  ',
                           style: DefaultTextStyle.of(context).style,
                           children: <TextSpan>[
-                            TextSpan(text: user.fullName, style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(
+                                text: user.fullName,
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ),
                       //  title: Text('${user.fullName}.', textScaleFactor: 1.1),
-                      subtitle: Text('Click to change the contact person', textScaleFactor: 1.2),
+                      subtitle: Text('Click to change the contact person',
+                          textScaleFactor: 1.2),
                     );
                   } else
                     return Container();

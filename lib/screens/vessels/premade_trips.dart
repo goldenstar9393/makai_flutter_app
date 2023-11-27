@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:makaiapp/models/premade_trip_model.dart';
@@ -52,10 +52,29 @@ class _PreMadeTripsState extends State<PreMadeTrips> {
           child: Column(
             children: [
               //CustomTextField(dropdown: dropDown(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], 1), label: 'Day of the week *'),
-              CustomTextField(dropdown: dropDown(['Per Passenger', 'Whole Boat'], 2), label: 'Booking Type *'),
-              CustomTextField(controller: priceTEC, hint: 'Enter Price', label: 'Price', textInputType: TextInputType.numberWithOptions(signed: false)),
-              CustomTextField(controller: durationTEC, hint: 'Enter duration', label: 'Duration', textInputType: TextInputType.numberWithOptions(signed: false, decimal: false)),
-              InkWell(onTap: () => showDatePicker(1, context), child: CustomTextField(controller: tripDateTEC, label: 'Date of Trip *', hint: 'Select date', validate: true, enabled: false)),
+              CustomTextField(
+                  dropdown: dropDown(['Per Passenger', 'Whole Boat'], 2),
+                  label: 'Booking Type *'),
+              CustomTextField(
+                  controller: priceTEC,
+                  hint: 'Enter Price',
+                  label: 'Price',
+                  textInputType:
+                      TextInputType.numberWithOptions(signed: false)),
+              CustomTextField(
+                  controller: durationTEC,
+                  hint: 'Enter duration',
+                  label: 'Duration',
+                  textInputType: TextInputType.numberWithOptions(
+                      signed: false, decimal: false)),
+              InkWell(
+                  onTap: () => showDatePicker(1, context),
+                  child: CustomTextField(
+                      controller: tripDateTEC,
+                      label: 'Date of Trip *',
+                      hint: 'Select date',
+                      validate: true,
+                      enabled: false)),
               SizedBox(height: 25),
               CustomButton(
                 text: 'Add Trip',
@@ -99,8 +118,11 @@ class _PreMadeTripsState extends State<PreMadeTrips> {
         PreMadeTrip booking = PreMadeTrip.fromDocument(documentSnapshot[i]);
         return Card(
           child: ListTile(
-            title: Text(DateFormat('dd MMM yyyy - hh:mm aa ').format(booking.tripDate!.toDate()) + '(${durationTEC.text} hrs)'),
-            subtitle: Text('\$' + booking.price.toString() + ' - ' + booking.type!),
+            title: Text(DateFormat('dd MMM yyyy - hh:mm aa ')
+                    .format(booking.tripDate!.toDate()) +
+                '(${durationTEC.text} hrs)'),
+            subtitle:
+                Text('\$' + booking.price.toString() + ' - ' + booking.type!),
             trailing: IconButton(
                 onPressed: () {
                   dialogService.showConfirmationDialog(
@@ -142,7 +164,10 @@ class _PreMadeTripsState extends State<PreMadeTrips> {
       style: TextStyle(color: primaryColor, fontSize: 17),
       value: getValue(i),
       items: items.map((value) {
-        return DropdownMenuItem<String>(value: value, child: Text(value, textScaleFactor: 1, style: TextStyle(color: Colors.black)));
+        return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value,
+                textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
       onChanged: (value) => setValue(i, value!),
     );
@@ -167,11 +192,11 @@ class _PreMadeTripsState extends State<PreMadeTrips> {
   }
 
   showDatePicker(int type, context) {
-    DatePicker.showDateTimePicker(context, showTitleActions: true, minTime: DateTime(2000), maxTime: DateTime(2100), onChanged: (date) {}, onConfirm: (date) {
-      if (type == 1) {
-        tripDateTEC.text = DateFormat('MMMM dd, yyyy - hh:mm a').format(date);
-        issueDate = Timestamp.fromDate(date);
-      }
-    }, currentTime: DateTime.now(), locale: LocaleType.en);
+    // DatePicker.showDateTimePicker(context, showTitleActions: true, minTime: DateTime(2000), maxTime: DateTime(2100), onChanged: (date) {}, onConfirm: (date) {
+    //   if (type == 1) {
+    //     tripDateTEC.text = DateFormat('MMMM dd, yyyy - hh:mm a').format(date);
+    //     issueDate = Timestamp.fromDate(date);
+    //   }
+    // }, currentTime: DateTime.now(), locale: LocaleType.en);
   }
 }

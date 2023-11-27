@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:makaiapp/controllers/user_controller.dart';
@@ -49,25 +49,60 @@ class _CustomerSupportState extends State<CustomerSupport> {
               key: formKey,
               child: Column(
                 children: [
-                  CustomTextField(controller: nameTEC, label: 'Full name *', hint: 'Enter full name', validate: true),
-                  CustomTextField(controller: emailTEC, label: 'Email Address *', hint: 'Enter email address', validate: true, isEmail: true, textInputType: TextInputType.emailAddress),
-                  CustomTextField(controller: mobileTEC, label: 'Mobile Number *', hint: 'Enter mobile', validate: true, textInputType: TextInputType.phone),
+                  CustomTextField(
+                      controller: nameTEC,
+                      label: 'Full name *',
+                      hint: 'Enter full name',
+                      validate: true),
+                  CustomTextField(
+                      controller: emailTEC,
+                      label: 'Email Address *',
+                      hint: 'Enter email address',
+                      validate: true,
+                      isEmail: true,
+                      textInputType: TextInputType.emailAddress),
+                  CustomTextField(
+                      controller: mobileTEC,
+                      label: 'Mobile Number *',
+                      hint: 'Enter mobile',
+                      validate: true,
+                      textInputType: TextInputType.phone),
                   InkWell(
                     onTap: () {
-                      DatePicker.showDatePicker(context, showTitleActions: true, minTime: DateTime(2000), maxTime: DateTime(2100), onChanged: (date) {}, onConfirm: (date) {
-                        tripDateTEC.text = DateFormat('MMMM dd, yyyy').format(date);
-                        tripDate = date;
-                      }, currentTime: DateTime.now(), locale: LocaleType.en);
+                      // DatePicker.showDatePicker(context,
+                      //     showTitleActions: true,
+                      //     minTime: DateTime(2000),
+                      //     maxTime: DateTime(2100),
+                      //     onChanged: (date) {}, onConfirm: (date) {
+                      //   tripDateTEC.text =
+                      //       DateFormat('MMMM dd, yyyy').format(date);
+                      //   tripDate = date;
+                      // }, currentTime: DateTime.now(), locale: LocaleType.en);
                     },
-                    child: CustomTextField(controller: tripDateTEC, label: 'Trip Date *', hint: 'Select date', validate: true, enabled: false),
+                    child: CustomTextField(
+                        controller: tripDateTEC,
+                        label: 'Trip Date *',
+                        hint: 'Select date',
+                        validate: true,
+                        enabled: false),
                   ),
-                  CustomTextField(controller: confirmationTEC, label: 'Confirmation Number *', hint: 'Enter confirmation no.', validate: true),
-                  CustomTextField(controller: detailsTEC, label: 'More details *', hint: 'Enter details', validate: true, maxLines: 5),
+                  CustomTextField(
+                      controller: confirmationTEC,
+                      label: 'Confirmation Number *',
+                      hint: 'Enter confirmation no.',
+                      validate: true),
+                  CustomTextField(
+                      controller: detailsTEC,
+                      label: 'More details *',
+                      hint: 'Enter details',
+                      validate: true,
+                      maxLines: 5),
                 ],
               ),
             ),
             SizedBox(height: 25),
-            ElevatedButton(onPressed: () => sendMail(), child: Text('RAISE QUERY')),
+            ElevatedButton(
+                onPressed: () => sendMail(), child: Text('RAISE QUERY')),
           ],
         ),
       ),
@@ -87,7 +122,10 @@ class _CustomerSupportState extends State<CustomerSupport> {
           "Trip Date: ${tripDateTEC.text}\n"
           "Confirmation No: ${confirmationTEC.text}\n"
           "Details: ${detailsTEC.text}\n";
-      await cloudFunction(functionName: 'genericEmail', parameters: {'subject': subject, 'text': text}, action: () {});
+      await cloudFunction(
+          functionName: 'genericEmail',
+          parameters: {'subject': subject, 'text': text},
+          action: () {});
     }
   }
 }

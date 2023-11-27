@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:makaiapp/controllers/user_controller.dart';
@@ -72,7 +72,8 @@ class AddCertificate extends StatelessWidget {
     dialogService.showLoading();
     List finalCertificates = [];
     for (int i = 0; i < certificates.length; i++) {
-      finalCertificates.add(await storageService.uploadPhoto(certificates[i], 'certificates'));
+      finalCertificates.add(
+          await storageService.uploadPhoto(certificates[i], 'certificates'));
     }
 
     // Now you can safely use the Timestamp variables as they are guaranteed to be non-null here
@@ -96,10 +97,6 @@ class AddCertificate extends StatelessWidget {
     );
   }
 
-  
-
-
-
   addImageButton() {
     return InkWell(
       onTap: () async {
@@ -110,8 +107,11 @@ class AddCertificate extends StatelessWidget {
         height: 80,
         width: 80,
         margin: EdgeInsets.only(right: 10),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey)),
-        child: Icon(Icons.add_photo_alternate_outlined, color: Colors.grey, size: 25),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey)),
+        child: Icon(Icons.add_photo_alternate_outlined,
+            color: Colors.grey, size: 25),
       ),
     );
   }
@@ -130,26 +130,29 @@ class AddCertificate extends StatelessWidget {
       style: TextStyle(color: primaryColor, fontSize: 17),
       value: certificateType.value,
       items: items.map((value) {
-        return DropdownMenuItem<String>(value: value, child: Text(value, textScaleFactor: 1, style: TextStyle(color: Colors.black)));
+        return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value,
+                textScaleFactor: 1, style: TextStyle(color: Colors.black)));
       }).toList(),
       onChanged: (value) => certificateType.value = value!,
     );
   }
 
   showDatePicker(int type, context) {
-    DatePicker.showDatePicker(context, showTitleActions: true, minTime: DateTime(2000), maxTime: DateTime(2100), onChanged: (date) {}, onConfirm: (date) {
-      if (type == 1) {
-        issueDateTEC.text = DateFormat('MMMM dd, yyyy').format(date);
-        issueDate = Timestamp.fromDate(date);
-      }
-      if (type == 2) {
-        buildDateTEC.text = DateFormat('MMMM dd, yyyy').format(date);
-        buildDate = Timestamp.fromDate(date);
-      }
-      if (type == 3) {
-        expiryDateTEC.text = DateFormat('MMMM dd, yyyy').format(date);
-        expiryDate = Timestamp.fromDate(date);
-      }
-    }, currentTime: DateTime.now(), locale: LocaleType.en);
+    // DatePicker.showDatePicker(context, showTitleActions: true, minTime: DateTime(2000), maxTime: DateTime(2100), onChanged: (date) {}, onConfirm: (date) {
+    //   if (type == 1) {
+    //     issueDateTEC.text = DateFormat('MMMM dd, yyyy').format(date);
+    //     issueDate = Timestamp.fromDate(date);
+    //   }
+    //   if (type == 2) {
+    //     buildDateTEC.text = DateFormat('MMMM dd, yyyy').format(date);
+    //     buildDate = Timestamp.fromDate(date);
+    //   }
+    //   if (type == 3) {
+    //     expiryDateTEC.text = DateFormat('MMMM dd, yyyy').format(date);
+    //     expiryDate = Timestamp.fromDate(date);
+    //   }
+    // }, currentTime: DateTime.now(), locale: LocaleType.en);
   }
 }
