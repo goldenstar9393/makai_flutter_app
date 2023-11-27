@@ -51,8 +51,7 @@ android {
     
     buildTypes {
         release {
-            useProguard true
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
         }
     }
     lintOptions {
