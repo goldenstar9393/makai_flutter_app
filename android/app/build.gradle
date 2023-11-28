@@ -70,5 +70,5 @@ dependencies {
     implementation 'androidx.browser:browser:1.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
-
+    // implementation 'com.passbase:passbase_sdk:latest_version'
 }

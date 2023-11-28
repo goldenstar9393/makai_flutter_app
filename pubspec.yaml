@@ -68,7 +68,7 @@ dependencies:
   loading_indicator: ^3.1.1
   flutter_credit_card: ^4.0.1
   flutter_emoji: ^2.5.1
-  passbase_flutter: ^3.2.1
+  # passbase_flutter: ^3.2.1
   firebase_crashlytics: ^2.9.0
 dev_dependencies:
   flutter_test:

@@ -1144,14 +1144,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3+1"
-  passbase_flutter:
-    dependency: "direct main"
-    description:
-      name: passbase_flutter
-      sha256: "5ff429b094b6604e4f4d8619450926fc1b907ce886a7229a97b0df7bd6448ac3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.1"
   path:
     dependency: transitive
     description:

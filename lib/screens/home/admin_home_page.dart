@@ -16,7 +16,7 @@ import 'package:makaiapp/widgets/custom_list_tile.dart';
 import 'package:makaiapp/widgets/custom_text_field.dart';
 import 'package:makaiapp/widgets/empty_box.dart';
 import 'package:makaiapp/widgets/vessel_item.dart';
-import 'package:passbase_flutter/passbase_flutter.dart';
+// import 'package:passbase_flutter/passbase_flutter.dart';
 
 class AdminHomePage extends StatelessWidget {
   final vesselService = Get.find<VesselService>();
@@ -25,12 +25,12 @@ class AdminHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
         appBar: AppBar(
           title: InkWell(
             onLongPress: () {
-              if (FirebaseAuth.instance.currentUser!.email == 'ujwalchordiya@gmail.com') adminControls(context);
+              if (FirebaseAuth.instance.currentUser!.email ==
+                  'ujwalchordiya@gmail.com') adminControls(context);
             },
             child: Text('MY VESSELS'),
           ),
@@ -42,17 +42,24 @@ class AdminHomePage extends StatelessWidget {
                   icon: Stack(
                     children: [
                       Center(child: Icon(Icons.notifications_none_outlined)),
-                      if (userController.currentUser.value.unreadNotifications ?? false)
+                      if (userController
+                              .currentUser.value.unreadNotifications ??
+                          false)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
-                          child: Align(alignment: Alignment.topCenter, child: CircleAvatar(radius: 5, backgroundColor: redColor)),
+                          child: Align(
+                              alignment: Alignment.topCenter,
+                              child: CircleAvatar(
+                                  radius: 5, backgroundColor: redColor)),
                         ),
                     ],
                   ),
                   onPressed: () async {
                     Get.to(() => Notifications());
-                    userController.currentUser.value.unreadNotifications = false;
-                    await userService.updateUser({'unreadNotifications': false});
+                    userController.currentUser.value.unreadNotifications =
+                        false;
+                    await userService
+                        .updateUser({'unreadNotifications': false});
                   }),
             ),
             SizedBox(width: 15),
@@ -60,8 +67,17 @@ class AdminHomePage extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Container(margin: const EdgeInsets.only(bottom: 15), color: Colors.white, padding: const EdgeInsets.all(15), width: double.infinity, alignment: Alignment.center, child: Text('Logged in as - $MY_ROLE', style: TextStyle(color: secondaryColor, fontWeight: FontWeight.bold))),
-            if (MY_ROLE == VESSEL_OWNER && userController.currentUser.value.verification == 'approved')
+            Container(
+                margin: const EdgeInsets.only(bottom: 15),
+                color: Colors.white,
+                padding: const EdgeInsets.all(15),
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: Text('Logged in as - $MY_ROLE',
+                    style: TextStyle(
+                        color: secondaryColor, fontWeight: FontWeight.bold))),
+            if (MY_ROLE == VESSEL_OWNER &&
+                userController.currentUser.value.verification == 'approved')
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: CustomListTile(
@@ -75,34 +91,45 @@ class AdminHomePage extends StatelessWidget {
             if (userController.currentUser.value.verification != 'approved')
               Column(
                 children: [
-                  Text('Want to add your own vessel? \nComplete your verification now and start adding.', textAlign: TextAlign.center),
+                  Text(
+                      'Want to add your own vessel? \nComplete your verification now and start adding.',
+                      textAlign: TextAlign.center),
                   SizedBox(height: 20),
-                  PassbaseButton(
-                    onStart: () {
-                      debugPrint('VERIFICATION STARTED');
-                      Get.back();
-                    },
-                    onFinish: (String identityAccessKey) async {
-                      debugPrint('VERIFICATION FINISHED');
-                      debugPrint(identityAccessKey);
-                      await userService.updateUser({'identityAccessKey': identityAccessKey, 'verification': 'pending'});
-                      showYellowAlert('Profile submitted for verification. You will be notified when you are approved.');
-                    },
-                    onSubmitted: (String identityAccessKey) async {
-                      debugPrint('VERIFICATION SUBMITTED');
-                      debugPrint(identityAccessKey);
-                      await userService.updateUser({'identityAccessKey': identityAccessKey, 'verification': 'pending'});
-                      showYellowAlert('Profile submitted for verification. You will be notified when you are approved.');
-                    },
-                    onError: (errorCode) async {
-                      debugPrint('VERIFICATION ERROR');
-                      debugPrint(errorCode);
-                      print(errorCode);
-                      await userService.updateUser({'identityAccessKey': errorCode});
-                    },
-                    width: Get.width - 20,
-                    height: 50,
-                  ),
+                  // PassbaseButton(
+                  //   onStart: () {
+                  //     debugPrint('VERIFICATION STARTED');
+                  //     Get.back();
+                  //   },
+                  //   onFinish: (String identityAccessKey) async {
+                  //     debugPrint('VERIFICATION FINISHED');
+                  //     debugPrint(identityAccessKey);
+                  //     await userService.updateUser({
+                  //       'identityAccessKey': identityAccessKey,
+                  //       'verification': 'pending'
+                  //     });
+                  //     showYellowAlert(
+                  //         'Profile submitted for verification. You will be notified when you are approved.');
+                  //   },
+                  //   onSubmitted: (String identityAccessKey) async {
+                  //     debugPrint('VERIFICATION SUBMITTED');
+                  //     debugPrint(identityAccessKey);
+                  //     await userService.updateUser({
+                  //       'identityAccessKey': identityAccessKey,
+                  //       'verification': 'pending'
+                  //     });
+                  //     showYellowAlert(
+                  //         'Profile submitted for verification. You will be notified when you are approved.');
+                  //   },
+                  //   onError: (errorCode) async {
+                  //     debugPrint('VERIFICATION ERROR');
+                  //     debugPrint(errorCode);
+                  //     print(errorCode);
+                  //     await userService
+                  //         .updateUser({'identityAccessKey': errorCode});
+                  //   },
+                  //   width: Get.width - 20,
+                  //   height: 50,
+                  // ),
                   Divider(height: 50),
                 ],
               ),
@@ -131,7 +158,7 @@ class AdminHomePage extends StatelessWidget {
         vessels = userController.currentUser.value.crew!;
         break;
     }
-    
+
     return vessels.isEmpty
         ? EmptyBox(text: 'No vessels to show')
         : SingleChildScrollView(
@@ -155,12 +182,14 @@ class AdminHomePage extends StatelessWidget {
                     return StreamBuilder(
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          Vessel vessel = Vessel.fromDocument(snapshot.data as DocumentSnapshot<Map<String, dynamic>>);
+                          Vessel vessel = Vessel.fromDocument(snapshot.data
+                              as DocumentSnapshot<Map<String, dynamic>>);
                           return VesselItem(vessel: vessel);
                         } else
                           return Container();
                       },
-                      stream: vesselService.getVesselForVesselIDStream(vessels[i]),
+                      stream:
+                          vesselService.getVesselForVesselIDStream(vessels[i]),
                     );
                   },
                 ),
@@ -173,7 +202,14 @@ class AdminHomePage extends StatelessWidget {
     TextEditingController staffTEC = TextEditingController();
     Get.defaultDialog(
       title: 'Login As',
-      content: CustomTextField(label: 'Enter Email', hint: 'Enter email', controller: staffTEC, maxLines: 1, validate: true, isEmail: false, textInputType: TextInputType.emailAddress),
+      content: CustomTextField(
+          label: 'Enter Email',
+          hint: 'Enter email',
+          controller: staffTEC,
+          maxLines: 1,
+          validate: true,
+          isEmail: false,
+          textInputType: TextInputType.emailAddress),
       actions: [
         ElevatedButton(
             onPressed: () async {
@@ -182,20 +218,29 @@ class AdminHomePage extends StatelessWidget {
               Get.back();
               showGreenAlert('Please wait...');
               String mobile = staffTEC.text.trim();
-              QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: mobile).get();
+              QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                  .collection('users')
+                  .where('email', isEqualTo: mobile)
+                  .get();
               if (querySnapshot.docs.isNotEmpty) {
-                userController.currentUser.value = u.User.fromDocument(querySnapshot.docs[0]);
-                await Preferences.setUser(userController.currentUser.value.userID ?? "");
+                userController.currentUser.value =
+                    u.User.fromDocument(querySnapshot.docs[0]);
+                await Preferences.setUser(
+                    userController.currentUser.value.userID ?? "");
                 await userService.getCurrentUser();
                 Get.back();
-                showGreenAlert('You are now logged in as ' + userController.currentUser.value.fullName!);
+                showGreenAlert('You are now logged in as ' +
+                    userController.currentUser.value.fullName!);
               } else {
                 Get.back();
-                showRedAlert('User does not exist. Please check the mobile number');
+                showRedAlert(
+                    'User does not exist. Please check the mobile number');
               }
             },
             child: Text('Login', textScaleFactor: 1)),
-        TextButton(onPressed: () => Get.back(), child: Text('Cancel', textScaleFactor: 1)),
+        TextButton(
+            onPressed: () => Get.back(),
+            child: Text('Cancel', textScaleFactor: 1)),
       ],
     );
   }

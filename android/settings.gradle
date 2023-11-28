@@ -1,3 +1,17 @@
+pluginManagement{
+    repositories{
+        gradlePluginPortal()
+        mavenCentral()
+        maven { url 'https://button.passbase.com/__android/' }
+        maven { url 'https://maven.microblink.com' }
+    }
+}
+// dependencyResolutionManagement{
+//     // repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+//     repositories{
+//         mavenCentral()
+//     }
+// }
 include ':app'
 
 def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
