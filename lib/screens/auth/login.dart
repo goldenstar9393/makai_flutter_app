@@ -56,7 +56,9 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(systemOverlayStyle: SystemUiOverlayStyle.dark, backgroundColor: Colors.transparent),
+      appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          backgroundColor: Colors.transparent),
       body: Obx(
         () => Form(
           key: formKey,
@@ -65,7 +67,8 @@ class _LoginState extends State<Login> {
               //  padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  Image.asset('assets/images/s1.png', height: Get.width, fit: BoxFit.contain),
+                  Image.asset('assets/images/s1.png',
+                      height: Get.width, fit: BoxFit.contain),
                   // Container(
                   //   height: Get.width,
                   //   margin: const EdgeInsets.only(bottom: 10),
@@ -105,28 +108,61 @@ class _LoginState extends State<Login> {
                     child: AutofillGroup(
                       child: Column(
                         children: [
-                          if (signIn.isFalse) CustomTextField(controller: nameTEC, label: '', hint: 'Enter full name', validate: true, autofillHints: AutofillHints.name),
+                          if (signIn.isFalse)
+                            CustomTextField(
+                                controller: nameTEC,
+                                label: '',
+                                hint: 'Enter full name',
+                                validate: true,
+                                autofillHints: AutofillHints.name),
                           SizedBox(height: 20),
-                          CustomTextField(controller: emailTEC, label: '', hint: 'Enter email address', validate: true, isEmail: true, textInputType: TextInputType.emailAddress, autofillHints: AutofillHints.email),
+                          CustomTextField(
+                              controller: emailTEC,
+                              label: '',
+                              hint: 'Enter email address',
+                              validate: true,
+                              isEmail: true,
+                              textInputType: TextInputType.emailAddress,
+                              autofillHints: AutofillHints.email),
                           SizedBox(height: 20),
-                          CustomTextField(controller: passwordTEC, label: '', hint: 'Enter password', validate: true, isPassword: true, textInputType: TextInputType.text, autofillHints: AutofillHints.password),
+                          CustomTextField(
+                              controller: passwordTEC,
+                              label: '',
+                              hint: 'Enter password',
+                              validate: true,
+                              isPassword: true,
+                              textInputType: TextInputType.text,
+                              autofillHints: AutofillHints.password),
                           SizedBox(height: 20),
-                          CustomButton(function: () => signIn.isTrue ? login() : signUp(), text: signIn.isTrue ? 'Sign In' : 'Sign Up'),
+                          CustomButton(
+                              function: () =>
+                                  signIn.isTrue ? login() : signUp(),
+                              text: signIn.isTrue ? 'Sign In' : 'Sign Up'),
                           FutureBuilder(
                               future: Preferences.getBiometricStatus(),
                               builder: (context, snapshot) {
-                                Object biometric = snapshot.data ?? false;
-                                RxBool? value = biometric.obs as RxBool?;
+                                print("here: ${snapshot.data}");
+                                print("type: ${snapshot.data.runtimeType}");
+
+                                RxBool? value = false.obs;
+                                if (snapshot.data is RxBool) {
+                                  value = snapshot.data as RxBool?;
+                                } else if (snapshot.data is bool) {
+                                  value =
+                                      (snapshot.data as bool).obs as RxBool?;
+                                }
                                 return Obx(() {
                                   return Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text('Use FaceID/Fingerprint to authenticate'),
+                                      Text(
+                                          'Use FaceID/Fingerprint to authenticate'),
                                       Checkbox(
                                         value: value!.value,
                                         onChanged: (val) async {
-                                          await Preferences.setBiometricStatus(val!);
-                                          value.toggle();
+                                          await Preferences.setBiometricStatus(
+                                              val!);
+                                          value?.toggle();
                                         },
                                       ),
                                     ],
@@ -136,9 +172,16 @@ class _LoginState extends State<Login> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              TextButton(onPressed: () => Get.to(() => ForgotPassword()), child: Text('Forgot Password?')),
+                              TextButton(
+                                  onPressed: () =>
+                                      Get.to(() => ForgotPassword()),
+                                  child: Text('Forgot Password?')),
                               SizedBox(height: 40),
-                              TextButton(onPressed: () => signIn.toggle(), child: Text(signIn.isTrue ? 'Create Account?' : 'Sign In')),
+                              TextButton(
+                                  onPressed: () => signIn.toggle(),
+                                  child: Text(signIn.isTrue
+                                      ? 'Create Account?'
+                                      : 'Sign In')),
                             ],
                           ),
                         ],
@@ -147,7 +190,9 @@ class _LoginState extends State<Login> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(signIn.isTrue ? 'Or sign in using' : 'Or sign up using'),
+                    child: Text(signIn.isTrue
+                        ? 'Or sign in using'
+                        : 'Or sign up using'),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -160,7 +205,8 @@ class _LoginState extends State<Login> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CircleAvatar(
-                            child: Icon(FontAwesomeIcons.googlePlusG, color: Colors.white, size: 22),
+                            child: Icon(FontAwesomeIcons.googlePlusG,
+                                color: Colors.white, size: 22),
                             radius: 22,
                             backgroundColor: redColor,
                           ),
@@ -174,7 +220,8 @@ class _LoginState extends State<Login> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CircleAvatar(
-                            child: Icon(FontAwesomeIcons.facebookF, color: Colors.white, size: 22),
+                            child: Icon(FontAwesomeIcons.facebookF,
+                                color: Colors.white, size: 22),
                             radius: 22,
                             backgroundColor: Colors.blue.shade700,
                           ),
@@ -189,7 +236,8 @@ class _LoginState extends State<Login> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: CircleAvatar(
-                              child: Icon(FontAwesomeIcons.apple, color: Colors.white, size: 22),
+                              child: Icon(FontAwesomeIcons.apple,
+                                  color: Colors.white, size: 22),
                               radius: 22,
                               backgroundColor: Colors.grey.shade900,
                             ),
@@ -198,7 +246,10 @@ class _LoginState extends State<Login> {
                     ],
                   ),
 
-                  TextButton(onPressed: () => Get.offAll(() => HomePage()), child: Text('SKIP >>', style: TextStyle(color: Colors.grey.shade600))),
+                  TextButton(
+                      onPressed: () => Get.offAll(() => HomePage()),
+                      child: Text('SKIP >>',
+                          style: TextStyle(color: Colors.grey.shade600))),
                 ],
               ),
             ),
@@ -236,29 +287,46 @@ class _LoginState extends State<Login> {
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('By signing up, you accept the Terms & Conditions of use of this app.'),
+          Text(
+              'By signing up, you accept the Terms & Conditions of use of this app.'),
           InkWell(
             onTap: () => miscService.openLink('https://makaiapp.com'),
             child: Text(
               'Know more',
               textScaleFactor: 0.95,
               maxLines: 2,
-              style: TextStyle(color: secondaryColor, decoration: TextDecoration.underline),
+              style: TextStyle(
+                  color: secondaryColor, decoration: TextDecoration.underline),
             ),
           ),
         ],
       ),
       confirm: Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        child: ElevatedButton(style: ButtonStyle(backgroundColor: MaterialStateProperty.all(redColor)), onPressed: () => Get.back(), child: Text('Cancel')),
+        child: ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(redColor)),
+            onPressed: () => Get.back(),
+            child: Text('Cancel')),
       ),
       cancel: ElevatedButton(
           onPressed: () async {
             dialogService.showLoading();
             final storage = new FlutterSecureStorage();
-            await storage.write(key: 'email', value: emailTEC.text.toLowerCase());
+            await storage.write(
+                key: 'email', value: emailTEC.text.toLowerCase());
             await storage.write(key: 'password', value: passwordTEC.text);
-            authService.signUp(User(email: emailTEC.text.toLowerCase(), fullName: nameTEC.text, unreadNotifications: true, unreadMessages: true, bookingNotifications: true, messageNotifications: true, generalNotifications: true, transactionNotifications: true), passwordTEC.text);
+            authService.signUp(
+                User(
+                    email: emailTEC.text.toLowerCase(),
+                    fullName: nameTEC.text,
+                    unreadNotifications: true,
+                    unreadMessages: true,
+                    bookingNotifications: true,
+                    messageNotifications: true,
+                    generalNotifications: true,
+                    transactionNotifications: true),
+                passwordTEC.text);
           },
           child: Text('Sign Up')),
     );
